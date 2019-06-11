@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllenBradleyDevice.cs" />
+    <Compile Include="FanucRobotDevice.cs" />
     <Compile Include="IOrderDevice.cs" />
     <Compile Include="OrderDistributionService.cs" />
+    <Compile Include="OrderDistributionService_FanucRobot.cs" />
     <Compile Include="OrderItem.cs" />
     <Compile Include="OrderServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

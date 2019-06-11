@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace OrderDistribution
 {
-
-    //设备侧缓存一个订单
-    //宁波项目--智能制造单元&工业实训单元
+    //设备侧仅有当前正在执行的订单
+    //宁波项目--汽车刹车盘订单下发服务
     //2019.06.11初始版本
-    public class OrderDistributionService
+    public class OrderDistributionService_FanucRobot
     {
         public IOrderDevice device;
         CancellationTokenSource token = new CancellationTokenSource();
@@ -20,7 +19,7 @@ namespace OrderDistribution
         public event Func<OrderItem> GetFirstOrderEvent;
         public event Action<int> UpdateOrderActualQuantityEvent;
 
-        public OrderDistributionService()
+        public OrderDistributionService_FanucRobot()
         {
             device = new AllenBradleyDevice();
         }
@@ -47,8 +46,7 @@ namespace OrderDistribution
                             new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
                         Thread.Sleep(1000);
                     }
-
-
+                    
                     bool dev_reset = false;
                     while (dev_reset == false)
                     {
@@ -57,6 +55,7 @@ namespace OrderDistribution
                             new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
                         Thread.Sleep(1000);
                     }
+                    
                 }
                 device.Temp_S_Order_AllowMES_Last = temp_S_Order_AllowMES_Last;
 
@@ -102,7 +101,7 @@ namespace OrderDistribution
         {
 
         }
-        
+
         //TODO
         private void SendOrderServiceStateMessage(OrderServiceState state)
         {
