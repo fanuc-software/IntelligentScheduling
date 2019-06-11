@@ -13,7 +13,12 @@ namespace OrderDistribution
         DONE
     }
 
-    public class OrderItem
+    public class BaseItem
+    {
+        public long Id { get; set; }
+
+    }
+    public class OrderItem : BaseItem
     {
         public int Type { get; set; }
 
