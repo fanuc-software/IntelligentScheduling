@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeviceAsset;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,36 @@ namespace OrderDistribution
 {
     public class AllenBradleyDevice : IOrderDevice
     {
+        private AllenBradleyDataConfig m_OrderModeConfig;
+        private AllenBradleyDataConfig m_OrderAllowConfig;
+        private AllenBradleyDataConfig m_ProductType;
+        private AllenBradleyDataConfig m_Quantity;
+        private AllenBradleyDataConfig m_CheckProductType;
+        private AllenBradleyDataConfig m_CheckQuantity;
+        private AllenBradleyDataConfig m_OrderAlarm;
+        private AllenBradleyDataConfig m_OrderReset;
+        private AllenBradleyDataConfig m_OrderConfirm;
+        private AllenBradleyDataConfig m_OrderProcess;
+
+        private AllenBradley m_ABDevice;
+
+        public AllenBradleyDevice()
+        {
+            m_ABDevice = new AllenBradley { IP = "192.168.1.1", Port = 80 };
+
+            m_OrderModeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
+            m_OrderAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
+            m_ProductType = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_Quantity = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_CheckProductType = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_CheckQuantity = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_OrderAlarm = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
+            m_OrderReset = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
+            m_OrderConfirm = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
+            m_OrderProcess = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            
+        }
+
         public bool Temp_S_Order_AllowMES_Last { get; set; }
 
         /// <summary>
@@ -18,6 +49,14 @@ namespace OrderDistribution
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetOrderMode(ref bool mode)
         {
+            var ret = m_ABDevice.Read(m_OrderModeConfig);
+            if (ret.IsSuccess == false) return false;
+
+            bool temp = false;
+            var pret = bool.TryParse(ret.Content, out temp);
+            if(pret==false) return false;
+
+            mode = temp;
             return true;
         }
 
@@ -28,6 +67,14 @@ namespace OrderDistribution
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetOrderAllow(ref bool allow)
         {
+            var ret = m_ABDevice.Read(m_OrderAllowConfig);
+            if (ret.IsSuccess == false) return false;
+
+            bool temp = false;
+            var pret = bool.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            allow = temp;
             return true;
         }
 
@@ -38,6 +85,9 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetProductType(int ptype)
         {
+            var ret = m_ABDevice.Write(m_ProductType, ptype.ToString());
+            if (ret.IsSuccess == false) return false;
+
             return true;
         }
 
@@ -48,6 +98,9 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetQuantity(int quantity)
         {
+            var ret = m_ABDevice.Write(m_Quantity, quantity.ToString());
+            if (ret.IsSuccess == false) return false;
+
             return true;
         }
 
@@ -58,6 +111,14 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool GetProductType(ref int ptype)
         {
+            var ret = m_ABDevice.Read(m_ProductType);
+            if (ret.IsSuccess == false) return false;
+
+            int temp = 0;
+            var pret = int.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            ptype = temp;
             return true;
         }
 
@@ -68,6 +129,14 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool GetQuantity(ref int quantity)
         {
+            var ret = m_ABDevice.Read(m_Quantity);
+            if (ret.IsSuccess == false) return false;
+
+            int temp = 0;
+            var pret = int.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            quantity = temp;
             return true;
         }
 
@@ -78,6 +147,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetCheckProductType(ref int ptype)
         {
+            var ret = m_ABDevice.Read(m_CheckProductType);
+            if (ret.IsSuccess == false) return false;
+
+            int temp = 0;
+            var pret = int.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            ptype = temp;
             return true;
         }
 
@@ -88,6 +165,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetCheckQuantity(ref int quantity)
         {
+            var ret = m_ABDevice.Read(m_CheckQuantity);
+            if (ret.IsSuccess == false) return false;
+
+            int temp = 0;
+            var pret = int.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            quantity = temp;
             return true;
         }
 
@@ -98,6 +183,9 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetOrderAlarm(bool alarm)
         {
+            var ret = m_ABDevice.Write(m_OrderAlarm, alarm.ToString());
+            if (ret.IsSuccess == false) return false;
+
             return true;
         }
 
@@ -108,6 +196,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderAlarm(ref bool alarm)
         {
+            var ret = m_ABDevice.Read(m_OrderAlarm);
+            if (ret.IsSuccess == false) return false;
+
+            bool temp = false;
+            var pret = bool.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            alarm = temp;
             return true;
         }
 
@@ -118,6 +214,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderReset(ref bool reset)
         {
+            var ret = m_ABDevice.Read(m_OrderReset);
+            if (ret.IsSuccess == false) return false;
+
+            bool temp = false;
+            var pret = bool.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            reset = temp;
             return true;
         }
 
@@ -128,6 +232,9 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetOrderConfirm(bool confirm)
         {
+            var ret = m_ABDevice.Write(m_OrderConfirm, confirm.ToString());
+            if (ret.IsSuccess == false) return false;
+
             return true;
         }
 
@@ -138,6 +245,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderConfirm(ref bool confirm)
         {
+            var ret = m_ABDevice.Read(m_OrderConfirm);
+            if (ret.IsSuccess == false) return false;
+
+            bool temp = false;
+            var pret = bool.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            confirm = temp;
             return true;
         }
 
@@ -148,6 +263,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderProcess(ref int quantity)
         {
+            var ret = m_ABDevice.Read(m_OrderProcess);
+            if (ret.IsSuccess == false) return false;
+
+            int temp = 0;
+            var pret = int.TryParse(ret.Content, out temp);
+            if (pret == false) return false;
+
+            quantity = temp;
             return true;
         }
 

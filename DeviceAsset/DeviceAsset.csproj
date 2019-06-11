@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllenBradley.cs" />
+    <Compile Include="AllenBradleyDataConfig.cs" />
+    <Compile Include="AllenBradleyDataTypeEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
