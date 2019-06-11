@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28917.182
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.MonitorUI", "WPF.MonitorUI\WPF.MonitorUI.csproj", "{FC58825F-5C74-4979-AD18-4DAA65318313}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FANUC.Host", "FANUC.Host\FANUC.Host.csproj", "{A564F8CB-68F8-48B5-92DD-70C9267E0363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderDistribution", "OrderDistribution\OrderDistribution.csproj", "{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAsset", "DeviceAsset\DeviceAsset.csproj", "{108A2162-2608-44CE-9CD6-6E3FA2E583F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{A564F8CB-68F8-48B5-92DD-70C9267E0363}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A564F8CB-68F8-48B5-92DD-70C9267E0363}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A564F8CB-68F8-48B5-92DD-70C9267E0363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

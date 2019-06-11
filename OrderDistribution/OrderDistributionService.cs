@@ -5,21 +5,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FANUC.Host
+namespace OrderDistribution
 {
-    class Program
+    public class OrderDistributionService
     {
+        public IOrderDevice device;
+        CancellationTokenSource token = new CancellationTokenSource();
 
-        static List<OrderItem> Orders = new List<OrderItem>();
-        
+        public event Action<OrderItem, int> OrderStateChangeEvent;
+        public event Func<OrderItem> GetFirstOrderEvent;
+        public event Action<int> UpdateOrderActualQuantityEvent;
 
-        static void Main(string[] args)
+        public OrderDistributionService()
         {
-            CancellationTokenSource token = new CancellationTokenSource();
-            
+            device = new AllenBradleyDevice();
+        }
+
+        public void Start()
+        {
+
             Task.Factory.StartNew(() =>
             {
-                IOrderDevice device = new AllenBradleyDevice();
+
                 device.Temp_S_Order_AllowMES_Last = false;
 
                 bool ret = false;
@@ -55,7 +62,7 @@ namespace FANUC.Host
                 {
 
                     //订单下发服务
-                    ret = OrderService(device);
+                    ret = OrderService();
                     if (ret == false)
                     {
                         while (ret == false)
@@ -78,11 +85,27 @@ namespace FANUC.Host
                     }
                 }
             }, token.Token);
-            
+        }
+
+        //TODO
+        public void Stop()
+        {
 
         }
 
-        static bool OrderService(IOrderDevice device)
+        //TODO
+        public void Suspend()
+        {
+
+        }
+        
+        //TODO
+        private void SendOrderServiceStateMessage(OrderServiceState state)
+        {
+
+        }
+
+        private bool OrderService()
         {
             bool ret = false;
 
@@ -90,16 +113,19 @@ namespace FANUC.Host
             ret = device.GetOrderMode(ref mode);
             if (ret != true) return ret;
 
-            if(mode==true)
+            if (mode == true)
             {
                 bool S_Order_AllowMES = false;
                 ret = device.GetOrderAllow(ref S_Order_AllowMES);
                 if (ret != true) return ret;
 
-                if(S_Order_AllowMES == true && device.Temp_S_Order_AllowMES_Last==false)
+                if (S_Order_AllowMES == true && device.Temp_S_Order_AllowMES_Last == false)
                 {
+                    //如果DOWORK订单为2个，将第一个的状态置为DONE
+                    OrderStateChangeEvent?.Invoke(null, -1);
+
                     //防错处理
-                    ret = CheckOnBegin(device);
+                    ret = CheckOnBegin();
                     if (ret != true)
                     {
                         device.Temp_S_Order_AllowMES_Last = S_Order_AllowMES;
@@ -107,8 +133,8 @@ namespace FANUC.Host
                     }
 
                     //下单
-                    var first_order = Orders.Where(x => x.State == OrderItemStateEnum.NEW).OrderBy(x => x.CreateDateTime).FirstOrDefault();
-                    if(first_order==null)
+                    var first_order = GetFirstOrderEvent?.Invoke();
+                    if (first_order == null)
                     {
                         return true;
                     }
@@ -125,14 +151,14 @@ namespace FANUC.Host
                         //检查下单是否成功
                         DateTime temp_time = DateTime.Now;
                         bool check_state = false;
-                        while(check_state==false && (DateTime.Now- temp_time).TotalSeconds<20)
+                        while (check_state == false && (DateTime.Now - temp_time).TotalSeconds < 20)
                         {
                             int check_type = 0;
                             int check_quantity = 0;
                             device.GetCheckProductType(ref check_type);
                             device.GetCheckQuantity(ref check_quantity);
 
-                            if(check_type== first_order.Type && check_quantity== first_order.Quantity)
+                            if (check_type == first_order.Type && check_quantity == first_order.Quantity)
                             {
                                 check_state = true;
                             }
@@ -144,7 +170,8 @@ namespace FANUC.Host
                         if (ret != true) return ret;
 
                         //变更软件订单状态
-                        first_order.State = OrderItemStateEnum.OTHER;
+                        first_order.State = OrderItemStateEnum.DOWORK;
+                        OrderStateChangeEvent?.Invoke(first_order, 0);
 
 
                     }
@@ -152,15 +179,24 @@ namespace FANUC.Host
                 else
                 {
                     device.Temp_S_Order_AllowMES_Last = S_Order_AllowMES;
+
+                    int process = 0;
+                    ret = device.GetOrderProcess(ref process);
+                    if (ret == true)
+                    {
+                        //更新订单完成数量
+
+                        UpdateOrderActualQuantityEvent?.Invoke(process);
+                    }
                 }
-                
+
             }
 
             return true;
 
         }
 
-        static bool CheckOnBegin(IOrderDevice device)
+        private bool CheckOnBegin()
         {
             bool ret = false;
 
@@ -192,7 +228,7 @@ namespace FANUC.Host
             ret = device.GetOrderAlarm(ref alarm);
             if (ret != true) return ret;
 
-            if(confirm!=false || type!=0 || quantity!=0 || check_type!=0 || check_quantity!=0 || reset!=false || alarm!=false)
+            if (confirm != false || type != 0 || quantity != 0 || check_type != 0 || check_quantity != 0 || reset != false || alarm != false)
             {
                 return false;
             }
@@ -200,9 +236,5 @@ namespace FANUC.Host
             return true;
         }
 
-        static void SendOrderServiceStateMessage(OrderServiceState state)
-        {
-
-        }
     }
 }
