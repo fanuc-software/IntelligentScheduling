@@ -15,10 +15,10 @@ namespace DeviceAsset
 
         public ushort Port { get; set; }
 
-        public AllenBradley()
+        public AllenBradley(string ip, ushort port)
         {
-            IP = "192.168.1.1";
-            Port = 80;
+            IP = ip;
+            Port = port;
         }
 
         public OperateResult Write(AllenBradleyDataConfig dataConfig, string dataValue)

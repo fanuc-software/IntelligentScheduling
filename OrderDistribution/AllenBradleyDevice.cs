@@ -25,7 +25,7 @@ namespace OrderDistribution
 
         public AllenBradleyDevice()
         {
-            m_ABDevice = new AllenBradley { IP = "192.168.1.1", Port = 80 };
+            m_ABDevice = new AllenBradley("192.168.1.1", 80);
 
             m_OrderModeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
             m_OrderAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };

@@ -32,6 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DevExpress.Data.v18.1, Version=18.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpo.v18.1, Version=18.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="HslCommunication, Version=6.2.5.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
       <HintPath>..\packages\HslCommunication.6.2.5\lib\net451\HslCommunication.dll</HintPath>
     </Reference>
@@ -49,10 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllenBradleyDevice.cs" />
+    <Compile Include="BaseOrderService.cs" />
     <Compile Include="FanucRobotDevice.cs" />
     <Compile Include="IOrderDevice.cs" />
     <Compile Include="OrderDistributionService.cs" />
-    <Compile Include="OrderDistributionService_FanucRobot.cs" />
     <Compile Include="OrderItem.cs" />
     <Compile Include="OrderServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

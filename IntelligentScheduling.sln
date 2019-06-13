@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderDistribution", "OrderD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAsset", "DeviceAsset\DeviceAsset.csproj", "{108A2162-2608-44CE-9CD6-6E3FA2E583F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModBusNetModBusTest", "ModBusNetModBusTest\ModBusNetModBusTest.csproj", "{18E400F8-1F81-499E-A565-39488B25D9B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

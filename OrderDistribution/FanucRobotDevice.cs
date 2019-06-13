@@ -9,33 +9,33 @@ namespace OrderDistribution
 {
     public class FanucRobotDevice : IOrderDevice
     {
-        private AllenBradleyDataConfig m_OrderModeConfig;
-        private AllenBradleyDataConfig m_OrderAllowConfig;
-        private AllenBradleyDataConfig m_ProductType;
-        private AllenBradleyDataConfig m_Quantity;
-        private AllenBradleyDataConfig m_CheckProductType;
-        private AllenBradleyDataConfig m_CheckQuantity;
-        private AllenBradleyDataConfig m_OrderAlarm;
-        private AllenBradleyDataConfig m_OrderReset;
-        private AllenBradleyDataConfig m_OrderConfirm;
-        private AllenBradleyDataConfig m_OrderProcess;
+        private FanucRobotDataConfig m_OrderModeConfig;
+        private FanucRobotDataConfig m_OrderAllowConfig;
+        private FanucRobotDataConfig m_ProductType;
+        private FanucRobotDataConfig m_Quantity;
+        private FanucRobotDataConfig m_CheckProductType;
+        private FanucRobotDataConfig m_CheckQuantity;
+        private FanucRobotDataConfig m_OrderAlarm;
+        private FanucRobotDataConfig m_OrderReset;
+        private FanucRobotDataConfig m_OrderConfirm;
+        private FanucRobotDataConfig m_OrderProcess;
 
-        private AllenBradley m_ABDevice;
+        private FanucRobotModbus m_FanucRobotDevice;
 
         public FanucRobotDevice()
         {
-            m_ABDevice = new AllenBradley { IP = "192.168.1.1", Port = 80 };
+            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.1");
 
-            m_OrderModeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_OrderAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_ProductType = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_Quantity = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_CheckProductType = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_CheckQuantity = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_OrderAlarm = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_OrderReset = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_OrderConfirm = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_OrderProcess = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_OrderModeConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
+            m_OrderAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
+            m_ProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "1" };
+            m_Quantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "1" };
+            m_CheckProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
+            m_CheckQuantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
+            m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
+            m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
+            m_OrderConfirm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
+            m_OrderProcess = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
 
         }
 
@@ -48,7 +48,7 @@ namespace OrderDistribution
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetOrderMode(ref bool mode)
         {
-            var ret = m_ABDevice.Read(m_OrderModeConfig);
+            var ret = m_FanucRobotDevice.Read(m_OrderModeConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -66,7 +66,7 @@ namespace OrderDistribution
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetOrderAllow(ref bool allow)
         {
-            var ret = m_ABDevice.Read(m_OrderAllowConfig);
+            var ret = m_FanucRobotDevice.Read(m_OrderAllowConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -84,7 +84,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetProductType(int ptype)
         {
-            var ret = m_ABDevice.Write(m_ProductType, ptype.ToString());
+            var ret = m_FanucRobotDevice.Write(m_ProductType, ptype.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -97,7 +97,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetQuantity(int quantity)
         {
-            var ret = m_ABDevice.Write(m_Quantity, quantity.ToString());
+            var ret = m_FanucRobotDevice.Write(m_Quantity, quantity.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -110,7 +110,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool GetProductType(ref int ptype)
         {
-            var ret = m_ABDevice.Read(m_ProductType);
+            var ret = m_FanucRobotDevice.Read(m_ProductType);
             if (ret.IsSuccess == false) return false;
 
             int temp = 0;
@@ -128,7 +128,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool GetQuantity(ref int quantity)
         {
-            var ret = m_ABDevice.Read(m_Quantity);
+            var ret = m_FanucRobotDevice.Read(m_Quantity);
             if (ret.IsSuccess == false) return false;
 
             int temp = 0;
@@ -146,7 +146,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetCheckProductType(ref int ptype)
         {
-            var ret = m_ABDevice.Read(m_CheckProductType);
+            var ret = m_FanucRobotDevice.Read(m_CheckProductType);
             if (ret.IsSuccess == false) return false;
 
             int temp = 0;
@@ -164,7 +164,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetCheckQuantity(ref int quantity)
         {
-            var ret = m_ABDevice.Read(m_CheckQuantity);
+            var ret = m_FanucRobotDevice.Read(m_CheckQuantity);
             if (ret.IsSuccess == false) return false;
 
             int temp = 0;
@@ -182,7 +182,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetOrderAlarm(bool alarm)
         {
-            var ret = m_ABDevice.Write(m_OrderAlarm, alarm.ToString());
+            var ret = m_FanucRobotDevice.Write(m_OrderAlarm, alarm.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -195,7 +195,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderAlarm(ref bool alarm)
         {
-            var ret = m_ABDevice.Read(m_OrderAlarm);
+            var ret = m_FanucRobotDevice.Read(m_OrderAlarm);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -213,7 +213,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderReset(ref bool reset)
         {
-            var ret = m_ABDevice.Read(m_OrderReset);
+            var ret = m_FanucRobotDevice.Read(m_OrderReset);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -231,7 +231,7 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetOrderConfirm(bool confirm)
         {
-            var ret = m_ABDevice.Write(m_OrderConfirm, confirm.ToString());
+            var ret = m_FanucRobotDevice.Write(m_OrderConfirm, confirm.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -244,7 +244,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderConfirm(ref bool confirm)
         {
-            var ret = m_ABDevice.Read(m_OrderConfirm);
+            var ret = m_FanucRobotDevice.Read(m_OrderConfirm);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -262,7 +262,7 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetOrderProcess(ref int quantity)
         {
-            var ret = m_ABDevice.Read(m_OrderProcess);
+            var ret = m_FanucRobotDevice.Read(m_OrderProcess);
             if (ret.IsSuccess == false) return false;
 
             int temp = 0;
