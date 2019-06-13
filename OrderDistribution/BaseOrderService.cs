@@ -88,6 +88,9 @@ namespace OrderDistribution
                                 new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "订单下发失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
                         }
+
+                        //复位所有信号
+                        Device.OrderDeviceReset();
                     }
                 }
             }, token.Token);

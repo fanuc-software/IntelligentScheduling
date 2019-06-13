@@ -274,5 +274,10 @@ namespace OrderDistribution
             return true;
         }
 
+        public bool OrderDeviceReset()
+        {
+            return true;
+        }
+
     }
 }

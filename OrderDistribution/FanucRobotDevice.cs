@@ -18,6 +18,7 @@ namespace OrderDistribution
         private FanucRobotDataConfig m_OrderAlarm;
         private FanucRobotDataConfig m_OrderReset;
         private FanucRobotDataConfig m_OrderConfirm;
+        private FanucRobotDataConfig m_OrderConfirmReset;
         private FanucRobotDataConfig m_OrderProcess;
 
         private FanucRobotModbus m_FanucRobotDevice;
@@ -35,6 +36,7 @@ namespace OrderDistribution
             m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
             m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
             m_OrderConfirm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
+            m_OrderConfirmReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
             m_OrderProcess = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
 
         }
@@ -231,9 +233,37 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetOrderConfirm(bool confirm)
         {
+
+
             var ret = m_FanucRobotDevice.Write(m_OrderConfirm, confirm.ToString());
             if (ret.IsSuccess == false) return false;
 
+            var start_time = DateTime.Now;
+            bool reset_confirm = false;
+            while(reset_confirm==false && (DateTime.Now-start_time).TotalSeconds<20)
+            {
+                var read_ret =  m_FanucRobotDevice.Read(m_OrderConfirmReset);
+                if(ret.IsSuccess == true)
+                {
+                    bool temp = false;
+                    var pret = bool.TryParse(read_ret.Content, out temp);
+                    if (pret == true) reset_confirm = temp;
+                }
+            }
+
+            if(reset_confirm == false)
+            {
+                return false;
+            }
+
+            ret = m_FanucRobotDevice.Write(m_ProductType, "0");
+            if (ret.IsSuccess == false) return false;
+
+            ret = m_FanucRobotDevice.Write(m_Quantity, "0");
+            if (ret.IsSuccess == false) return false;
+
+            ret = m_FanucRobotDevice.Write(m_OrderConfirm, "false");
+            if (ret.IsSuccess == false) return false;
             return true;
         }
 
@@ -270,6 +300,23 @@ namespace OrderDistribution
             if (pret == false) return false;
 
             quantity = temp;
+            return true;
+        }
+
+        public bool OrderDeviceReset()
+        {
+            var ret = m_FanucRobotDevice.Write(m_ProductType, "0");
+            if (ret.IsSuccess == false) return false;
+
+            ret = m_FanucRobotDevice.Write(m_Quantity, "0");
+            if (ret.IsSuccess == false) return false;
+            
+            ret = m_FanucRobotDevice.Write(m_OrderConfirm, "false");
+            if (ret.IsSuccess == false) return false;
+
+            ret = m_FanucRobotDevice.Write(m_OrderAlarm, "false");
+            if (ret.IsSuccess == false) return false;
+
             return true;
         }
     }
