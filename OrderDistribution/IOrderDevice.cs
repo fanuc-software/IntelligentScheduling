@@ -107,5 +107,12 @@ namespace OrderDistribution
         /// <param name="quantity">订单二次确认信号 true：确认； false：非确认</param>
         /// <returns>true：获得正常； false：获得异常</returns>
         bool GetOrderProcess(ref int quantity);
+
+        /// <summary>
+        /// 复位设备
+        /// </summary>
+        /// <param name="reset">订单下发复位 true：复位状态； false：非复位状态</param>
+        /// <returns>true：获得正常； false：获得异常</returns>
+        bool OrderDeviceReset();
     }
 }
