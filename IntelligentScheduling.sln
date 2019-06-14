@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAsset", "DeviceAsset\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRedis", "ConsoleRedis\ConsoleRedis.csproj", "{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModBusNetModBusTest", "ModBusNetModBusTest\ModBusNetModBusTest.csproj", "{18E400F8-1F81-499E-A565-39488B25D9B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
