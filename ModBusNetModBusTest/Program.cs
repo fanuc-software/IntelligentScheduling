@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Modbus.Net;
@@ -13,7 +11,7 @@ namespace ModBusNetModBusTest
     {
         static void Main(string[] args)
         {
-            var _modbusTcpMachine = new ModbusMachine(ModbusType.Tcp, "192.168.0.237", null, true, 2, 0);
+            var _modbusTcpMachine = new ModbusMachine(ModbusType.Tcp, "192.168.0.11", null, true, 2, 0);
 
             #region DO READ
             if (false)
@@ -161,52 +159,86 @@ namespace ModBusNetModBusTest
 
             #endregion
 
-            
-            CancellationTokenSource token = new CancellationTokenSource();
-            Task.Factory.StartNew(() =>
+            #region GI WRITE
+            if(true)
             {
-                var _modbusTcpMachine2 = new ModbusMachine(ModbusType.Tcp, "192.168.0.237", null, true, 2, 0);
+                var adr = "91";
+                ushort data = 0;
 
-                while (true)
+                int iAdr;
+                var ret = int.TryParse(adr, out iAdr);
+
+                for (int i = 0; i < 16; i++)
                 {
-                    
-                    if (true)
+                    var div_adr = "0X " + (iAdr + i).ToString();
+                    double div_data = data & (0x01 << i);
+
+                    var dic = new Dictionary<string, double>()
                     {
-                        var addresses = new List<AddressUnit>();
-                        for (int i = 0; i < 200; i++)
                         {
-                            addresses.Add(
-                                                new AddressUnit
-                                                {
-                                                    Id = i.ToString(),
-                                                    Area = "1X",
-                                                    Address = 1 + i,
-                                                    SubAddress = 0,
-                                                    CommunicationTag = "A" + i.ToString(),
-                                                    DataType = typeof(bool)
-                                                }
-                                );
+                            div_adr, div_data
                         }
+                    };
 
-                        _modbusTcpMachine2.GetAddresses = addresses;
-
-                        var ans = _modbusTcpMachine2.GetDatas(MachineGetDataType.Address)??new Dictionary<string, ReturnUnit>();
-                        
-                            foreach (var an in ans)
-                            {
-                            if (an.Value.PlcValue != 0)
-                            {
-                                Console.WriteLine(an.Key);
-                            }
-                            }
-                        Console.WriteLine(DateTime.Now);
-                    }
-
+                    ret = AsyncHelper.RunSync(() =>
+                        _modbusTcpMachine.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
                     
                 }
-                _modbusTcpMachine2.Disconnect();
 
-            }, token.Token);
+                Console.WriteLine("HERE");
+            }
+
+            #endregion
+
+            if (false)
+            {
+                CancellationTokenSource token = new CancellationTokenSource();
+                Task.Factory.StartNew(() =>
+                {
+                    var _modbusTcpMachine2 = new ModbusMachine(ModbusType.Tcp, "192.168.0.237", null, true, 2, 0);
+
+                    while (true)
+                    {
+
+                        if (true)
+                        {
+                            var addresses = new List<AddressUnit>();
+                            for (int i = 0; i < 200; i++)
+                            {
+                                addresses.Add(
+                                                    new AddressUnit
+                                                    {
+                                                        Id = i.ToString(),
+                                                        Area = "1X",
+                                                        Address = 1 + i,
+                                                        SubAddress = 0,
+                                                        CommunicationTag = "A" + i.ToString(),
+                                                        DataType = typeof(bool)
+                                                    }
+                                    );
+                            }
+
+                            _modbusTcpMachine2.GetAddresses = addresses;
+
+                            var ans = _modbusTcpMachine2.GetDatas(MachineGetDataType.Address) ?? new Dictionary<string, ReturnUnit>();
+
+                            foreach (var an in ans)
+                            {
+                                if (an.Value.PlcValue != 0)
+                                {
+                                    Console.WriteLine(an.Key);
+                                }
+                            }
+                            Console.WriteLine(DateTime.Now);
+                        }
+
+
+                    }
+                    _modbusTcpMachine2.Disconnect();
+
+                }, token.Token);
+            }
+
 
             _modbusTcpMachine.Disconnect();
             Console.ReadKey();

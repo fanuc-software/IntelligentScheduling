@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29006.145
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.MonitorUI", "WPF.MonitorUI\WPF.MonitorUI.csproj", "{FC58825F-5C74-4979-AD18-4DAA65318313}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRedis", "ConsoleRedis\ConsoleRedis.csproj", "{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModBusNetModBusTest", "ModBusNetModBusTest\ModBusNetModBusTest.csproj", "{18E400F8-1F81-499E-A565-39488B25D9B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WareHouse", "WareHouse\WareHouse.csproj", "{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{18E400F8-1F81-499E-A565-39488B25D9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18E400F8-1F81-499E-A565-39488B25D9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

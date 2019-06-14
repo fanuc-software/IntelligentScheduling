@@ -191,10 +191,12 @@ namespace DeviceAsset
 
             var div_adr = "0X " + iAdr.ToString();
 
+            double div_data = data == false ? 0 : 1;
+
             var dic = new Dictionary<string, double>()
             {
                 {
-                    div_adr, 0
+                    div_adr, div_data
                 }
             };
 
@@ -285,10 +287,42 @@ namespace DeviceAsset
             data = (ushort)(ans["LOWPART"].PlcValue + ans["HIGHPART"].PlcValue * 256);
             return true;
         }
-
-        //TODO:
+        
         private bool WriteGI(string adr, ushort data)
         {
+            int iAdr;
+            var ret = int.TryParse(adr, out iAdr);
+            if (ret != true) return ret;
+
+            for(int i=0;i<16;i++)
+            {
+                var div_adr = "0X " + (iAdr + i).ToString();
+                double div_data = data & (0x01 << i);
+
+                var dic = new Dictionary<string, double>()
+                {
+                    {
+                        div_adr, div_data
+                    }
+                };
+
+                ret = AsyncHelper.RunSync(() =>
+                    _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
+
+                if(ret!=true)
+                {
+                    return ret;
+                }
+
+            }
+
+
+
+
+
+
+            
+
             return true;
         }
     }
