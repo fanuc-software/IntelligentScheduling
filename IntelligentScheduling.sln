@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29006.145
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.MonitorUI", "WPF.MonitorUI\WPF.MonitorUI.csproj", "{FC58825F-5C74-4979-AD18-4DAA65318313}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderDistribution", "OrderDistribution\OrderDistribution.csproj", "{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAsset", "DeviceAsset\DeviceAsset.csproj", "{108A2162-2608-44CE-9CD6-6E3FA2E583F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleRedis", "ConsoleRedis\ConsoleRedis.csproj", "{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{108A2162-2608-44CE-9CD6-6E3FA2E583F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDCE97F5-C190-43F0-A46A-DE3F6C9C906A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

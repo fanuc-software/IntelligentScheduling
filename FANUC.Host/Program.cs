@@ -15,14 +15,15 @@ namespace FANUC.Host
         {
 
             Redis.RedisHelper<OrderItem> redisHelper = new Redis.RedisHelper<OrderItem>();
-            redisHelper.Update(new OrderItem()
+            redisHelper.Store(new OrderItem()
             {
 
-                Id = 1,
+                Id = "2",
                 CreateDateTime = DateTime.Now,
                 Quantity = 12300,
                 Type = 2
             });
+            redisHelper.Push("OrderItem", "2");
         }
 
 

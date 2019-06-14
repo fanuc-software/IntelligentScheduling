@@ -28,11 +28,18 @@ namespace FANUC.Host.Redis
             using (var redisClient = managerPool.GetClient())
             {
                 var redisTodo = redisClient.As<T>();
-                
+
                 redisTodo.Store(model);
             }
         }
 
+        public void Push(string channel,string message)
+        {
+            using (var redisClient = managerPool.GetClient())
+            {
+                redisClient.PublishMessage(channel, message);
+            }
+        }
         public void Update(T model)
         {
             using (var redisClient = managerPool.GetClient())
@@ -44,6 +51,16 @@ namespace FANUC.Host.Redis
                     redisTodo.Store(model);
 
                 }
+            }
+        }
+
+        public T Get(object id)
+        {
+            using (var redisClient = managerPool.GetClient())
+            {
+                var redisTodo = redisClient.As<T>();
+                return redisTodo.GetById(id);
+
             }
         }
 

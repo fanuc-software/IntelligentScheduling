@@ -15,7 +15,7 @@ namespace OrderDistribution
 
     public class BaseItem
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
 
     }
     public class OrderItem : BaseItem
