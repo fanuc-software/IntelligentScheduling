@@ -14,6 +14,7 @@ namespace WareHouse
 
         public LeftWareHouseService()
         {
+
         }
 
         public void Start()

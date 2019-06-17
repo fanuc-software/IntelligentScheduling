@@ -66,6 +66,10 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         bool GetCheckQuantity(ref int quantity);
 
+        bool SetCheckProductType(int ptype);
+
+        bool SetCheckQuantity(int quantity);
+
         /// <summary>
         /// 设定订单下发错误信息（软件）
         /// </summary>
@@ -86,6 +90,8 @@ namespace OrderDistribution
         /// <param name="reset">订单下发复位 true：复位状态； false：非复位状态</param>
         /// <returns>true：获得正常； false：获得异常</returns>
         bool GetOrderReset(ref bool reset);
+
+        bool SetOrderReset(bool reset);
 
         /// <summary>
         /// 设定订单二次确认信号

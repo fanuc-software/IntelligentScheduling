@@ -177,6 +177,16 @@ namespace OrderDistribution
             return true;
         }
 
+        public bool SetCheckProductType(int ptype)
+        {
+            return false;
+        }
+
+        public bool SetCheckQuantity(int quantity)
+        {
+            return false;
+        }
+
         /// <summary>
         /// 设定订单下发错误信息（软件）
         /// </summary>
@@ -224,6 +234,11 @@ namespace OrderDistribution
 
             reset = temp;
             return true;
+        }
+
+        public bool SetOrderReset(bool reset)
+        {
+            return false;
         }
 
         /// <summary>

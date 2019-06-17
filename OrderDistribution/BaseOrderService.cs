@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ namespace OrderDistribution
         public BaseOrderService(OrderServiceEnum orderServiceEnum)
         {
             ServiceEnum = orderServiceEnum;
+
         }
 
 
@@ -128,7 +130,8 @@ namespace OrderDistribution
                 ret = Device.GetOrderAllow(ref S_Order_AllowMES);
                 if (ret != true) return ret;
 
-                if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
+                //if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
+                if(S_Order_AllowMES == true)
                 {
                     //如果DOWORK订单为2个，将第一个的状态置为DONE
                     OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);
@@ -193,7 +196,6 @@ namespace OrderDistribution
                     if (ret == true)
                     {
                         //更新订单完成数量
-
                         UpdateOrderActualQuantityEvent?.Invoke(ServiceEnum, process);
                     }
                 }
@@ -207,39 +209,27 @@ namespace OrderDistribution
         private bool CheckOnBegin()
         {
             bool ret = false;
-
-            bool confirm = false;
-            ret = Device.GetOrderConfirm(ref confirm);
+            
+            ret = Device.SetOrderConfirm(false);
             if (ret != true) return ret;
-
-            int type = 0;
-            ret = Device.GetProductType(ref type);
+            
+            ret = Device.SetProductType(0);
             if (ret != true) return ret;
-
-            int quantity = 0;
-            ret = Device.GetQuantity(ref quantity);
+            
+            ret = Device.SetQuantity(0);
             if (ret != true) return ret;
-
-            int check_type = 0;
-            ret = Device.GetCheckProductType(ref check_type);
+            
+            ret = Device.SetCheckProductType(0);
             if (ret != true) return ret;
-
-            int check_quantity = 0;
-            ret = Device.GetCheckQuantity(ref check_quantity);
+            
+            ret = Device.SetCheckQuantity(0);
             if (ret != true) return ret;
-
-            bool reset = false;
-            ret = Device.GetOrderReset(ref reset);
+            
+            ret = Device.SetOrderReset(false);
             if (ret != true) return ret;
-
-            bool alarm = false;
-            ret = Device.GetOrderAlarm(ref alarm);
+            
+            ret = Device.SetOrderAlarm(false);
             if (ret != true) return ret;
-
-            if (confirm != false || type != 0 || quantity != 0 || check_type != 0 || check_quantity != 0 || reset != false || alarm != false)
-            {
-                return false;
-            }
 
             return true;
         }

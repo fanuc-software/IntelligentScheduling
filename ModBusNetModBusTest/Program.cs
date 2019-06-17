@@ -190,7 +190,8 @@ namespace ModBusNetModBusTest
 
             #endregion
 
-            if (true)
+            #region 连续读取
+            if (false)
             {
                 CancellationTokenSource token = new CancellationTokenSource();
                 Task.Factory.StartNew(() =>
@@ -239,6 +240,7 @@ namespace ModBusNetModBusTest
                 }, token.Token);
             }
 
+            #endregion
 
             _modbusTcpMachine.Disconnect();
             Console.ReadKey();

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModBusNetModBusTest", "ModB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WareHouse", "WareHouse\WareHouse.csproj", "{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{06F77AA6-BD37-4D03-88F3-34275DA4925B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F77AA6-BD37-4D03-88F3-34275DA4925B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F77AA6-BD37-4D03-88F3-34275DA4925B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F77AA6-BD37-4D03-88F3-34275DA4925B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F77AA6-BD37-4D03-88F3-34275DA4925B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
