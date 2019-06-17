@@ -160,10 +160,10 @@ namespace ModBusNetModBusTest
             #endregion
 
             #region GI WRITE
-            if(true)
+            if(false)
             {
-                var adr = "91";
-                ushort data = 0;
+                var adr = "81";
+                ushort data = 10;
 
                 int iAdr;
                 var ret = int.TryParse(adr, out iAdr);
@@ -190,12 +190,12 @@ namespace ModBusNetModBusTest
 
             #endregion
 
-            if (false)
+            if (true)
             {
                 CancellationTokenSource token = new CancellationTokenSource();
                 Task.Factory.StartNew(() =>
                 {
-                    var _modbusTcpMachine2 = new ModbusMachine(ModbusType.Tcp, "192.168.0.237", null, true, 2, 0);
+                    var _modbusTcpMachine2 = new ModbusMachine(ModbusType.Tcp, "192.168.0.11", null, true, 2, 0);
 
                     while (true)
                     {
