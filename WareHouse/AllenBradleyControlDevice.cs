@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DeviceAsset;
 
-namespace WareHouse
+namespace LeftMaterialService
 {
     public class AllenBradleyControlDevice :IControlDevice
     {
@@ -25,7 +25,7 @@ namespace WareHouse
 
         public AllenBradleyControlDevice()
         {
-            m_ABDevice = new AllenBradley("192.168.1.1", 80);
+            m_ABDevice = new AllenBradley("192.168.1.1", 44818);
 
             m_HouseRequestFCSConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
             m_HouseRequestFCSFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
@@ -33,11 +33,11 @@ namespace WareHouse
             m_HouseRequestInfoFCSFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
             m_HouseFCSAlarmConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
             m_HouseFCSResetConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_HouseProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_HouseMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_HouseProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "X6" };
+            m_HouseMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "X6" };
             m_HouseInOutConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "X6" };
-            m_HouseProductPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
-            m_HouseTrayPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.INT, DataAdr = "X6" };
+            m_HouseProductPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "X6" };
+            m_HouseTrayPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "X6" };
         }
 
         public bool Temp_S_House_RequestFCS_Last { get; set; }

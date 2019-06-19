@@ -2,17 +2,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WareHouse
+namespace LeftMaterialService
 {
-    public abstract class LeftWareHouseService
+    public abstract class LeftMaterialService
     {
         public abstract IControlDevice ControlDevice { get; }
 
-        public abstract IWareHouse WareHouse { get; }
+        public abstract IWareHouseClient WareHouse { get; }
 
         CancellationTokenSource token = new CancellationTokenSource();
 
-        public LeftWareHouseService()
+        public LeftMaterialService()
         {
 
         }
@@ -35,8 +35,8 @@ namespace WareHouse
                     while (ret == false)
                     {
                         ret = ControlDevice.SetHouseFCSAlarm(true);
-                        SendLeftWareHouseServiceStateMessage(
-                            new LeftWareHouseServiceState { State = LeftWareHouseServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
+                        SendLeftMaterialServiceStateMessage(
+                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
                         Thread.Sleep(1000);
                     }
 
@@ -45,8 +45,8 @@ namespace WareHouse
                     while (dev_reset == false)
                     {
                         ControlDevice.GetHouseFCSReset(ref dev_reset);
-                        SendLeftWareHouseServiceStateMessage(
-                            new LeftWareHouseServiceState { State = LeftWareHouseServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
+                        SendLeftMaterialServiceStateMessage(
+                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
                         Thread.Sleep(1000);
                     }
                 }
@@ -58,14 +58,14 @@ namespace WareHouse
                 {
 
                     //料库请求
-                    ret = LeftWareHouseFlow();
+                    ret = LeftMaterialFlow();
                     if (ret == false)
                     {
                         while (ret == false)
                         {
                             ret = ControlDevice.SetHouseFCSAlarm(true);
-                            SendLeftWareHouseServiceStateMessage(
-                                new LeftWareHouseServiceState { State = LeftWareHouseServiceStateEnum.ERROR, Message = "左侧料库请求或者调用失败,发送错误信息至设备!" });
+                            SendLeftMaterialServiceStateMessage(
+                                new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "左侧料库请求或者调用失败,发送错误信息至设备!" });
                             Thread.Sleep(1000);
                         }
 
@@ -74,8 +74,8 @@ namespace WareHouse
                         while (dev_reset == false)
                         {
                             ControlDevice.GetHouseFCSReset(ref dev_reset);
-                            SendLeftWareHouseServiceStateMessage(
-                                new LeftWareHouseServiceState { State = LeftWareHouseServiceStateEnum.INFO, Message = "左侧料库请求或者调用失败,等待设备的复位信号" });
+                            SendLeftMaterialServiceStateMessage(
+                                new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "左侧料库请求或者调用失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
                         }
 
@@ -100,12 +100,12 @@ namespace WareHouse
         }
 
         //TODO
-        private void SendLeftWareHouseServiceStateMessage(LeftWareHouseServiceState state)
+        private void SendLeftMaterialServiceStateMessage(LeftMaterialServiceState state)
         {
 
         }
 
-        private bool LeftWareHouseFlow()
+        private bool LeftMaterialFlow()
         {
             bool ret = false;
 
@@ -135,7 +135,7 @@ namespace WareHouse
 
                 if(S_House_InOut==true)
                 {
-                    var ret_out = LeftWareHouseOutFlow();
+                    var ret_out = LeftMaterialOutFlow();
                     if (ret_out == false)
                     {
                         return ret_out;
@@ -143,7 +143,7 @@ namespace WareHouse
                 }
                 else
                 {
-                    var ret_in = LeftWareHouseInFlow();
+                    var ret_in = LeftMaterialInFlow();
                     if (ret_in == false)
                     {
                         return ret_in;
@@ -194,7 +194,7 @@ namespace WareHouse
             return true;
         }
 
-        private bool LeftWareHouseOutFlow()
+        private bool LeftMaterialOutFlow()
         {
             int S_House_ProductType = 0;
             var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
@@ -210,21 +210,22 @@ namespace WareHouse
                 return ret_material_type;
             }
 
-            int S_House_ProductPosition = 0;
-            int S_House_TrayPosition = 0;
-            var ret_warehouse_info = WareHouse.GetHousePosition(S_House_ProductType, S_House_MaterialType, 
-                ref S_House_ProductPosition, ref S_House_TrayPosition);
-            if (ret_warehouse_info == false)
-            {
-                return ret_warehouse_info;
-            }
-
-            var ret_moveout = WareHouse.MoveOutHouseTray();
+            var ret_moveout = WareHouse.MoveOutHouseTray(S_House_ProductType, S_House_MaterialType);
             if (ret_moveout == false)
             {
                 return ret_moveout;
             }
 
+            int S_House_ProductPosition = 0;
+            int S_House_TrayPosition = 0;
+            var ret_warehouse_info = WareHouse.GetHousePosition(S_House_ProductType, S_House_MaterialType,
+                out S_House_ProductPosition, out S_House_TrayPosition);
+            if (ret_warehouse_info == false)
+            {
+                return ret_warehouse_info;
+            }
+
+            
             var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
             if (ret_warehouse_product_position == false)
             {
@@ -262,7 +263,7 @@ namespace WareHouse
                 }
             }
 
-            var ret_data_input =  WareHouse.HouseDataInputRequest();
+            var ret_data_input = WareHouse.HouseDataInputRequest(S_House_ProductType, S_House_MaterialType, true);
             if (ret_data_input == false)
             {
                 return false;
@@ -277,7 +278,7 @@ namespace WareHouse
             return true;
         }
 
-        private bool LeftWareHouseInFlow()
+        private bool LeftMaterialInFlow()
         {
             int S_House_ProductType = 0;
             var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
@@ -293,21 +294,21 @@ namespace WareHouse
                 return ret_material_type;
             }
 
-            int S_House_ProductPosition = 0;
-            int S_House_TrayPosition = 0;
-            var ret_warehouse_info = WareHouse.GetHousePosition(S_House_ProductType, S_House_MaterialType,
-                ref S_House_ProductPosition, ref S_House_TrayPosition);
-            if (ret_warehouse_info == false)
-            {
-                return ret_warehouse_info;
-            }
-
-            var ret_movein = WareHouse.MoveInHouseTray();
+            var ret_movein = WareHouse.MoveInHouseTray(S_House_ProductType, S_House_MaterialType);
             if (ret_movein == false)
             {
                 return ret_movein;
             }
 
+            int S_House_ProductPosition = 0;
+            int S_House_TrayPosition = 0;
+            var ret_warehouse_info = WareHouse.GetHousePosition(S_House_ProductType, S_House_MaterialType,
+                out S_House_ProductPosition, out S_House_TrayPosition);
+            if (ret_warehouse_info == false)
+            {
+                return ret_warehouse_info;
+            }
+            
             var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
             if (ret_warehouse_product_position == false)
             {
@@ -345,7 +346,7 @@ namespace WareHouse
                 }
             }
 
-            var ret_data_input = WareHouse.HouseDataInputRequest();
+            var ret_data_input = WareHouse.HouseDataInputRequest(S_House_ProductType, S_House_MaterialType, false);
             if (ret_data_input == false)
             {
                 return false;

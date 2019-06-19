@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Modbus.Net;
 using Modbus.Net.Modbus;
+using WareHouse;
 
 namespace ModBusNetModBusTest
 {
@@ -11,6 +13,8 @@ namespace ModBusNetModBusTest
     {
         static void Main(string[] args)
         {
+
+
             var _modbusTcpMachine = new ModbusMachine(ModbusType.Tcp, "192.168.0.11", null, true, 2, 0);
 
             #region DO READ

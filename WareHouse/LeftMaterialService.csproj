@@ -51,9 +51,9 @@
   <ItemGroup>
     <Compile Include="AllenBradleyControlDevice.cs" />
     <Compile Include="IControlDevice.cs" />
-    <Compile Include="IWareHouse.cs" />
-    <Compile Include="BaseLeftWareHouseService.cs" />
-    <Compile Include="LeftWareHouseServiceState.cs" />
+    <Compile Include="IWareHouseClient.cs" />
+    <Compile Include="BaseLeftMaterialService.cs" />
+    <Compile Include="LeftMaterialServiceState.cs" />
     <Compile Include="ModulaHouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

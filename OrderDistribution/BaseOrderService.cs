@@ -10,7 +10,7 @@ namespace OrderDistribution
         OrderDistribution
     }
 
-    public abstract class BaseOrderService
+    public class BaseOrderService
     {
 
         public  event Action<OrderItem, OrderServiceEnum, int> OrderStateChangeEvent;
@@ -19,13 +19,22 @@ namespace OrderDistribution
 
         public OrderServiceEnum ServiceEnum;
 
-        public abstract IOrderDevice Device { get; }
+        //public abstract IOrderDevice Device { get; }
+        public IOrderDevice Device { get; set; }
+
         CancellationTokenSource token = new CancellationTokenSource();
+        List<OrderItem> orders = new List<OrderItem>();
+        int orders_index = 0;
 
         public BaseOrderService(OrderServiceEnum orderServiceEnum)
         {
             ServiceEnum = orderServiceEnum;
 
+            Device = new AllenBradleyDevice();
+            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 10, CreateDateTime = DateTime.Now });
+            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 20, CreateDateTime = DateTime.Now });
+            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 30, CreateDateTime = DateTime.Now });
+            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 40, CreateDateTime = DateTime.Now });
         }
 
 
@@ -130,11 +139,11 @@ namespace OrderDistribution
                 ret = Device.GetOrderAllow(ref S_Order_AllowMES);
                 if (ret != true) return ret;
 
-                //if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
-                if(S_Order_AllowMES == true)
+                if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
+                //if(S_Order_AllowMES == true)
                 {
                     //如果DOWORK订单为2个，将第一个的状态置为DONE
-                    OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);
+                    //OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);//test
 
                     //防错处理
                     ret = CheckOnBegin();
@@ -145,7 +154,9 @@ namespace OrderDistribution
                     }
 
                     //下单
-                    var first_order = GetFirstOrderEvent?.Invoke(ServiceEnum);
+                    //var first_order = GetFirstOrderEvent?.Invoke(ServiceEnum);//test
+                    orders_index = orders_index >= orders.Count ? 0 : orders_index;
+                    var first_order = orders[orders_index];
                     if (first_order == null)
                     {
                         return true;
@@ -182,8 +193,8 @@ namespace OrderDistribution
                         if (ret != true) return ret;
 
                         //变更软件订单状态
-                        first_order.State = OrderItemStateEnum.DOWORK;
-                        OrderStateChangeEvent?.Invoke(first_order, ServiceEnum, 0);
+                        //first_order.State = OrderItemStateEnum.DOWORK;//test
+                        //OrderStateChangeEvent?.Invoke(first_order, ServiceEnum, 0);
                         
                     }
                 }
@@ -196,7 +207,7 @@ namespace OrderDistribution
                     if (ret == true)
                     {
                         //更新订单完成数量
-                        UpdateOrderActualQuantityEvent?.Invoke(ServiceEnum, process);
+                        //UpdateOrderActualQuantityEvent?.Invoke(ServiceEnum, process);//test
                     }
                 }
 

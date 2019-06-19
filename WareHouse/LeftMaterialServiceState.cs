@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WareHouse
+namespace LeftMaterialService
 {
 
-    public enum LeftWareHouseServiceStateEnum
+    public enum LeftMaterialServiceStateEnum
     {
         OFF,
         FATAL,
@@ -17,9 +17,9 @@ namespace WareHouse
         DEBUG
     }
 
-    public class LeftWareHouseServiceState
+    public class LeftMaterialServiceState
     {
-        public LeftWareHouseServiceStateEnum State { get; set; }
+        public LeftMaterialServiceStateEnum State { get; set; }
 
         public string Message { get; set; }
     }
