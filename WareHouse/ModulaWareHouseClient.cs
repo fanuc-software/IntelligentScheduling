@@ -16,7 +16,7 @@ namespace LeftMaterialService
             m_Modula = new ModulaClient("192.168.1.22", 102);
         }
 
-        public bool GetHousePosition(int product_type, int material_type, out int product_position, out int tray_position)
+        public bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position)
         {
             product_position = 0;
             tray_position = 0;
@@ -52,7 +52,7 @@ namespace LeftMaterialService
 
         }
 
-        public bool MoveOutHouseTray(int product_type, int material_type)
+        public bool MoveOutTray(int product_type, int material_type)
         {
             var message = "PART=" + material_type.ToString().PadLeft(25, ' ') + "11";
             
@@ -78,7 +78,7 @@ namespace LeftMaterialService
             }
         }
         
-        public bool MoveInHouseTray(int product_type, int material_type)
+        public bool MoveInTray(int product_type, int material_type)
         {
             var message = "RVART=" + material_type.ToString().PadLeft(25, ' ') + "11";
 
@@ -104,7 +104,7 @@ namespace LeftMaterialService
             }
         }
 
-        public bool HouseDataInputRequest(int product_type, int material_type, bool in_out)
+        public bool WriteBackData(int product_type, int material_type, bool in_out)
         {
             var message = "VART=" + material_type.ToString().PadLeft(25, ' ') + (in_out ? "V1" : "P1");
 
@@ -114,7 +114,7 @@ namespace LeftMaterialService
             
         }
 
-        public bool ResetHouseTray()
+        public bool ResetTray()
         {
             var message = "FPICK=1";
 
@@ -138,6 +138,11 @@ namespace LeftMaterialService
             {
                 return false;
             }
+        }
+
+        public bool ReleaseWriterLock()
+        {
+            return true;
         }
     }
 }

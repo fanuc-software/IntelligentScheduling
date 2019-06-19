@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Modbus.Net;
 using Modbus.Net.Modbus;
-using WareHouse;
 
 namespace ModBusNetModBusTest
 {

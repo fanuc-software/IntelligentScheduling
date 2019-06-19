@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{A1B3305F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeTest", "CodeTest", "{1FADABD8-245C-4E22-9878-931CBBFE5413}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgvStationClient", "AgvStationClient\AgvStationClient.csproj", "{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{943BEBC8-E05E-417F-9273-FFD1F2E10D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{943BEBC8-E05E-417F-9273-FFD1F2E10D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{943BEBC8-E05E-417F-9273-FFD1F2E10D31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{06F77AA6-BD37-4D03-88F3-34275DA4925B} = {1FADABD8-245C-4E22-9878-931CBBFE5413}
 		{D1C2A203-E904-451D-874A-301F9E1448C9} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
 		{943BEBC8-E05E-417F-9273-FFD1F2E10D31} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
+		{B6CFADBB-3199-4DBC-B058-AA83C99C0B19} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45B6882A-9624-4C65-AC8B-669A2C6C0558}

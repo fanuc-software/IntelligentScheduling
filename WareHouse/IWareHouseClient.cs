@@ -8,15 +8,17 @@ namespace LeftMaterialService
 {
     public interface IWareHouseClient
     {
-        bool GetHousePosition(int product_type, int material_type, out int product_position, out int tray_position);
+        bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position);
 
-        bool MoveOutHouseTray(int product_type, int material_type);
+        bool MoveOutTray(int product_type, int material_type);
 
-        bool MoveInHouseTray(int product_type, int material_type);
+        bool MoveInTray(int product_type, int material_type);
 
-        bool HouseDataInputRequest(int product_type, int material_type, bool in_out);
+        bool WriteBackData(int product_type, int material_type, bool in_out);
 
-        bool ResetHouseTray();
+        bool ResetTray();
+
+        bool ReleaseWriterLock();
 
     }
 }

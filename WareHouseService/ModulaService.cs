@@ -1,14 +1,174 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using DeviceAsset;
 
 namespace WareHouseService
 {
-    public class ModulaService
+    [System.Runtime.Remoting.Contexts.Synchronization]
+    public class ModulaService : System.ContextBoundObject, IWareHouseService
     {
-        private Queue<>
+        private string m_client;
+        static object obj = new object();
+        private static ReaderWriterLock m_readerWriterLock = new ReaderWriterLock();
+
+        private ModulaClient m_Modula;
+
+        public event Action<string> ServiceInfoEvent;
+
+        public ModulaService(string client,string ip, ushort port)
+        {
+            m_client = client;
+
+            m_Modula = new ModulaClient(ip, port);
+            m_readerWriterLock.AcquireWriterLock(100000);
+        }
+
+        public WareHouseResult GetPositionInfo(WareHousePara para)
+        {
+            ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【GetPositionInfo】 {DateTime.Now}");
+
+            var result = new WareHouseResult() { IsSuccessed = false };
+
+            var message = "?DPICK";
+
+            var ret = m_Modula.Send(message);
+            if (ret.Item1 == false)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            if (ret.Item2.Count() < 34)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            string toolCode = (ret.Item2.Substring(0, 25)).Trim();//刀具编号
+            string trayCode = (ret.Item2.Substring(25, 4)).Trim();//托盘编号
+            string count = (ret.Item2.Substring(29, 4)).Trim();//数量
+            string mode = (ret.Item2.Substring(33, 1)).Trim();//模式P:拿 V：取
+            string position = (ret.Item2.Substring(34, 2)).Trim();//
+
+            int material_position;
+            int tray_position;
+            var prod_ret = int.TryParse(toolCode, out material_position);
+            var tray_ret = int.TryParse(trayCode, out tray_position);
+
+            if (prod_ret == false || tray_ret == false)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            return new WareHouseResult() { IsSuccessed = true, Result1 = tray_position, Result2 = material_position };
+        }
+
+        public WareHouseResult MoveOutTray(WareHousePara para)
+        {
+            ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveOutTray】 {DateTime.Now}");
+
+            var message = "PART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
+
+            var ret = m_Modula.Send(message);
+            if (ret.Item1 == false)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            if (ret.Item2.Count() < 34)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            var ok_back = ret.Item2.ElementAt(33);
+            if (ok_back == '0')
+            {
+                return new WareHouseResult() { IsSuccessed = true };
+            }
+            else
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+        }
+
+        public WareHouseResult MoveInTray(WareHousePara para)
+        {
+            ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveInTray】 {DateTime.Now}");
+
+            var message = "RVART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
+
+            var ret = m_Modula.Send(message);
+            if (ret.Item1 == false)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            if (ret.Item2.Count() < 35)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            var ok_back = ret.Item2.ElementAt(34);
+            if (ok_back == '0')
+            {
+                return new WareHouseResult() { IsSuccessed = true };
+            }
+            else
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+        }
+
+        public WareHouseResult WriteBackData(WareHousePara para)
+        {
+
+            ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【WriteBackData】 {DateTime.Now}");
+
+            var message = "VART=" + para.Material_Type.ToString().PadLeft(25, ' ') + (para.In_Out ? "V1" : "P1");
+
+            var ret = m_Modula.Send(message);
+
+            return new WareHouseResult() { IsSuccessed = true };
+
+        }
+
+        public WareHouseResult ResetTray(WareHousePara para)
+        {
+            ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【ResetTray】 {DateTime.Now}");
+
+            var message = "FPICK=1";
+
+            var ret = m_Modula.Send(message);
+            if (ret.Item1 == false)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            if (ret.Item2.Count() < 10)
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+
+            var ok_back = ret.Item2.Substring(8, 2);
+            if (ok_back == "10")
+            {
+                return new WareHouseResult() { IsSuccessed = true };
+            }
+            else
+            {
+                return new WareHouseResult() { IsSuccessed = false };
+            }
+        }
+
+        public WareHouseResult ReleaseWriterLock(WareHousePara para)
+        {
+            m_readerWriterLock.ReleaseWriterLock();
+
+            return new WareHouseResult { IsSuccessed = true };
+        }
 
     }
 }
