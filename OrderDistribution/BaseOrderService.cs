@@ -120,7 +120,7 @@ namespace OrderDistribution
             bool mode = false;
             ret = Device.GetOrderMode(ref mode);
             if (ret != true) return ret;
-
+         
             if (mode == true)
             {
                 bool S_Order_AllowMES = false;
@@ -130,6 +130,7 @@ namespace OrderDistribution
                 //if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
                 if(S_Order_AllowMES == true)
                 {
+                   
                     //如果DOWORK订单为2个，将第一个的状态置为DONE
                     OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);//test
 
