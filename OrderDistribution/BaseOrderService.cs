@@ -127,8 +127,8 @@ namespace OrderDistribution
                 ret = Device.GetOrderAllow(ref S_Order_AllowMES);
                 if (ret != true) return ret;
 
-                if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
-                //if(S_Order_AllowMES == true)
+                //if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
+                if(S_Order_AllowMES == true)
                 {
                     //如果DOWORK订单为2个，将第一个的状态置为DONE
                     OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);//test

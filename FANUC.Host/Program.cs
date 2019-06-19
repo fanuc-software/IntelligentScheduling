@@ -14,8 +14,8 @@ namespace FANUC.Host
         static void Main(string[] args)
         {
 
-            //  Device();
-            MoitorTest();
+              Device();
+            //MoitorTest();
 
             Console.ReadLine();
         }
@@ -59,6 +59,9 @@ namespace FANUC.Host
 
         static void Device()
         {
+            Redis.RedisHelper<OrderItem> redisHelper = new Redis.RedisHelper<OrderItem>();
+            redisHelper.DeleteAll();
+
             OrderDistributionService srv = new OrderDistributionService(OrderServiceEnum.OrderDistribution);
             srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
             srv.OrderStateChangeEvent += Srv_OrderStateChangeEvent;
@@ -89,10 +92,10 @@ namespace FANUC.Host
                 obj.ActualQuantity = arg2;
                 redisHelper.Update(obj);
                 redisHelper.Push(obj.Id);
-                Console.WriteLine();
-                Console.WriteLine("=================UpdateOrderActualQuantity=====================Start");
-                Console.WriteLine(obj);
-                Console.WriteLine("=================UpdateOrderActualQuantity=====================End");
+                //Console.WriteLine();
+                //Console.WriteLine("=================UpdateOrderActualQuantity=====================Start");
+                //Console.WriteLine(obj);
+                //Console.WriteLine("=================UpdateOrderActualQuantity=====================End");
 
             }
 
