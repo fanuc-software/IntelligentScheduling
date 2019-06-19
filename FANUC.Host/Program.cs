@@ -14,19 +14,46 @@ namespace FANUC.Host
         static void Main(string[] args)
         {
 
-            Device();
-            Console.WriteLine("OrderDistributionService 运行中........");
-            Console.WriteLine("输入 【exit】 退出........");
+            //  Device();
+            MoitorTest();
 
-            while (true)
+            Console.ReadLine();
+        }
+        static void MoitorTest()
+        {
+            Task.Factory.StartNew(() =>
             {
-               var key= Console.ReadLine();
-                if (key == "exit")
-                {
-                    return;
-                }
-                Console.WriteLine("输入 【exit】 退出");
-            }
+
+                var host = new MonitorHost("Task1");
+                host.ConsoleInfoEvent += (s) => Console.WriteLine(s);
+                host.StepA();
+                host.StepB();
+                host.StepC();
+             
+            });
+
+            Task.Factory.StartNew(() =>
+            {
+
+                var host = new MonitorHost("Task2");
+
+                host.ConsoleInfoEvent += (s) => Console.WriteLine(s);
+                host.StepA();
+                host.StepB();
+                host.StepC();
+            });
+
+            Task.Factory.StartNew(() =>
+            {
+
+                var host = new MonitorHost("Task3");
+
+                host.ConsoleInfoEvent += (s) => Console.WriteLine(s);
+                host.StepA();
+                host.StepB();
+                host.StepC();
+                //    Thread.Sleep(1000);
+            });
 
         }
 
@@ -39,6 +66,18 @@ namespace FANUC.Host
             srv.SendOrderServiceStateMessage += (s) => Console.WriteLine(s);
             srv.Start();
 
+            Console.WriteLine("OrderDistributionService 运行中........");
+            Console.WriteLine("输入 【exit】 退出........");
+
+            while (true)
+            {
+                var key = Console.ReadLine();
+                if (key == "exit")
+                {
+                    return;
+                }
+                Console.WriteLine("输入 【exit】 退出");
+            }
         }
 
         private static void Srv_UpdateOrderActualQuantityEvent(OrderServiceEnum arg1, int arg2)
@@ -102,7 +141,7 @@ namespace FANUC.Host
                 Console.WriteLine(obj);
                 Console.WriteLine("==============GetFirstOrder======End");
             }
-           
+
             return obj;
         }
     }
