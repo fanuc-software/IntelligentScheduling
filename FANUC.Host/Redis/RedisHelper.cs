@@ -14,9 +14,12 @@ namespace FANUC.Host.Redis
     {
         RedisManagerPool managerPool;
         static string host;
+        static string channel;
+
         static RedisHelper()
         {
             host = ConfigurationManager.AppSettings["RedisHost"];
+            channel = ConfigurationManager.AppSettings["RedisChannel"];
         }
         public RedisHelper()
         {
@@ -33,7 +36,7 @@ namespace FANUC.Host.Redis
             }
         }
 
-        public void Push(string channel,string message)
+        public void Push(string message)
         {
             using (var redisClient = managerPool.GetClient())
             {
@@ -63,7 +66,15 @@ namespace FANUC.Host.Redis
 
             }
         }
+        public IEnumerable<T> GetAll()
+        {
+            using (var redisClient = managerPool.GetClient())
+            {
+                var redisTodo = redisClient.As<T>();
+                return redisTodo.GetAll();
 
+            }
+        }
         public void DeleteAll()
         {
             using (var redisClient = managerPool.GetClient())

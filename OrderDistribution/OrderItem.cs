@@ -24,8 +24,14 @@ namespace OrderDistribution
 
         public int Quantity { get; set; }
 
+        public int ActualQuantity { get; set; }
         public OrderItemStateEnum State { get; set; }
 
         public DateTime CreateDateTime { get; set; }
+
+        public override string ToString()
+        {
+            return $"Id:{Id},Type:{Type},Quantiry:{Quantity},ActualQuantity:{ActualQuantity},State:{State},Time:{CreateDateTime},CurrentTime:{DateTime.Now}";
+        }
     }
 }

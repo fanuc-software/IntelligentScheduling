@@ -10,31 +10,24 @@ namespace OrderDistribution
         OrderDistribution
     }
 
-    public class BaseOrderService
+    public abstract class BaseOrderService
     {
 
         public  event Action<OrderItem, OrderServiceEnum, int> OrderStateChangeEvent;
         public  event Func<OrderServiceEnum, OrderItem> GetFirstOrderEvent;
         public  event Action<OrderServiceEnum, int> UpdateOrderActualQuantityEvent;
-
+        public event Action<OrderServiceState> SendOrderServiceStateMessage;
         public OrderServiceEnum ServiceEnum;
 
-        //public abstract IOrderDevice Device { get; }
-        public IOrderDevice Device { get; set; }
+        public abstract IOrderDevice Device { get; }
 
         CancellationTokenSource token = new CancellationTokenSource();
-        List<OrderItem> orders = new List<OrderItem>();
-        int orders_index = 0;
-
+  
         public BaseOrderService(OrderServiceEnum orderServiceEnum)
         {
             ServiceEnum = orderServiceEnum;
 
-            Device = new AllenBradleyDevice();
-            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 10, CreateDateTime = DateTime.Now });
-            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 20, CreateDateTime = DateTime.Now });
-            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 30, CreateDateTime = DateTime.Now });
-            orders.Add(new OrderItem { State = OrderItemStateEnum.NEW, Type = 1, Quantity = 40, CreateDateTime = DateTime.Now });
+
         }
 
 
@@ -56,7 +49,7 @@ namespace OrderDistribution
                     while (ret == false)
                     {
                         ret = Device.SetOrderAlarm(true);
-                        SendOrderServiceStateMessage(
+                        SendOrderServiceStateMessage?.Invoke(
                             new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
                         Thread.Sleep(1000);
                     }
@@ -66,7 +59,7 @@ namespace OrderDistribution
                     while (dev_reset == false)
                     {
                         Device.GetOrderReset(ref dev_reset);
-                        SendOrderServiceStateMessage(
+                        SendOrderServiceStateMessage?.Invoke(
                             new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
                         Thread.Sleep(1000);
                     }
@@ -85,7 +78,7 @@ namespace OrderDistribution
                         while (ret == false)
                         {
                             ret = Device.SetOrderAlarm(true);
-                            SendOrderServiceStateMessage(
+                            SendOrderServiceStateMessage?.Invoke(
                                 new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "订单下发失败,发送错误信息至设备!" });
                             Thread.Sleep(1000);
                         }
@@ -95,7 +88,7 @@ namespace OrderDistribution
                         while (dev_reset == false)
                         {
                             Device.GetOrderReset(ref dev_reset);
-                            SendOrderServiceStateMessage(
+                            SendOrderServiceStateMessage?.Invoke(
                                 new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "订单下发失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
                         }
@@ -119,12 +112,7 @@ namespace OrderDistribution
 
         }
 
-        //TODO
-        private void SendOrderServiceStateMessage(OrderServiceState state)
-        {
-
-        }
-
+       
         private bool OrderService()
         {
             bool ret = false;
@@ -143,7 +131,7 @@ namespace OrderDistribution
                 //if(S_Order_AllowMES == true)
                 {
                     //如果DOWORK订单为2个，将第一个的状态置为DONE
-                    //OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);//test
+                    OrderStateChangeEvent?.Invoke(null, ServiceEnum,-1);//test
 
                     //防错处理
                     ret = CheckOnBegin();
@@ -154,9 +142,8 @@ namespace OrderDistribution
                     }
 
                     //下单
-                    //var first_order = GetFirstOrderEvent?.Invoke(ServiceEnum);//test
-                    orders_index = orders_index >= orders.Count ? 0 : orders_index;
-                    var first_order = orders[orders_index];
+                    var first_order = GetFirstOrderEvent?.Invoke(ServiceEnum);//test
+            
                     if (first_order == null)
                     {
                         return true;
@@ -193,9 +180,9 @@ namespace OrderDistribution
                         if (ret != true) return ret;
 
                         //变更软件订单状态
-                        //first_order.State = OrderItemStateEnum.DOWORK;//test
-                        //OrderStateChangeEvent?.Invoke(first_order, ServiceEnum, 0);
-                        
+                        first_order.State = OrderItemStateEnum.DOWORK;//test
+                        OrderStateChangeEvent?.Invoke(first_order, ServiceEnum, 0);
+
                     }
                 }
                 else
@@ -207,7 +194,7 @@ namespace OrderDistribution
                     if (ret == true)
                     {
                         //更新订单完成数量
-                        //UpdateOrderActualQuantityEvent?.Invoke(ServiceEnum, process);//test
+                        UpdateOrderActualQuantityEvent?.Invoke(ServiceEnum, process);//test
                     }
                 }
 
