@@ -99,6 +99,62 @@ namespace AgvStationClient
         /// <param name="reset">true:允许；false：不允许</param>
         /// <returns>true：读取正常； false：读取异常</returns>
         bool CheckEmptyInAllow(ref bool empty_in);
-        
+
+        /// <summary>
+        /// 获得毛坯种类
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetRawInProductType(ref string type);
+
+        /// <summary>
+        /// 获得毛坯物料类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetRawInMaterialType(ref string type);
+
+        /// <summary>
+        /// 获得成品空箱种类
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetEmptyInProductType(ref string type);
+
+        /// <summary>
+        /// 获得成品空箱物料类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetEmptyInMaterialType(ref string type);
+
+        /// <summary>
+        /// 获得毛坯空箱回库种类
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetEmptyOutProductType(ref string type);
+
+        /// <summary>
+        /// 获得毛坯空箱回库物料类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetEmptyOutMaterialType(ref string type);
+
+        /// <summary>
+        /// 获得成品回库种类
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetFinOutProductType(ref string type);
+
+        /// <summary>
+        /// 获得成品回库物料类型
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <returns>true：读取正常； false：读取异常</returns>
+        bool GetFinOutMaterialType(ref string type);
+
     }
 }

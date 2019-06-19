@@ -42,7 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRightMaterialService.cs" />
+    <Compile Include="RightMaterialServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RightMaterialInMisson.cs" />
+    <Compile Include="RightMaterialMissionTypeEnum.cs" />
+    <Compile Include="RightMaterialOutMisson.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

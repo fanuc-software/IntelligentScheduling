@@ -51,16 +51,22 @@
   <ItemGroup>
     <Compile Include="AllenBradleyControlDevice.cs" />
     <Compile Include="IControlDevice.cs" />
+    <Compile Include="INewWareHouseClient.cs" />
     <Compile Include="IWareHouseClient.cs" />
     <Compile Include="BaseLeftMaterialService.cs" />
     <Compile Include="LeftMaterialServiceState.cs" />
-    <Compile Include="ModulaHouse.cs" />
+    <Compile Include="ModulaWareHouseClient.cs" />
+    <Compile Include="NewModulaWareHouseClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
       <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
       <Name>DeviceAsset</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WareHouseService\WareHouseService.csproj">
+      <Project>{d1c2a203-e904-451d-874a-301f9e1448c9}</Project>
+      <Name>WareHouseService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
