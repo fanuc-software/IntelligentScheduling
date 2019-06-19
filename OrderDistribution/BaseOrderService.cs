@@ -16,7 +16,7 @@ namespace OrderDistribution
         public  event Action<OrderItem, OrderServiceEnum, int> OrderStateChangeEvent;
         public  event Func<OrderServiceEnum, OrderItem> GetFirstOrderEvent;
         public  event Action<OrderServiceEnum, int> UpdateOrderActualQuantityEvent;
-
+        public event Action<OrderServiceState> SendOrderServiceStateMessage;
         public OrderServiceEnum ServiceEnum;
 
         public abstract IOrderDevice Device { get; }
@@ -47,7 +47,7 @@ namespace OrderDistribution
                     while (ret == false)
                     {
                         ret = Device.SetOrderAlarm(true);
-                        SendOrderServiceStateMessage(
+                        SendOrderServiceStateMessage?.Invoke(
                             new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
                         Thread.Sleep(1000);
                     }
@@ -57,7 +57,7 @@ namespace OrderDistribution
                     while (dev_reset == false)
                     {
                         Device.GetOrderReset(ref dev_reset);
-                        SendOrderServiceStateMessage(
+                        SendOrderServiceStateMessage?.Invoke(
                             new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
                         Thread.Sleep(1000);
                     }
@@ -76,7 +76,7 @@ namespace OrderDistribution
                         while (ret == false)
                         {
                             ret = Device.SetOrderAlarm(true);
-                            SendOrderServiceStateMessage(
+                            SendOrderServiceStateMessage?.Invoke(
                                 new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "订单下发失败,发送错误信息至设备!" });
                             Thread.Sleep(1000);
                         }
@@ -86,7 +86,7 @@ namespace OrderDistribution
                         while (dev_reset == false)
                         {
                             Device.GetOrderReset(ref dev_reset);
-                            SendOrderServiceStateMessage(
+                            SendOrderServiceStateMessage?.Invoke(
                                 new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "订单下发失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
                         }
@@ -110,12 +110,7 @@ namespace OrderDistribution
 
         }
 
-        //TODO
-        private void SendOrderServiceStateMessage(OrderServiceState state)
-        {
-
-        }
-
+       
         private bool OrderService()
         {
             bool ret = false;

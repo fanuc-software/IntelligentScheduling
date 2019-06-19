@@ -19,6 +19,6 @@ namespace OrderDistribution
 
         }
 
-        //public override IOrderDevice Device => new AllenBradleyDevice();
+        public override IOrderDevice Device => new AllenBradleyDevice();
     }
 }
