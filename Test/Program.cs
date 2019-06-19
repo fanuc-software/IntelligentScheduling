@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using WareHouse;
 
 namespace Test
 {
@@ -11,17 +13,19 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            //var ab = new AllenBradleyDevice();
+            var test_in = "RVART=                        111";
+            var test = "OKRVART=1                        101";
+            var count = test.Count();
 
-            //int mode = 0;
-            //var ret = ab.SetProductType(2);
-            //ret = ab.SetQuantity(10);
 
-            //Console.WriteLine("ret:" + ret + " res:" + mode);
+            var modula = new ModulaHouse();
+            var ret = modula.MoveInHouseTray(0, 1);
 
-            BaseOrderService srv = new BaseOrderService(OrderServiceEnum.OrderDistribution);
+            //System.Threading.Thread.Sleep(2000);
 
-            srv.Start();
+            //var ret = modula.ResetHouseTray();
+            //BaseOrderService srv = new BaseOrderService(OrderServiceEnum.OrderDistribution);
+            //srv.Start();
 
             Console.ReadKey();
         }

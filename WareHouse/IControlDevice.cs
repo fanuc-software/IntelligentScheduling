@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WareHouse
+namespace LeftMaterialService
 {
     public interface IControlDevice
     {

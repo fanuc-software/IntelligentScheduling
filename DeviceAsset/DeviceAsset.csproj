@@ -90,7 +90,7 @@
     <Compile Include="FanucRobot\FanucRobotDataConfig.cs" />
     <Compile Include="FanucRobot\FanucRobotDataTypeEnum.cs" />
     <Compile Include="FanucRobot\FanucRobotModbus.cs" />
-    <Compile Include="Modula\ModulaSocket.cs" />
+    <Compile Include="Modula\ModulaClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
