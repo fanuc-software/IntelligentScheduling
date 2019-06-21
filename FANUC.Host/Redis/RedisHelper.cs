@@ -12,7 +12,6 @@ namespace FANUC.Host.Redis
 {
     public class RedisHelper<T> where T : BaseItem
     {
-        RedisManagerPool managerPool;
         static string host;
         static string channel;
 
@@ -23,12 +22,18 @@ namespace FANUC.Host.Redis
         }
         public RedisHelper()
         {
-            managerPool = new RedisManagerPool(host);
+            
+         
+        }
+        RedisClient GetClient()
+        {
+          return  RedisClientFactory.Instance.CreateRedisClient(host, 6379);
+
         }
         public void Store(T model)
         {
 
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 var redisTodo = redisClient.As<T>();
 
@@ -38,14 +43,14 @@ namespace FANUC.Host.Redis
 
         public void Push(string message)
         {
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 redisClient.PublishMessage(channel, message);
             }
         }
         public void Update(T model)
         {
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 var redisTodo = redisClient.As<T>();
                 var obj = redisTodo.GetById(model.Id);
@@ -59,7 +64,7 @@ namespace FANUC.Host.Redis
 
         public T Get(object id)
         {
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 var redisTodo = redisClient.As<T>();
                 return redisTodo.GetById(id);
@@ -68,7 +73,7 @@ namespace FANUC.Host.Redis
         }
         public IEnumerable<T> GetAll()
         {
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 var redisTodo = redisClient.As<T>();
                 return redisTodo.GetAll();
@@ -77,7 +82,7 @@ namespace FANUC.Host.Redis
         }
         public void DeleteAll()
         {
-            using (var redisClient = managerPool.GetClient())
+            using (var redisClient = GetClient())
             {
                 var redisTodo = redisClient.As<T>();
                 redisTodo.DeleteAll();
