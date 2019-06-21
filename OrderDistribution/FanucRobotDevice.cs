@@ -25,19 +25,19 @@ namespace OrderDistribution
 
         public FanucRobotDevice()
         {
-            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.1");
+            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.172");
 
-            m_OrderModeConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
-            m_OrderAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
-            m_ProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "1" };
-            m_Quantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "1" };
-            m_CheckProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
-            m_CheckQuantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
-            m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
-            m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
-            m_OrderConfirm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "1" };
-            m_OrderConfirmReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "1" };
-            m_OrderProcess = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "1" };
+            m_OrderModeConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "0" };
+            m_OrderAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "131" };
+            m_ProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "0" };
+            m_Quantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "161" };
+            m_CheckProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "0" };
+            m_CheckQuantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "161" };
+            m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "136" };
+            m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "136" };
+            m_OrderConfirm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "132" };
+            m_OrderConfirmReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "132" };
+            m_OrderProcess = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "193" };
 
         }
 
@@ -50,14 +50,14 @@ namespace OrderDistribution
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetOrderMode(ref bool mode)
         {
-            var ret = m_FanucRobotDevice.Read(m_OrderModeConfig);
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_FanucRobotDevice.Read(m_OrderModeConfig);
+            //if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //bool temp = false;
+            //var pret = bool.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            mode = temp;
+            mode = true;
             return true;
         }
 
@@ -86,8 +86,8 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool SetProductType(int ptype)
         {
-            var ret = m_FanucRobotDevice.Write(m_ProductType, ptype.ToString());
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_FanucRobotDevice.Write(m_ProductType, ptype.ToString());
+            //if (ret.IsSuccess == false) return false;
 
             return true;
         }
@@ -112,14 +112,14 @@ namespace OrderDistribution
         /// <returns>true：设定正常； false：设定异常</returns>
         public bool GetProductType(ref int ptype)
         {
-            var ret = m_FanucRobotDevice.Read(m_ProductType);
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_FanucRobotDevice.Read(m_ProductType);
+            //if (ret.IsSuccess == false) return false;
 
-            int temp = 0;
-            var pret = int.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //int temp = 0;
+            //var pret = int.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            ptype = temp;
+            ptype = 0;
             return true;
         }
 
@@ -148,14 +148,14 @@ namespace OrderDistribution
         /// <returns>true：获得正常； false：获得异常</returns>
         public bool GetCheckProductType(ref int ptype)
         {
-            var ret = m_FanucRobotDevice.Read(m_CheckProductType);
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_FanucRobotDevice.Read(m_CheckProductType);
+            //if (ret.IsSuccess == false) return false;
 
-            int temp = 0;
-            var pret = int.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //int temp = 0;
+            //var pret = int.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            ptype = temp;
+            ptype = 1;
             return true;
         }
 
@@ -179,12 +179,12 @@ namespace OrderDistribution
 
         public bool SetCheckProductType(int ptype)
         {
-            return false;
+            return true;
         }
 
         public bool SetCheckQuantity(int quantity)
         {
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace OrderDistribution
 
         public bool SetOrderReset(bool reset)
         {
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -271,8 +271,8 @@ namespace OrderDistribution
                 return false;
             }
 
-            ret = m_FanucRobotDevice.Write(m_ProductType, "0");
-            if (ret.IsSuccess == false) return false;
+            //ret = m_FanucRobotDevice.Write(m_ProductType, "0");
+            //if (ret.IsSuccess == false) return false;
 
             ret = m_FanucRobotDevice.Write(m_Quantity, "0");
             if (ret.IsSuccess == false) return false;
@@ -320,10 +320,10 @@ namespace OrderDistribution
 
         public bool OrderDeviceReset()
         {
-            var ret = m_FanucRobotDevice.Write(m_ProductType, "0");
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_FanucRobotDevice.Write(m_ProductType, "0");
+            //if (ret.IsSuccess == false) return false;
 
-            ret = m_FanucRobotDevice.Write(m_Quantity, "0");
+            var ret = m_FanucRobotDevice.Write(m_Quantity, "0");
             if (ret.IsSuccess == false) return false;
             
             ret = m_FanucRobotDevice.Write(m_OrderConfirm, "false");

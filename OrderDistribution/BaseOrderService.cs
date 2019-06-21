@@ -209,8 +209,8 @@ namespace OrderDistribution
         {
             bool ret = false;
             
-            ret = Device.SetOrderConfirm(false);
-            if (ret != true) return ret;
+            //ret = Device.SetOrderConfirm(false);
+            //if (ret != true) return ret;
             
             ret = Device.SetProductType(0);
             if (ret != true) return ret;

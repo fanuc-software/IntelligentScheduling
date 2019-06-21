@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using DeviceAsset;
 
 namespace RightMaterialService
 {
     public class BaseRightMaterialService
     {
+        private SeerRoboRoute seerRoboRoute;
+
         private static BaseRightMaterialService _instance = null;
+        private CancellationTokenSource token = new CancellationTokenSource();
 
         //出库队列
-        private Queue<RightMaterialOutMisson> OutMissions { get; set; }
+        private List<RightMaterialOutMisson> OutMissions { get; set; }
         //入库队列
-        private Queue<RightMaterialInMisson> InMissions { get; set; }
+        private List<RightMaterialInMisson> InMissions { get; set; }
         
         public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
 
@@ -32,24 +37,44 @@ namespace RightMaterialService
 
         public BaseRightMaterialService()
         {
-            OutMissions = new Queue<RightMaterialOutMisson>();
+            OutMissions = new List<RightMaterialOutMisson>();
+            InMissions = new List<RightMaterialInMisson>();
 
-            InMissions = new Queue<RightMaterialInMisson>();
+            seerRoboRoute = new SeerRoboRoute();
         }
 
         #endregion
 
-        public void PushOutMission()
+        public void PushOutMission(RightMaterialOutMisson mission)
         {
-
+            if (OutMissions.Where(x => x.Id == mission.Id).Count() == 0)
+            {
+                OutMissions.Add(mission);
+            }
         }
 
-        public void PushInMission()
+        public void PushInMission(RightMaterialInMisson mission)
         {
-
+            if (InMissions.Where(x => x.Id == mission.Id).Count() == 0)
+            {
+                InMissions.Add(mission);
+            }
         }
 
-        public void OnStart()
+        public void Start()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    
+
+                }
+            }, token.Token);
+        }
+
+        //TODO:
+        public void Stop()
         {
 
         }

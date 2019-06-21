@@ -257,12 +257,12 @@ namespace AgvStationClient
 
         private void SendOutMission(RightMaterialOutMisson mission)
         {
-
+            materialSrv.PushOutMission(mission);
         }
         
         private void SendInMission(RightMaterialInMisson mission)
         {
-
+            materialSrv.PushInMission(mission);
         }
 
         private void SendStationClientStateMessage(StationClientState state)

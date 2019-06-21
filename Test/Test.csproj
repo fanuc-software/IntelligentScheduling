@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+      <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
+      <Name>DeviceAsset</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OrderDistribution\OrderDistribution.csproj">
       <Project>{f67fbb7e-6d6d-4d76-b390-fb4c90a84cae}</Project>
       <Name>OrderDistribution</Name>
