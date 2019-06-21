@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EventBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e3081d91662be497, processorArchitecture=MSIL">
+      <HintPath>..\packages\EventBus.1.1.2\lib\net46\EventBus.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,6 +54,9 @@
       <Project>{943bebc8-e05e-417f-9273-ffd1f2e10d31}</Project>
       <Name>RightMaterialService</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -49,21 +49,21 @@ namespace AgvStationClient
         /// </summary>
         /// <param name="empty_out_fin">true:请求完成</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        bool SetEmptyOutFin(ref bool empty_out_fin);
+        bool SetEmptyOutFin(bool empty_out_fin);
 
         /// <summary>
         /// 设定成品空箱输入请求完成
         /// </summary>
         /// <param name="empty_in_fin">true:请求完成</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        bool SetEmptyInFin(ref bool empty_in_fin);
+        bool SetEmptyInFin(bool empty_in_fin);
 
         /// <summary>
         /// 设定成品回库请求完成
         /// </summary>
         /// <param name="fin_out_fin">true:请求完成</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        bool SetFinOutFin(ref bool fin_out_fin);
+        bool SetFinOutFin(bool fin_out_fin);
 
         /// <summary>
         /// 设定报警

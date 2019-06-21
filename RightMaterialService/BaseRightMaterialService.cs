@@ -8,9 +8,27 @@ namespace RightMaterialService
 {
     public class BaseRightMaterialService
     {
-        public Queue<RightMaterialOutMisson> OutMissions { get; set; }
+        private static BaseRightMaterialService _instance = null;
 
-        public Queue<RightMaterialInMisson> InMissions { get; set; }
+        //出库队列
+        private Queue<RightMaterialOutMisson> OutMissions { get; set; }
+        //入库队列
+        private Queue<RightMaterialInMisson> InMissions { get; set; }
+        
+        public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
+
+        public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
+
+        #region ctor
+        public static BaseRightMaterialService CreateInstance()
+        {
+            if (_instance == null)
+
+            {
+                _instance = new BaseRightMaterialService();
+            }
+            return _instance;
+        }
 
         public BaseRightMaterialService()
         {
@@ -18,6 +36,8 @@ namespace RightMaterialService
 
             InMissions = new Queue<RightMaterialInMisson>();
         }
+
+        #endregion
 
         public void PushOutMission()
         {

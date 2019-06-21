@@ -5,9 +5,21 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using OrderDistribution;
+using EventBus;
+using System.Diagnostics;
+using LeftMaterialService;
+
 
 namespace Test
 {
+   
+    class TestLeftMaterialService : BaseLeftMaterialService
+    {
+        public override IControlDevice ControlDevice => new AllenBradleyControlDevice();
+
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -17,14 +29,28 @@ namespace Test
             //var count = test.Count();
 
 
-            //var modula = new ModulaHouse();
-            //var ret = modula.MoveInHouseTray(0, 1);
+            //var modula = new NewModulaWareHouseClient("TEST");
+            //int prod = 0;
+            //int tray = 0;
+            //var ret = modula.GetPositionInfo(1, 1, out prod, out tray);
+            //var ret = modula.ResetTray();
+            //var ret = modula.MoveOutTray(1, 1);
 
             //System.Threading.Thread.Sleep(2000);
 
-            //var ret = modula.ResetHouseTray();
+
             //BaseOrderService srv = new BaseOrderService(OrderServiceEnum.OrderDistribution);
             //srv.Start();
+
+            // eventBus.Deregister(mytest);
+
+            //var dev = new AllenBradleyDevice();
+            //bool mode = false;
+            //var ret = dev.GetOrderMode(ref mode);
+
+            var leftSrv = new TestLeftMaterialService();
+            leftSrv.Start();
+
 
             Console.ReadKey();
         }

@@ -8,7 +8,7 @@ namespace LeftMaterialService
 {
     public interface IControlDevice
     {
-        bool Temp_S_House_RequestFCS_Last { get; set; }
+       // bool Temp_S_House_RequestFCS_Last { get; set; }
 
         bool GetHouseRequestFCS(ref bool req);
 
@@ -32,10 +32,16 @@ namespace LeftMaterialService
 
         bool SetHouseTrayPostion(int tray_pos);
 
+        bool SetHouseConfirmMaterialType(int type);
+
         bool SetHouseRequestFCSFin(bool req_fin);
 
         bool SetHouseFCSAlarm(bool alarm);
 
+        bool SetHouseFCSReset(bool alarm);
+
         bool SetHouseRequestInfoFCSFin(bool req_info_fin);
+
+        bool GetHouseTrayInposition(ref bool inposition);
     }
 }

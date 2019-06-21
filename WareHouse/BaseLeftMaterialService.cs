@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 
 namespace LeftMaterialService
 {
-    public abstract class LeftMaterialService
+
+    public abstract class BaseLeftMaterialService
     {
         public abstract IControlDevice ControlDevice { get; }
-
-        //public abstract 
+        public bool Temp_S_House_RequestFCS_Last { get; set; }
 
         CancellationTokenSource token = new CancellationTokenSource();
 
-        public LeftMaterialService()
+        public BaseLeftMaterialService()
         {
 
         }
@@ -23,7 +23,7 @@ namespace LeftMaterialService
             Task.Factory.StartNew(async () =>
             {
 
-                ControlDevice.Temp_S_House_RequestFCS_Last = false;
+                Temp_S_House_RequestFCS_Last = false;
 
                 bool ret = false;
 
@@ -50,7 +50,7 @@ namespace LeftMaterialService
                         Thread.Sleep(1000);
                     }
                 }
-                ControlDevice.Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
+                Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
 
                 #endregion
 
@@ -112,9 +112,9 @@ namespace LeftMaterialService
             ret = ControlDevice.GetHouseRequestFCS(ref S_HouseRequestFCS);
             if (ret != true) return ret;
 
-            if (S_HouseRequestFCS == true && ControlDevice.Temp_S_House_RequestFCS_Last == false)
+            if (S_HouseRequestFCS == true)
             {
-                ControlDevice.Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
+                Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
 
                 //防错处理
                 ret = CheckOnBegin();
@@ -152,7 +152,7 @@ namespace LeftMaterialService
             }
             else
             {
-                ControlDevice.Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
+                Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
             }
 
 
@@ -163,61 +163,67 @@ namespace LeftMaterialService
         private bool CheckOnBegin()
         {
             bool ret = false;
-
-            bool req_fin = false;
-            ret = ControlDevice.GetHouseRequestFCSFin(ref req_fin);
+            
+            ret = ControlDevice.SetHouseFCSAlarm(false);
             if (ret != true) return ret;
 
-            bool req_info = false;
-            ret = ControlDevice.GetHouseRequestInfoFCS(ref req_info);
+            ret = ControlDevice.SetHouseFCSReset(false);
             if (ret != true) return ret;
 
-            bool req_info_fin = false;
-            ret = ControlDevice.GetHouseRequestInfoFCSFin(ref req_info_fin);
+            ret = ControlDevice.SetHouseRequestFCSFin(false);
             if (ret != true) return ret;
 
-            bool alarm = false;
-            ret = ControlDevice.GetHouseFCSAlarm(ref alarm);
+            ret = ControlDevice.SetHouseRequestInfoFCSFin(false);
             if (ret != true) return ret;
-
-            bool reset = false;
-            ret = ControlDevice.GetHouseFCSReset(ref reset);
-            if (ret != true) return ret;
-
-
-            if (req_fin != false || req_info != false || req_info_fin != false || req_info != false || alarm != false || reset != false)
-            {
-                return false;
-            }
-
+            
             return true;
         }
 
         private async Task<bool> LeftMaterialOutFlow()
         {
-            return  await Task.Factory.StartNew( () =>
+            return await Task.Factory.StartNew(() =>
             {
                 IWareHouseClient WareHouse = new NewModulaWareHouseClient("LEFT_MATERIAL_OUT");
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
                 if (ret_prod_type == false)
-                {
-                    return ret_prod_type;
-                }
+              {
+                  return ret_prod_type;
+              }
 
                 int S_House_MaterialType = 0;
                 var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
                 if (ret_material_type == false)
-                {
-                    return ret_material_type;
-                }
+              {
+                  return ret_material_type;
+              }
 
                 var ret_moveout = WareHouse.MoveOutTray(S_House_ProductType, S_House_MaterialType);
                 if (ret_moveout == false)
+              {
+                  return ret_moveout;
+              }
+
+                bool S_House_TrayInposition = false;
+                while (S_House_TrayInposition == false)
                 {
-                    return ret_moveout;
+
+                    var ret_inposition_info = ControlDevice.GetHouseTrayInposition(ref S_House_TrayInposition);
+                    if (ret_inposition_info == false)
+                    {
+                        return ret_inposition_info;
+                    }
+
+                    var reset = false;
+                    ControlDevice.GetHouseFCSReset(ref reset);
+                    if (reset == true)
+                    {
+                        return false;
+                    }
                 }
+
+                Thread.Sleep(500);
 
                 int S_House_ProductPosition = 0;
                 int S_House_TrayPosition = 0;
@@ -241,6 +247,12 @@ namespace LeftMaterialService
                     return ret_warehouse_tray_position;
                 }
 
+                var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
+                if (ret_confirm_materialtype_position == false)
+              {
+                  return ret_confirm_materialtype_position;
+              }
+
                 var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);
                 if (ret_req_fin == false)
                 {
@@ -254,29 +266,29 @@ namespace LeftMaterialService
 
                     var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
                     if (ret_req_info == false)
-                    {
-                        return ret_req_info;
-                    }
+                  {
+                      return ret_req_info;
+                  }
 
                     var reset = false;
                     ControlDevice.GetHouseFCSReset(ref reset);
                     if (reset == true)
-                    {
-                        return false;
-                    }
+                  {
+                      return false;
+                  }
                 }
 
                 var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, true);
                 if (ret_data_input == false)
-                {
-                    return false;
-                }
+              {
+                  return false;
+              }
 
                 var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
                 if (ret_info_fin == false)
-                {
-                    return false;
-                }
+              {
+                  return false;
+              }
 
                 return true;
             });
@@ -329,6 +341,12 @@ namespace LeftMaterialService
                 if (ret_warehouse_tray_position == false)
                 {
                     return ret_warehouse_tray_position;
+                }
+
+                var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
+                if (ret_confirm_materialtype_position == false)
+                {
+                    return ret_confirm_materialtype_position;
                 }
 
                 var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);

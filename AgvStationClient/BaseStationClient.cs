@@ -8,14 +8,59 @@ namespace AgvStationClient
     public abstract class BaseStationClient
     {
         private string stationId;
+        private BaseRightMaterialService materialSrv;
 
         public abstract IStationDevice stationDevice { get; set; }
-
+        
         CancellationTokenSource token = new CancellationTokenSource();
 
         public BaseStationClient(string id)
         {
             stationId = id;
+            materialSrv = BaseRightMaterialService.CreateInstance();
+
+            materialSrv.UpdateRightMaterialInMissonEvent += OnRightMaterialInMissonEvent;
+            materialSrv.UpdateRightMaterialOutMissonEvent += OnRightMaterialOutMissonEvent;
+        }
+
+        private void OnRightMaterialInMissonEvent(RightMaterialInMisson mission)
+        {
+            //毛坯空箱回库
+            if (mission.Id.Equals(stationId + "_EMPTYOUT"))
+            {
+                if(mission.Process>=RightMaterialInMissonProcessEnum.AGVLEAVEPICK)
+                {
+                    stationDevice.SetEmptyOutFin(true);
+                }
+            }
+            //成品回库
+            if (mission.Id.Equals(stationId + "_FINOUT"))
+            {
+                if (mission.Process >= RightMaterialInMissonProcessEnum.AGVLEAVEPICK)
+                {
+                    stationDevice.SetFinOutFin(true);
+                }
+            }
+        }
+
+        private void OnRightMaterialOutMissonEvent(RightMaterialOutMisson mission)
+        {
+            //毛坯输入
+            if (mission.Id.Equals(stationId + "_RAWIN"))
+            {
+                if (mission.Process >= RightMaterialOutMissonProcessEnum.FINISHED)
+                {
+                    stationDevice.SetRawInFin(true);
+                }
+            }
+            //成品空箱输入
+            if (mission.Id.Equals(stationId + "_EMPTYIN"))
+            {
+                if (mission.Process >= RightMaterialOutMissonProcessEnum.FINISHED)
+                {
+                    stationDevice.SetEmptyInFin(true);
+                }
+            }
         }
 
         public void Start()
@@ -50,9 +95,10 @@ namespace AgvStationClient
                 }
             }, token.Token);
 
+
+
         }
-
-
+        
         private bool StationClientFlow()
         {
             //毛坯输入
@@ -75,9 +121,15 @@ namespace AgvStationClient
                         return false;
                     }
 
+                    var ret_rawin_fin = stationDevice.SetRawInFin(false);
+                    if (ret_rawin_fin == false)
+                    {
+                        return false;
+                    }
+
                     SendOutMission(new RightMaterialOutMisson
                     {
-                        Id = stationId,
+                        Id = stationId+"_RAWIN",
                         Type = RightMaterialMissionTypeEnum.RAW_IN,
                         PickStationId = null,
                         PlaceStationId = stationId,
@@ -104,15 +156,20 @@ namespace AgvStationClient
 
                     string material_type = "";
                     var ret_material_type = stationDevice.GetEmptyInMaterialType(ref material_type);
-
                     if (ret_product_type == false || ret_material_type == false)
+                    {
+                        return false;
+                    }
+
+                    var ret_emptyin_fin =  stationDevice.SetEmptyInFin(false);
+                    if (ret_emptyin_fin == false)
                     {
                         return false;
                     }
 
                     SendOutMission(new RightMaterialOutMisson
                     {
-                        Id = stationId,
+                        Id = stationId+"_EMPTYIN",
                         Type = RightMaterialMissionTypeEnum.EMPTY_IN,
                         PickStationId = null,
                         PlaceStationId = stationId,
@@ -141,9 +198,15 @@ namespace AgvStationClient
                     return false;
                 }
 
+                var ret_emptyout_fin = stationDevice.SetEmptyOutFin(false);
+                if (ret_emptyout_fin == false)
+                {
+                    return false;
+                }
+
                 SendInMission(new RightMaterialInMisson
                 {
-                    Id = stationId,
+                    Id = stationId+"_EMPTYOUT",
                     Type = RightMaterialMissionTypeEnum.EMPTY_OUT,
                     PickStationId = stationId,
                     PlaceStationId = null,
@@ -170,10 +233,16 @@ namespace AgvStationClient
                     return false;
                 }
 
+                var ret_finout_fin = stationDevice.SetFinOutFin(false);
+                if (ret_finout_fin == false)
+                {
+                    return false;
+                }
+
                 SendInMission(new RightMaterialInMisson
                 {
-                    Id = stationId,
-                    Type = RightMaterialMissionTypeEnum.EMPTY_OUT,
+                    Id = stationId+"_FINOUT",
+                    Type = RightMaterialMissionTypeEnum.FIN_OUT,
                     PickStationId = stationId,
                     PlaceStationId = null,
                     Process = RightMaterialInMissonProcessEnum.NEW,
@@ -190,8 +259,7 @@ namespace AgvStationClient
         {
 
         }
-
-
+        
         private void SendInMission(RightMaterialInMisson mission)
         {
 

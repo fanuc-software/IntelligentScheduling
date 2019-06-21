@@ -47,11 +47,13 @@ namespace WareHouseService
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
-            string toolCode = (ret.Item2.Substring(0, 25)).Trim();//刀具编号
-            string trayCode = (ret.Item2.Substring(25, 4)).Trim();//托盘编号
-            string count = (ret.Item2.Substring(29, 4)).Trim();//数量
-            string mode = (ret.Item2.Substring(33, 1)).Trim();//模式P:拿 V：取
-            string position = (ret.Item2.Substring(34, 2)).Trim();//
+            var removestartstr = ret.Item2.Replace("DPICK=", "");
+
+            string toolCode = (removestartstr.Substring(0, 25)).Trim();//刀具编号
+            string trayCode = (removestartstr.Substring(25, 4)).Trim();//托盘编号
+            string count = (removestartstr.Substring(29, 4)).Trim();//数量
+            string mode = (removestartstr.Substring(33, 1)).Trim();//模式P:拿 V：取
+            string position = (removestartstr.Substring(34, 2)).Trim();//
 
             int material_position;
             int tray_position;
@@ -127,7 +129,7 @@ namespace WareHouseService
 
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【WriteBackData】 {DateTime.Now}");
 
-            var message = "VART=" + para.Material_Type.ToString().PadLeft(25, ' ') + (para.In_Out ? "V1" : "P1");
+            var message = "VART=" + para.Material_Type.ToString().PadLeft(25, ' ') + (para.In_Out ? "P1" : "V1");
 
             var ret = m_Modula.Send(message);
 
