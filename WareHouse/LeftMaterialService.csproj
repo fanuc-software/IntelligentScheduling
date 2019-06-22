@@ -56,7 +56,7 @@
     <Compile Include="BaseLeftMaterialService.cs" />
     <Compile Include="LeftMaterialServiceState.cs" />
     <Compile Include="ModulaWareHouseClient.cs" />
-    <Compile Include="NewModulaWareHouseClient.cs" />
+    <Compile Include="LefModulaWareHouseClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ namespace RightMaterialService
 
         //开始处理
         START = 1,
-        
+
         //通知小车前往PICK
         AGVSTART = 2,
         
@@ -26,14 +26,28 @@ namespace RightMaterialService
         //小车进入料库入料道
         INPLACE=5,
 
-        //放置完成离开
-        PLACED = 6,
+        //放置完成
+        PLACEANDLEAVE = 6,
+
+        //通知入库动作
+        WHSTART=7,
 
         //入库结束
-        FINISHED = 7,
+        FINISHED = 8,
+
+        //任务撤销
+        CANCEL =9,
+        
+        //任务已撤销
+        CANCELED = 10,
+
+        //任务关闭
+        CLOSE =11,
     }
 
-    public class RightMaterialInMisson
+    [System.Runtime.Remoting.Contexts.Synchronization]
+
+    public class RightMaterialInMisson: System.ContextBoundObject
     {
         public string Id { get; set; }
 

@@ -8,7 +8,7 @@ namespace AgvStationClient
     public abstract class BaseStationClient
     {
         private string stationId;
-        private BaseRightMaterialService materialSrv;
+        private BaseRightMaterialMissionService materialSrv;
 
         public abstract IStationDevice stationDevice { get; set; }
         
@@ -17,7 +17,7 @@ namespace AgvStationClient
         public BaseStationClient(string id)
         {
             stationId = id;
-            materialSrv = BaseRightMaterialService.CreateInstance();
+            materialSrv = BaseRightMaterialMissionService.CreateInstance();
 
             materialSrv.UpdateRightMaterialInMissonEvent += OnRightMaterialInMissonEvent;
             materialSrv.UpdateRightMaterialOutMissonEvent += OnRightMaterialOutMissonEvent;

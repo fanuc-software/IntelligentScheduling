@@ -183,7 +183,7 @@ namespace LeftMaterialService
         {
             return await Task.Factory.StartNew(() =>
             {
-                IWareHouseClient WareHouse = new NewModulaWareHouseClient("LEFT_MATERIAL_OUT");
+                IWareHouseClient WareHouse = new LefModulaWareHouseClient("LEFT_MATERIAL_OUT");
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
@@ -300,7 +300,7 @@ namespace LeftMaterialService
         {
             return await Task.Factory.StartNew(() =>
             {
-                IWareHouseClient WareHouse = new NewModulaWareHouseClient("LEFT_MATERIAL_IN");
+                IWareHouseClient WareHouse = new LefModulaWareHouseClient("LEFT_MATERIAL_IN");
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
