@@ -37,7 +37,7 @@ namespace LeftMaterialService
 
         public bool MoveInTray(int product_type, int material_type)
         {
-            var temp = m_wareHouseSrv.MoveOutTray(new WareHousePara { Product_Type = product_type, Material_Type = material_type });
+            var temp = m_wareHouseSrv.MoveInTray(new WareHousePara { Product_Type = product_type, Material_Type = material_type });
 
             return temp.IsSuccessed;
         }

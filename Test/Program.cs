@@ -13,7 +13,7 @@ using LeftMaterialService;
 
 namespace Test
 {
-   
+
     class TestLeftMaterialService : BaseLeftMaterialService
     {
         public override IControlDevice ControlDevice => new AllenBradleyControlDevice();
@@ -29,12 +29,16 @@ namespace Test
             //var count = test.Count();
 
 
-            //var modula = new NewModulaWareHouseClient("TEST");
-            //int prod = 0;
-            //int tray = 0;
-            //var ret = modula.GetPositionInfo(1, 1, out prod, out tray);
-            //var ret = modula.ResetTray();
-            //var ret = modula.MoveOutTray(1, 1);
+            // var modula = new NewModulaWareHouseClient("TEST");
+            //modula.ResetTray();
+
+            //modula.MoveInTray(1, 2);
+
+            // int prod = 0;
+            // int tray = 0;
+            //var ret = modula.GetPositionInfo(1, 2, out prod, out tray);
+            //    var ret = modula.ResetTray();
+            //   var ret = modula.MoveOutTray(1, 1);
 
             //System.Threading.Thread.Sleep(2000);
 
@@ -51,8 +55,11 @@ namespace Test
             var leftSrv = new TestLeftMaterialService();
             leftSrv.Start();
 
+            while (true)
+            {
+                Console.ReadKey();
 
-            Console.ReadKey();
+            }
         }
     }
 }

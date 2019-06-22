@@ -57,7 +57,7 @@ namespace WareHouseService
 
             int material_position;
             int tray_position;
-            var prod_ret = int.TryParse(toolCode, out material_position);
+            var prod_ret = int.TryParse(position, out material_position);
             var tray_ret = int.TryParse(trayCode, out tray_position);
 
             if (prod_ret == false || tray_ret == false)
