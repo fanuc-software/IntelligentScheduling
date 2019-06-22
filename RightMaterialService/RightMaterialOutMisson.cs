@@ -24,7 +24,7 @@ namespace RightMaterialService
         AGVLEAVEPICK=4,
 
         //小车准备进入单元入料道
-        BEFOREPLACE=5,
+        INPLACE=5,
 
         //放置完成离开
         FINISHED=6,
@@ -33,6 +33,8 @@ namespace RightMaterialService
     public class RightMaterialOutMisson
     {
         public string Id { get; set; }
+
+        public string TimeId { get; set; }
 
         public RightMaterialMissionTypeEnum Type { get; set; }
 

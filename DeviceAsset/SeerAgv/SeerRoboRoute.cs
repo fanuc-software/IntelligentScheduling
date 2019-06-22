@@ -8,12 +8,34 @@ namespace DeviceAsset
 {
     public class SeerRoboRoute
     {
-        public SeerRoboRoute()
+        private static SeerRoboRoute _instance = null;
+        //public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
+
+        #region ctor
+        public static SeerRoboRoute CreateInstance()
         {
-            OnInitial();
+            if (_instance == null)
+
+            {
+                _instance = new SeerRoboRoute();
+            }
+            return _instance;
         }
 
+
+        public SeerRoboRoute()
+        {
+
+        }
+
+        #endregion
+
         public void OnInitial()
+        {
+
+        }
+
+        private void PollAgvOrderState()
         {
 
         }

@@ -10,7 +10,7 @@ using EventBus;
 using System.Diagnostics;
 using LeftMaterialService;
 using DeviceAsset;
-
+using RightMaterialService;
 
 namespace Test
 {
@@ -37,6 +37,14 @@ namespace Test
         static void Main(string[] args)
         {
 
+            List<RightMaterialOutMisson> OutMissions = new List<RightMaterialOutMisson>();
+
+            //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
+            //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
+
+            var max_inmission = OutMissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max();
+
+            Console.WriteLine(max_inmission.num);
             //var robot = new FanucRobotModbus("192.168.1.172");
             //var ret = robot.Read(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = (161).ToString() });
 
@@ -84,9 +92,9 @@ namespace Test
 
 
 
-            var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
-            orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
-            orderSrv.Start();
+            //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //orderSrv.Start();
 
 
 

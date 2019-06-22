@@ -129,7 +129,8 @@ namespace AgvStationClient
 
                     SendOutMission(new RightMaterialOutMisson
                     {
-                        Id = stationId+"_RAWIN",
+                        Id = stationId + "_RAWIN",
+                        TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                         Type = RightMaterialMissionTypeEnum.RAW_IN,
                         PickStationId = null,
                         PlaceStationId = stationId,
@@ -170,6 +171,7 @@ namespace AgvStationClient
                     SendOutMission(new RightMaterialOutMisson
                     {
                         Id = stationId+"_EMPTYIN",
+                        TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                         Type = RightMaterialMissionTypeEnum.EMPTY_IN,
                         PickStationId = null,
                         PlaceStationId = stationId,
@@ -207,6 +209,7 @@ namespace AgvStationClient
                 SendInMission(new RightMaterialInMisson
                 {
                     Id = stationId+"_EMPTYOUT",
+                    TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                     Type = RightMaterialMissionTypeEnum.EMPTY_OUT,
                     PickStationId = stationId,
                     PlaceStationId = null,
@@ -242,6 +245,7 @@ namespace AgvStationClient
                 SendInMission(new RightMaterialInMisson
                 {
                     Id = stationId+"_FINOUT",
+                    TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                     Type = RightMaterialMissionTypeEnum.FIN_OUT,
                     PickStationId = stationId,
                     PlaceStationId = null,
