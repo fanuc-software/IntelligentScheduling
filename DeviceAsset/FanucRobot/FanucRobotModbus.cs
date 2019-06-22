@@ -113,7 +113,7 @@ namespace DeviceAsset
 
                 return isRead;
             }
-            catch
+            catch(Exception ex)
             {
                 return new OperateResult<string>("机器人读取信号发生致命错误");
             }
@@ -139,7 +139,7 @@ namespace DeviceAsset
             };
 
             _clinet.GetAddresses = addresses;
-            var ans = _clinet.GetDatas(MachineGetDataType.Address);
+            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
             if(ans==null)
             {
@@ -172,7 +172,7 @@ namespace DeviceAsset
             };
 
             _clinet.GetAddresses = addresses;
-            var ans = _clinet.GetDatas(MachineGetDataType.Address);
+            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
             if (ans == null)
             {
@@ -221,7 +221,7 @@ namespace DeviceAsset
                     Address = iAdr,
                     SubAddress = 0,
                     CommunicationTag = "LOWPART",
-                    DataType = typeof(ushort)
+                    DataType = typeof(byte)
                 },
                 new AddressUnit
                 {
@@ -230,13 +230,13 @@ namespace DeviceAsset
                     Address = iAdr+8,
                     SubAddress = 0,
                     CommunicationTag = "HIGHPART",
-                    DataType = typeof(ushort)
+                    DataType = typeof(byte)
                 },
             };
 
             _clinet.GetAddresses = addresses;
 
-            var ans = _clinet.GetDatas(MachineGetDataType.Address);
+            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
             if(ans==null)
             {
@@ -262,7 +262,7 @@ namespace DeviceAsset
                     Address = iAdr,
                     SubAddress = 0,
                     CommunicationTag = "LOWPART",
-                    DataType = typeof(ushort)
+                    DataType = typeof(byte)
                 },
                 new AddressUnit
                 {
@@ -271,13 +271,13 @@ namespace DeviceAsset
                     Address = iAdr+8,
                     SubAddress = 0,
                     CommunicationTag = "HIGHPART",
-                    DataType = typeof(ushort)
+                    DataType = typeof(byte)
                 },
             };
 
             _clinet.GetAddresses = addresses;
 
-            var ans = _clinet.GetDatas(MachineGetDataType.Address);
+            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
             if (ans == null)
             {

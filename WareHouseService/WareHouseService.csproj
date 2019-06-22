@@ -44,6 +44,7 @@
     <Compile Include="IWareHouseService.cs" />
     <Compile Include="ModulaService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RightModulaService.cs" />
     <Compile Include="WareHousePara.cs" />
     <Compile Include="WareHouseResult.cs" />
   </ItemGroup>

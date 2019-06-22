@@ -9,7 +9,8 @@ using OrderDistribution;
 using EventBus;
 using System.Diagnostics;
 using LeftMaterialService;
-
+using DeviceAsset;
+using RightMaterialService;
 
 namespace Test
 {
@@ -20,10 +21,48 @@ namespace Test
 
     }
 
+    class TestOrderService : BaseOrderService
+    {
+        public override IOrderDevice Device => new FanucRobotDevice();
+
+        public TestOrderService(OrderServiceEnum serviceEnum) : base(serviceEnum)
+        {
+
+        }
+
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+
+            List<RightMaterialOutMisson> OutMissions = new List<RightMaterialOutMisson>();
+
+            //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
+            //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
+
+            var max_inmission = OutMissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max();
+
+            Console.WriteLine(max_inmission.num);
+            //var robot = new FanucRobotModbus("192.168.1.172");
+            //var ret = robot.Read(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = (161).ToString() });
+
+
+
+            //for (int i = 0; i < 16; i++)
+            //{
+            //    var ret = robot.Read(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = (161 + i).ToString() });
+
+            //    if (bool.Parse(ret.Content) == true)
+            //    {
+            //        Console.WriteLine(i);
+            //    }
+
+
+            //}
+
+
             //var test_in = "RVART=                        111";
             //var test = "OKRVART=1                        101";
             //var count = test.Count();
@@ -52,8 +91,15 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            var leftSrv = new TestLeftMaterialService();
-            leftSrv.Start();
+            //var leftSrv = new TestLeftMaterialService();
+            //leftSrv.Start();
+
+
+
+            //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //orderSrv.Start();
+
 
             while (true)
             {
@@ -61,5 +107,12 @@ namespace Test
 
             }
         }
+
+        private static OrderItem Srv_GetFirstOrderEvent(OrderServiceEnum arg)
+        {
+            Console.WriteLine("==============GetFirstOrder==============Start");
+            return new OrderItem { Id = "test", CreateDateTime = DateTime.Now, Type = 1, State = OrderItemStateEnum.NEW, Quantity = 1 };
+        }
+
     }
 }

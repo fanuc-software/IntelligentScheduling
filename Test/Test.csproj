@@ -60,9 +60,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+      <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
+      <Name>DeviceAsset</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OrderDistribution\OrderDistribution.csproj">
       <Project>{f67fbb7e-6d6d-4d76-b390-fb4c90a84cae}</Project>
       <Name>OrderDistribution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RightMaterialService\RightMaterialService.csproj">
+      <Project>{943bebc8-e05e-417f-9273-ffd1f2e10d31}</Project>
+      <Name>RightMaterialService</Name>
     </ProjectReference>
     <ProjectReference Include="..\WareHouse\LeftMaterialService.csproj">
       <Project>{a86ceba4-dd92-42c2-96cd-74a0eac92401}</Project>

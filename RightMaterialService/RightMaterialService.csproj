@@ -48,5 +48,11 @@
     <Compile Include="RightMaterialMissionTypeEnum.cs" />
     <Compile Include="RightMaterialOutMisson.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+      <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
+      <Name>DeviceAsset</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

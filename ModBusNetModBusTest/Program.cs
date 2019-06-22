@@ -14,20 +14,20 @@ namespace ModBusNetModBusTest
         {
 
 
-            var _modbusTcpMachine = new ModbusMachine(ModbusType.Tcp, "192.168.0.11", null, true, 2, 0);
+            var _modbusTcpMachine = new ModbusMachine(ModbusType.Tcp, "192.168.1.172", null, true, 2, 0);
 
             #region DO READ
             if (false)
             {
                 var addresses = new List<AddressUnit>();
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     addresses.Add(
                                         new AddressUnit
                                         {
                                             Id = i.ToString(),
                                             Area = "1X",
-                                            Address = 1 + i,
+                                            Address = 129 + i,
                                             SubAddress = 0,
                                             CommunicationTag = "A" + i.ToString(),
                                             DataType = typeof(bool)
@@ -53,14 +53,14 @@ namespace ModBusNetModBusTest
             if (false)
             {
                 var addresses = new List<AddressUnit>();
-                for (int i = 0; i < 200; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     addresses.Add(
                                         new AddressUnit
                                         {
                                             Id = i.ToString(),
                                             Area = "0X",
-                                            Address = 1 + i,
+                                            Address = 129 + i,
                                             SubAddress = 0,
                                             CommunicationTag = "A" + i.ToString(),
                                             DataType = typeof(bool)
@@ -83,17 +83,17 @@ namespace ModBusNetModBusTest
             #endregion
 
             #region DI WRITE
-            if (false)
+            if (true)
             {
 
                 var dic2 = new Dictionary<string, double>()
                 {
                     {
-                        "0X 72", 0
+                        "0X 129", 0
                     }
                 };
                 
-                var ret =  _modbusTcpMachine.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync("0X 72", dic2["0X 72"] >= 1).Result;
+                var ret =  _modbusTcpMachine.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync("0X 129", dic2["0X 129"] >= 1).Result;
 
                 //var addresses = new List<AddressUnit>()
                 //{

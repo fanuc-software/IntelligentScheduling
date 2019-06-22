@@ -23,16 +23,21 @@ namespace RightMaterialService
         //小车准备进入料库入料道
         BEFOREPLACE = 4,
 
+        //小车进入料库入料道
+        INPLACE=5,
+
         //放置完成离开
-        PLACED = 5,
+        PLACED = 6,
 
         //入库结束
-        FINISHED = 6,
+        FINISHED = 7,
     }
 
     public class RightMaterialInMisson
     {
         public string Id { get; set; }
+
+        public string TimeId { get; set; }
 
         public RightMaterialMissionTypeEnum Type { get; set; }
 
