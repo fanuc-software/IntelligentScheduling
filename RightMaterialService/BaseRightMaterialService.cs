@@ -1,183 +1,392 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DeviceAsset;
 
 namespace RightMaterialService
 {
-    public class BaseRightMaterialService
+    public abstract class BaseRightMaterialService
     {
-        private SeerRoboRoute seerRoboRoute;
+        public abstract IControlDevice ControlDevice { get; }
+        public bool Temp_S_House_RequestFCS_Last { get; set; }
 
-        private static BaseRightMaterialService _instance = null;
-        private CancellationTokenSource token = new CancellationTokenSource();
-
-        #region 任务
-        private List<RightMaterialOutMisson> OutMissions { get; set; }
-        private List<RightMaterialInMisson> InMissions { get; set; }
-        
-        public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
-
-        public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
-
-        #endregion
-        
-        #region ctor
-        public static BaseRightMaterialService CreateInstance()
-        {
-            if (_instance == null)
-
-            {
-                _instance = new BaseRightMaterialService();
-            }
-            return _instance;
-        }
+        CancellationTokenSource token = new CancellationTokenSource();
 
         public BaseRightMaterialService()
         {
-            OutMissions = new List<RightMaterialOutMisson>();
-            InMissions = new List<RightMaterialInMisson>();
 
-            seerRoboRoute = SeerRoboRoute.CreateInstance();
-            //seerRoboRoute.
-
-            #region 初始化任务
-            seerRoboRoute.OnInitial();
-
-            OutMissions.Clear();
-            InMissions.Clear();
-
-            #endregion
-        }
-
-        #endregion
-
-        public void PushOutMission(RightMaterialOutMisson mission)
-        {
-            if (OutMissions.Where(x => x.Id == mission.Id).Count() == 0)
-            {
-                OutMissions.Add(mission);
-            }
-        }
-
-        public void PushInMission(RightMaterialInMisson mission)
-        {
-            if (InMissions.Where(x => x.Id == mission.Id).Count() == 0)
-            {
-                InMissions.Add(mission);
-            }
         }
 
         public void Start()
         {
-            Task.Factory.StartNew(() =>
+
+            Task.Factory.StartNew(async () =>
             {
+
+                Temp_S_House_RequestFCS_Last = false;
+
+                bool ret = false;
+
+                #region 初始化
+                bool temp_S_House_RequestFCS_Last = false;
+                ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
+                if (ret == false)
+                {
+                    while (ret == false)
+                    {
+                        ret = ControlDevice.SetHouseFCSAlarm(true);
+                        SendRightMaterialServiceStateMessage(
+                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "初始化失败,发送错误信息至设备!" });
+                        Thread.Sleep(1000);
+                    }
+
+
+                    bool dev_reset = false;
+                    while (dev_reset == false)
+                    {
+                        ControlDevice.GetHouseFCSReset(ref dev_reset);
+                        SendRightMaterialServiceStateMessage(
+                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "初始化失败,等待设备的复位信号" });
+                        Thread.Sleep(1000);
+                    }
+                }
+                Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
+
+                #endregion
+
                 while (!token.IsCancellationRequested)
                 {
-                    var ret = CheckMissionConflict();
-                    if(ret==false)
+                    //料库请求
+                    ret = await RightMaterialFlow();
+                    if (ret == false)
                     {
                         while (ret == false)
                         {
-                            ret = SetAlarm(true);
-                            SendStationClientStateMessage(
-                                new StationClientState { State = StationClientStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!" });
+                            ret = ControlDevice.SetHouseFCSAlarm(true);
+                            SendRightMaterialServiceStateMessage(
+                                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "右侧料库请求或者调用失败,发送错误信息至设备!" });
                             Thread.Sleep(1000);
                         }
+
 
                         bool dev_reset = false;
                         while (dev_reset == false)
                         {
-                            stationDevice.GetReset(ref dev_reset);
-                            SendStationClientStateMessage(
-                                new StationClientState { State = StationClientStateEnum.INFO, Message = "物料调用失败,等待设备的复位信号" });
+                            ControlDevice.GetHouseFCSReset(ref dev_reset);
+                            SendRightMaterialServiceStateMessage(
+                                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库请求或者调用失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
                         }
 
-                    }
-
-                    //没有料库入库任务
-                    if (InMissions.Count()==0)
-                    {
-                        var new_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.NEW).FirstOrDefault();
-                        if (new_inmission != null) new_inmission.Process = RightMaterialInMissonProcessEnum.START;
-                        SendInMissionToAgvRoboRoute(new_inmission);
+                        //复位所有信号
+                        //ControlDevice.ControlDeviceReset();
                     }
 
                 }
             }, token.Token);
         }
 
-        //TODO:
+        //TODO
         public void Stop()
         {
 
         }
 
-        //TODO:
+        //TODO
         public void Suspend()
         {
 
         }
 
-        private void UpdataRightMaterialInMisson()
+        //TODO
+        private void SendRightMaterialServiceStateMessage(RightMaterialServiceState state)
         {
 
         }
 
-        private void AgvOrderStateEvent()
+        private async Task<bool> RightMaterialFlow()
         {
+            bool ret = false;
+
+            bool S_HouseRequestFCS = false;
+            ret = ControlDevice.GetHouseRequestFCS(ref S_HouseRequestFCS);
+            if (ret != true) return ret;
+
+            if (S_HouseRequestFCS == true)
+            {
+                Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
+
+                //防错处理
+                ret = CheckOnBegin();
+                if (ret != true)
+                {
+
+                    return ret;
+                }
+
+                //料库通讯
+                bool S_House_InOut = false;
+                var ret_inout = ControlDevice.GetHouseInOut(ref S_House_InOut);
+                if (ret_inout == false)
+                {
+                    return ret_inout;
+                }
+
+                if (S_House_InOut == true)
+                {
+                    var ret_out = await RightMaterialOutFlow();
+                    if (ret_out == false)
+                    {
+                        return ret_out;
+                    }
+                }
+                else
+                {
+                    var ret_in = await RightMaterialInFlow();
+                    if (ret_in == false)
+                    {
+                        return ret_in;
+                    }
+                }
+
+            }
+            else
+            {
+                Temp_S_House_RequestFCS_Last = S_HouseRequestFCS;
+            }
+
+
+            return true;
 
         }
 
-        private bool CheckMissionConflict()
+        private bool CheckOnBegin()
         {
-            var undo_inmissions = InMissions
-                .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.FINISHED);
-            var undo_outmissions = OutMissions
-                .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.FINISHED);
+            bool ret = false;
 
-            //存在相同ID的任务
-            var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
-            var max_outmission = undo_outmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
-            if (max_inmission.num > 1 || max_outmission.num > 1) return false;
+            ret = ControlDevice.SetHouseFCSAlarm(false);
+            if (ret != true) return ret;
 
-            //多于2个任务正在执行
-            var count_inmissions = undo_inmissions.Count();
-            var count_outmissions = undo_outmissions.Count();
-            if (count_inmissions + count_outmissions > 2) return false;
+            ret = ControlDevice.SetHouseFCSReset(false);
+            if (ret != true) return ret;
 
-            //存在两个出料库任务，已经达到AGVSTART， 但是小于AGVLEAVEPICK
-            var count_outmission_conflict = undo_outmissions
-                .Where(x => x.Process >= RightMaterialOutMissonProcessEnum.AGVSTART && x.Process < RightMaterialOutMissonProcessEnum.AGVLEAVEPICK).Count();
-            if (count_outmission_conflict > 1) return false;
+            ret = ControlDevice.SetHouseRequestFCSFin(false);
+            if (ret != true) return ret;
 
-            //只能有一个入料库任务
-            var count_inmission_conflict = undo_inmissions.Count();
-            if (count_inmission_conflict > 1) return false;
+            ret = ControlDevice.SetHouseRequestInfoFCSFin(false);
+            if (ret != true) return ret;
 
             return true;
         }
 
-        //TODO:发送入库任务给小车调度中心
-        private void SendInMissionToAgvRoboRoute(RightMaterialInMisson mission)
+        private async Task<bool> RightMaterialOutFlow()
         {
+            return await Task.Factory.StartNew(() =>
+            {
+                IWareHouseClient WareHouse = new RightModulaWareHouseClient("RIGHT_MATERIAL_OUT");
+
+                int S_House_ProductType = 0;
+                var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
+                if (ret_prod_type == false)
+                {
+                    return ret_prod_type;
+                }
+
+                int S_House_MaterialType = 0;
+                var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
+                if (ret_material_type == false)
+                {
+                    return ret_material_type;
+                }
+
+                var ret_moveout = WareHouse.MoveOutTray(S_House_ProductType, S_House_MaterialType);
+                if (ret_moveout == false)
+                {
+                    return ret_moveout;
+                }
+
+                bool S_House_TrayInposition = false;
+                while (S_House_TrayInposition == false)
+                {
+
+                    var ret_inposition_info = ControlDevice.GetHouseTrayInposition(ref S_House_TrayInposition);
+                    if (ret_inposition_info == false)
+                    {
+                        return ret_inposition_info;
+                    }
+
+                    var reset = false;
+                    ControlDevice.GetHouseFCSReset(ref reset);
+                    if (reset == true)
+                    {
+                        return false;
+                    }
+                }
+
+                Thread.Sleep(500);
+
+                int S_House_ProductPosition = 0;
+                int S_House_TrayPosition = 0;
+                var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
+                    out S_House_ProductPosition, out S_House_TrayPosition);
+                if (ret_warehouse_info == false)
+                {
+                    return ret_warehouse_info;
+                }
+
+
+                var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
+                if (ret_warehouse_product_position == false)
+                {
+                    return ret_warehouse_product_position;
+                }
+
+                var ret_warehouse_tray_position = ControlDevice.SetHouseTrayPostion(S_House_TrayPosition);
+                if (ret_warehouse_tray_position == false)
+                {
+                    return ret_warehouse_tray_position;
+                }
+
+                var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
+                if (ret_confirm_materialtype_position == false)
+                {
+                    return ret_confirm_materialtype_position;
+                }
+
+                var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);
+                if (ret_req_fin == false)
+                {
+                    return ret_req_fin;
+                }
+
+                bool S_House_RequestInfoFCS = false;
+
+                while (S_House_RequestInfoFCS == false)
+                {
+
+                    var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
+                    if (ret_req_info == false)
+                    {
+                        return ret_req_info;
+                    }
+
+                    var reset = false;
+                    ControlDevice.GetHouseFCSReset(ref reset);
+                    if (reset == true)
+                    {
+                        return false;
+                    }
+                }
+
+                var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, true);
+                if (ret_data_input == false)
+                {
+                    return false;
+                }
+
+                var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
+                if (ret_info_fin == false)
+                {
+                    return false;
+                }
+
+                return true;
+            });
+
 
         }
 
-        //TODO:发送错误消息给系统
-        private bool SetAlarm(bool alarm)
+        private async Task<bool> RightMaterialInFlow()
         {
-            return true;
-        }
+            return await Task.Factory.StartNew(() =>
+            {
+                IWareHouseClient WareHouse = new RightModulaWareHouseClient("RIGHT_MATERIAL_IN");
 
-        //TODO:从系统获得复位信号
-        private bool GetReset(ref bool reset)
-        {
-            return true;
+                int S_House_ProductType = 0;
+                var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
+                if (ret_prod_type == false)
+                {
+                    return ret_prod_type;
+                }
+
+                int S_House_MaterialType = 0;
+                var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
+                if (ret_material_type == false)
+                {
+                    return ret_material_type;
+                }
+
+                var ret_movein = WareHouse.MoveInTray(S_House_ProductType, S_House_MaterialType);
+                if (ret_movein == false)
+                {
+                    return ret_movein;
+                }
+
+                int S_House_ProductPosition = 0;
+                int S_House_TrayPosition = 0;
+                var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
+                    out S_House_ProductPosition, out S_House_TrayPosition);
+                if (ret_warehouse_info == false)
+                {
+                    return ret_warehouse_info;
+                }
+
+                var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
+                if (ret_warehouse_product_position == false)
+                {
+                    return ret_warehouse_product_position;
+                }
+
+                var ret_warehouse_tray_position = ControlDevice.SetHouseTrayPostion(S_House_TrayPosition);
+                if (ret_warehouse_tray_position == false)
+                {
+                    return ret_warehouse_tray_position;
+                }
+
+                var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
+                if (ret_confirm_materialtype_position == false)
+                {
+                    return ret_confirm_materialtype_position;
+                }
+
+                var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);
+                if (ret_req_fin == false)
+                {
+                    return ret_req_fin;
+                }
+
+                bool S_House_RequestInfoFCS = false;
+
+                while (S_House_RequestInfoFCS == false)
+                {
+
+                    var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
+                    if (ret_req_info == false)
+                    {
+                        return ret_req_info;
+                    }
+
+                    var reset = false;
+                    ControlDevice.GetHouseFCSReset(ref reset);
+                    if (reset == true)
+                    {
+                        return false;
+                    }
+                }
+
+                var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, false);
+                if (ret_data_input == false)
+                {
+                    return false;
+                }
+
+                var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
+                if (ret_info_fin == false)
+                {
+                    return false;
+                }
+
+                return true;
+            });
         }
     }
 }

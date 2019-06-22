@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RightMaterialService
 {
 
-    public enum StationClientStateEnum
+    public enum RightMaterialServiceStateEnum
     {
         OFF,
         FATAL,
@@ -17,9 +17,9 @@ namespace RightMaterialService
         DEBUG
     }
 
-    public class StationClientState
+    public class RightMaterialServiceState
     {
-        public StationClientStateEnum State { get; set; }
+        public RightMaterialServiceStateEnum State { get; set; }
 
         public string Message { get; set; }
     }

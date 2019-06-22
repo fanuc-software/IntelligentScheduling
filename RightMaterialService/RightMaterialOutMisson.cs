@@ -14,20 +14,29 @@ namespace RightMaterialService
         //开始处理
         START=1,
 
+        //通知料库出库
+        WHSTART = 2,
+
         //出库物料
-        PICKED=2,
+        PICKED =3,
 
         //通知小车前往PICK
-        AGVSTART=3,
+        AGVSTART=4,
 
         //小车从出料道搬离物料
-        AGVLEAVEPICK=4,
+        AGVLEAVEPICK = 5,
 
         //小车准备进入单元入料道
-        INPLACE=5,
+        INPLACE=6,
 
         //放置完成离开
-        FINISHED=6,
+        FINISHED=7,
+
+        //任务撤销
+        CANCEL = 8,
+
+        //任务关闭
+        CLOSE = 9,
     }
 
     public class RightMaterialOutMisson
