@@ -91,7 +91,7 @@ namespace RightMaterialService
                         bool dev_reset = false;
                         while (dev_reset == false)
                         {
-                            stationDevice.GetReset(ref dev_reset);
+                            GetReset(ref dev_reset);
                             SendStationClientStateMessage(
                                 new StationClientState { State = StationClientStateEnum.INFO, Message = "物料调用失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
@@ -109,6 +109,11 @@ namespace RightMaterialService
 
                 }
             }, token.Token);
+        }
+
+        private void SendStationClientStateMessage(StationClientState stationClientState)
+        {
+            throw new NotImplementedException();
         }
 
         //TODO:

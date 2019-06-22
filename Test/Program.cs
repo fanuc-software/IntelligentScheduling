@@ -42,9 +42,9 @@ namespace Test
             //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
             //OutMissions.Add(new RightMaterialOutMisson { Id = "HEELO" });
 
-            var max_inmission = OutMissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max();
+            // var max_inmission = OutMissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max();
 
-            Console.WriteLine(max_inmission.num);
+            // Console.WriteLine(max_inmission.num);
             //var robot = new FanucRobotModbus("192.168.1.172");
             //var ret = robot.Read(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = (161).ToString() });
 
@@ -91,8 +91,8 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            //var leftSrv = new TestLeftMaterialService();
-            //leftSrv.Start();
+            var leftSrv = new TestLeftMaterialService();
+            leftSrv.Start();
 
 
 
