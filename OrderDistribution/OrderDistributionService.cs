@@ -21,4 +21,14 @@ namespace OrderDistribution
 
         public override IOrderDevice Device => new AllenBradleyDevice();
     }
+
+    public class OrderRobotDistributionService : BaseOrderService
+    {
+        public OrderRobotDistributionService(OrderServiceEnum serviceEnum) : base(serviceEnum)
+        {
+
+        }
+
+        public override IOrderDevice Device => new FanucRobotDevice();
+    }
 }

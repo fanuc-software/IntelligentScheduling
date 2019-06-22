@@ -14,13 +14,25 @@ namespace FANUC.Host
 {
     class Program
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
         {
             var serviceName = ConfigurationManager.AppSettings["MonitorService"];
-            var monitorService = Assembly.GetExecutingAssembly().CreateInstance(serviceName) as IMonitorService;
-            monitorService.ShowMessageEvent += MonitorService_ShowMessageEvent;
-            monitorService.Start();
+        
+            try
+            {
+                var monitorService = Assembly.GetExecutingAssembly().CreateInstance(serviceName) as BaseHostService;
+                monitorService.ShowMessageEvent += MonitorService_ShowMessageEvent;
+                monitorService.Start();
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+                Console.WriteLine(ex.Message);
+
+            }
             while (true)
             {
                 var key = Console.ReadLine();
