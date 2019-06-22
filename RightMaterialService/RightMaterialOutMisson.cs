@@ -35,8 +35,11 @@ namespace RightMaterialService
         //任务撤销
         CANCEL = 8,
 
+        //任务已撤销
+        CANCELED = 9,
+
         //任务关闭
-        CLOSE = 9,
+        CLOSE = 10,
     }
 
     public class RightMaterialOutMisson

@@ -105,9 +105,9 @@ namespace RightMaterialService
                     }
 
                     var undo_inmissions = InMissions
-                        .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.FINISHED);
+                        .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
                     var undo_outmissions = OutMissions
-                        .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.FINISHED);
+                        .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
 
                     //没有料库入库任务
                     if (undo_inmissions.Count() == 0)
@@ -157,7 +157,7 @@ namespace RightMaterialService
 
                             }
                         });
-                        
+
                     }
 
                     //通知料库出库动作
@@ -173,7 +173,7 @@ namespace RightMaterialService
                             if (ret == false)
                             {
                                 warehouse_outmission.Process = RightMaterialOutMissonProcessEnum.CANCEL;
-                                
+
                                 while (ret == false)
                                 {
                                     ret = SetAlarm(true);
@@ -195,7 +195,7 @@ namespace RightMaterialService
 
                             }
                         });
-                        
+
                     }
 
                     //通知小车搬运入库
@@ -290,12 +290,12 @@ namespace RightMaterialService
                     var cancel_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.CANCEL).FirstOrDefault();
                     if (cancel_inmission != null)
                     {
-                        cancel_inmission.Process = RightMaterialInMissonProcessEnum.CLOSE;
+                        cancel_inmission.Process = RightMaterialInMissonProcessEnum.CANCELED;
                         AgvInMissionCancel(cancel_inmission);
                     }
 
                     //出库异常处理
-                    var cancel_outmission = OutMissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.CANCEL).FirstOrDefault();
+                    var cancel_outmission = OutMissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.CANCELED).FirstOrDefault();
                     if (cancel_outmission != null)
                     {
                         cancel_outmission.Process = RightMaterialOutMissonProcessEnum.CLOSE;
@@ -330,9 +330,9 @@ namespace RightMaterialService
         private bool CheckMissionConflict()
         {
             var undo_inmissions = InMissions
-                .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.FINISHED);
+                .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
             var undo_outmissions = OutMissions
-                .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.FINISHED);
+                .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
 
             //存在相同ID的任务
             var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
@@ -396,7 +396,7 @@ namespace RightMaterialService
 
             ret = controlDevice.SetRHouseInOut(false);
             if (ret == false) return ret;
-            
+
             ret = controlDevice.SetRHouseRequest(true);
             if (ret == false) return ret;
 
@@ -407,7 +407,7 @@ namespace RightMaterialService
 
                 var in_reset = false;
                 controlDevice.GetRHouseReset(ref in_reset);
-                if(in_reset==true)
+                if (in_reset == true)
                 {
                     break;
                 }
@@ -479,7 +479,35 @@ namespace RightMaterialService
         private async Task<bool> AgvInMission(RightMaterialInMisson mission)
         {
             var agv_order_id = mission.Id + "_" + mission.TimeId;
+            IClient client = new Client();
+            await client.TransportOrders2Async(agv_order_id, new TransportOrder()
+            {
+                Deadline = DateTime.Now.AddMinutes(20),
+                Destinations = new List<DestinationOrder>()
+                {
+                    new DestinationOrder(){ LocationName=mission.PickStationId,Operation="JackLoad"}
+                }
+            });
 
+            await Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(2000);
+
+                    var order = await client.TransportOrdersAsync(agv_order_id);
+                    if (order.State == TransportOrderStateState.FINISHED)
+                    {
+                        mission.Process = RightMaterialInMissonProcessEnum.FINISHED;
+                        break;
+                    }
+                    else if (order.State == TransportOrderStateState.WITHDRAWN || order.State == TransportOrderStateState.FAILED)
+                    {
+                        mission.Process = RightMaterialInMissonProcessEnum.CANCEL;
+                        break;
+                    }
+                }
+            });
             return true;
         }
 

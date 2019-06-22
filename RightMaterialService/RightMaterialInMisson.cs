@@ -37,9 +37,12 @@ namespace RightMaterialService
 
         //任务撤销
         CANCEL =9,
+        
+        //任务已撤销
+        CANCELED = 10,
 
         //任务关闭
-        CLOSE =10,
+        CLOSE =11,
     }
 
     [System.Runtime.Remoting.Contexts.Synchronization]
