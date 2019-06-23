@@ -104,9 +104,11 @@ namespace LeftMaterialService
         //TODO
         private void SendLeftMaterialServiceStateMessage(LeftMaterialServiceState state)
         {
-            if(cur_Display_ErrorCode!= state.ErrorCode || state.State==LeftMaterialServiceStateEnum.INFO)
+            if(cur_Display_ErrorCode!= state.ErrorCode)
             {
                 Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+
+                cur_Display_ErrorCode = state.ErrorCode;
             }
         }
 
