@@ -106,7 +106,7 @@ namespace LeftMaterialService
         {
             if(cur_Display_ErrorCode!= state.ErrorCode || state.State==LeftMaterialServiceStateEnum.INFO)
             {
-                Console.WriteLine($"【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+                Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
             }
         }
 
