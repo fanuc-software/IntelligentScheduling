@@ -50,6 +50,7 @@
     <Compile Include="AllenBradleyControlDevice.cs" />
     <Compile Include="BaseRightMaterialMissionService.cs" />
     <Compile Include="BaseRightMaterialService.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IControlDevice.cs" />
     <Compile Include="IWareHouseClient.cs" />
     <Compile Include="RightMaterialServiceState.cs" />

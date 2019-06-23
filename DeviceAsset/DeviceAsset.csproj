@@ -92,6 +92,7 @@
     <Compile Include="FanucRobot\FanucRobotDataConfig.cs" />
     <Compile Include="FanucRobot\FanucRobotDataTypeEnum.cs" />
     <Compile Include="FanucRobot\FanucRobotModbus.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Modula\ModulaClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeerAgv\SeerRoboRoute.cs" />

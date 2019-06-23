@@ -20,9 +20,13 @@ namespace RightMaterialService
         private List<RightMaterialOutMisson> OutMissions { get; set; }
         private List<RightMaterialInMisson> InMissions { get; set; }
 
+#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
         public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
 
+#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
         public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
 
         #endregion
 
@@ -375,7 +379,9 @@ namespace RightMaterialService
         }
 
         //TODO:异步料库执行入库
+#pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         private async Task<bool> WareHouseInMission(RightMaterialInMisson mission)
+#pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             int temp_type = 0;
             var ret = int.TryParse(mission.ProductId, out temp_type);
@@ -426,7 +432,9 @@ namespace RightMaterialService
         }
 
         //TODO:异步料库执行出库
+#pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         private async Task<bool> WareHouseOutMission(RightMaterialOutMisson mission)
+#pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             int temp_type = 0;
             var ret = int.TryParse(mission.ProductId, out temp_type);
@@ -512,7 +520,9 @@ namespace RightMaterialService
         }
 
         //TODO:异步小车出库搬运
+#pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         private async Task<bool> AgvOutMission(RightMaterialOutMisson mission)
+#pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             return true;
         }

@@ -113,7 +113,9 @@ namespace DeviceAsset
 
                 return isRead;
             }
+#pragma warning disable CS0168 // 声明了变量“ex”，但从未使用过
             catch(Exception ex)
+#pragma warning restore CS0168 // 声明了变量“ex”，但从未使用过
             {
                 return new OperateResult<string>("机器人读取信号发生致命错误");
             }

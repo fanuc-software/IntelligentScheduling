@@ -19,7 +19,9 @@ namespace ModBusNetModBusTest
             #region DO READ
             if (false)
             {
+#pragma warning disable CS0162 // 检测到无法访问的代码
                 var addresses = new List<AddressUnit>();
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 for (int i = 0; i < 100; i++)
                 {
                     addresses.Add(
@@ -52,7 +54,9 @@ namespace ModBusNetModBusTest
             #region DI READ
             if (false)
             {
+#pragma warning disable CS0162 // 检测到无法访问的代码
                 var addresses = new List<AddressUnit>();
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 for (int i = 0; i < 100; i++)
                 {
                     addresses.Add(
@@ -125,7 +129,9 @@ namespace ModBusNetModBusTest
             #region GO READ
             if (false)
             {
+#pragma warning disable CS0162 // 检测到无法访问的代码
                 var addresses = new List<AddressUnit>()
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 {
                     new AddressUnit
                     {
@@ -165,7 +171,9 @@ namespace ModBusNetModBusTest
             #region GI WRITE
             if(false)
             {
+#pragma warning disable CS0162 // 检测到无法访问的代码
                 var adr = "81";
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 ushort data = 10;
 
                 int iAdr;
@@ -196,7 +204,9 @@ namespace ModBusNetModBusTest
             #region 连续读取
             if (false)
             {
+#pragma warning disable CS0162 // 检测到无法访问的代码
                 CancellationTokenSource token = new CancellationTokenSource();
+#pragma warning restore CS0162 // 检测到无法访问的代码
                 Task.Factory.StartNew(() =>
                 {
                     var _modbusTcpMachine2 = new ModbusMachine(ModbusType.Tcp, "192.168.0.11", null, true, 2, 0);
@@ -238,7 +248,9 @@ namespace ModBusNetModBusTest
 
 
                     }
+#pragma warning disable CS0162 // 检测到无法访问的代码
                     _modbusTcpMachine2.Disconnect();
+#pragma warning restore CS0162 // 检测到无法访问的代码
 
                 }, token.Token);
             }

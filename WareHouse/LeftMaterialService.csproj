@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllenBradleyControlDevice.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IControlDevice.cs" />
     <Compile Include="INewWareHouseClient.cs" />
     <Compile Include="IWareHouseClient.cs" />

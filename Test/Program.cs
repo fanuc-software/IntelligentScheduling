@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+#pragma warning disable CS0105 // “OrderDistribution”的 using 指令以前在此命名空间中出现过
 using OrderDistribution;
+#pragma warning restore CS0105 // “OrderDistribution”的 using 指令以前在此命名空间中出现过
 using EventBus;
 using System.Diagnostics;
 using LeftMaterialService;
@@ -60,8 +62,8 @@ namespace Test
             //var count = test.Count();
 
 
-            var modula = new LefModulaWareHouseClient("TEST");
-            modula.ResetTray();
+            //var modula = new LefModulaWareHouseClient("TEST");
+            //modula.ResetTray();
 
             //modula.MoveInTray(1, 2);
 
