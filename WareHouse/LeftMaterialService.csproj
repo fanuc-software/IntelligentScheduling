@@ -55,6 +55,7 @@
     <Compile Include="INewWareHouseClient.cs" />
     <Compile Include="IWareHouseClient.cs" />
     <Compile Include="BaseLeftMaterialService.cs" />
+    <Compile Include="LeftMaterialServiceErrorCodeEnum.cs" />
     <Compile Include="LeftMaterialServiceState.cs" />
     <Compile Include="ModulaWareHouseClient.cs" />
     <Compile Include="LefModulaWareHouseClient.cs" />

@@ -22,5 +22,7 @@ namespace LeftMaterialService
         public LeftMaterialServiceStateEnum State { get; set; }
 
         public string Message { get; set; }
+
+        public LeftMaterialServiceErrorCodeEnum ErrorCode { get; set; }
     }
 }
