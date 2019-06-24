@@ -4,11 +4,12 @@
 // </auto-generated>
 //----------------------
 
+using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 
 namespace DeviceAsset
 {
-    #pragma warning disable
+#pragma warning disable
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.2.4.0 (NJsonSchema v9.13.36.0 (Newtonsoft.Json v11.0.0.0))")]
     public partial interface IClient
@@ -18,34 +19,34 @@ namespace DeviceAsset
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Collections.Generic.List<TransportOrderState> TransportOrdersAll(string intendedVehicle = null);
-    
+
         /// <summary>获取业务订单的集合.</summary>
         /// <param name="intendedVehicle">以预期执行业务订单的机器人的名称，对业务订单进行筛选</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<System.Collections.Generic.List<TransportOrderState>> TransportOrdersAllAsync(string intendedVehicle = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>获取指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         TransportOrderState TransportOrders(string nAME);
-    
+
         /// <summary>获取指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<TransportOrderState> TransportOrdersAsync(string nAME, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>使用指定名称创建一个新的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="unnamed">业务订单的详细信息</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         void TransportOrders2(string nAME, TransportOrder unnamed = null);
-    
+
         /// <summary>使用指定名称创建一个新的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="unnamed">业务订单的详细信息</param>
@@ -53,7 +54,7 @@ namespace DeviceAsset
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task TransportOrders2Async(string nAME, TransportOrder unnamed = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>撤销指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -61,7 +62,7 @@ namespace DeviceAsset
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         void Withdrawal(string nAME, bool? immediate = null, bool? disableVehicle = null);
-    
+
         /// <summary>撤销指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -70,7 +71,7 @@ namespace DeviceAsset
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task WithdrawalAsync(string nAME, bool? immediate = null, bool? disableVehicle = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>获取机器人的信息集合</summary>
         /// <param name="procState">以机器人的业务状态，对机器人进行筛选
         /// - UNAVAILABLE：机器人不可利用
@@ -80,7 +81,7 @@ namespace DeviceAsset
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         System.Collections.Generic.List<VehicleState> VehiclesAll(ProcState? procState = null);
-    
+
         /// <summary>获取机器人的信息集合</summary>
         /// <param name="procState">以机器人的业务状态，对机器人进行筛选
         /// - UNAVAILABLE：机器人不可利用
@@ -91,20 +92,20 @@ namespace DeviceAsset
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<System.Collections.Generic.List<VehicleState>> VehiclesAllAsync(ProcState? procState = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>获取指定名称的机器人的信息</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         VehicleState Vehicles(string nAME);
-    
+
         /// <summary>获取指定名称的机器人的信息</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task<VehicleState> VehiclesAsync(string nAME, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>撤销指定的机器人正在执行的业务订单</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -112,7 +113,7 @@ namespace DeviceAsset
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         void Withdrawal2(string nAME, bool? immediate = null, bool? disableVehicle = null);
-    
+
         /// <summary>撤销指定的机器人正在执行的业务订单</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -121,7 +122,7 @@ namespace DeviceAsset
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task Withdrawal2Async(string nAME, bool? immediate = null, bool? disableVehicle = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
         /// <summary>为指定的机器人设置在线状态</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="newValue">指定的机器人在线状态
@@ -132,7 +133,7 @@ namespace DeviceAsset
         /// <returns>请求已成功</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         void IntegrationLevel(string nAME, NewValue newValue);
-    
+
         /// <summary>为指定的机器人设置在线状态</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="newValue">指定的机器人在线状态
@@ -144,38 +145,38 @@ namespace DeviceAsset
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         System.Threading.Tasks.Task IntegrationLevelAsync(string nAME, NewValue newValue, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.2.4.0 (NJsonSchema v9.13.36.0 (Newtonsoft.Json v11.0.0.0))")]
     public partial class Client : IClient
     {
-        private string _baseUrl = "http://localhost:55200/v1";
+        private string _baseUrl = "http://192.168.1.203:55200/v1";
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-    
+
         public Client()
         {
-            _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() => 
+            _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() =>
             {
-                var settings = new Newtonsoft.Json.JsonSerializerSettings();
+                var settings = new Newtonsoft.Json.JsonSerializerSettings() { Converters = new List<Newtonsoft.Json.JsonConverter>() { new IsoDateTimeConverter() } };
                 UpdateJsonSerializerSettings(settings);
                 return settings;
             });
         }
-    
-        public string BaseUrl 
+
+        public string BaseUrl
         {
             get { return _baseUrl; }
             set { _baseUrl = value; }
         }
-    
+
         public Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings { get { return _settings.Value; } }
-    
+
         partial void UpdateJsonSerializerSettings(Newtonsoft.Json.JsonSerializerSettings settings);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url);
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
-    
+
         /// <summary>获取业务订单的集合.</summary>
         /// <param name="intendedVehicle">以预期执行业务订单的机器人的名称，对业务订单进行筛选</param>
         /// <returns>请求已成功</returns>
@@ -184,7 +185,7 @@ namespace DeviceAsset
         {
             return System.Threading.Tasks.Task.Run(async () => await TransportOrdersAllAsync(intendedVehicle, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>获取业务订单的集合.</summary>
         /// <param name="intendedVehicle">以预期执行业务订单的机器人的名称，对业务订单进行筛选</param>
         /// <returns>请求已成功</returns>
@@ -194,12 +195,12 @@ namespace DeviceAsset
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transportOrders?");
-            if (intendedVehicle != null) 
+            if (intendedVehicle != null)
             {
                 urlBuilder_.Append("intendedVehicle=").Append(System.Uri.EscapeDataString(ConvertToString(intendedVehicle, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -207,12 +208,12 @@ namespace DeviceAsset
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -222,34 +223,34 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<TransportOrderState>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<TransportOrderState>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<TransportOrderState>>(responseData_, _settings.Value);
-                                return result_; 
-                            } 
-                            catch (System.Exception exception_) 
+                                return result_;
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -258,10 +259,10 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-            
+
                         return default(System.Collections.Generic.List<TransportOrderState>);
                     }
                     finally
@@ -277,7 +278,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>获取指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <returns>请求已成功</returns>
@@ -286,7 +287,7 @@ namespace DeviceAsset
         {
             return System.Threading.Tasks.Task.Run(async () => await TransportOrdersAsync(nAME, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>获取指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <returns>请求已成功</returns>
@@ -296,11 +297,11 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transportOrders/{NAME}");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -308,12 +309,12 @@ namespace DeviceAsset
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -323,34 +324,34 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(TransportOrderState); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(TransportOrderState);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<TransportOrderState>(responseData_, _settings.Value);
-                                return result_; 
-                            } 
-                            catch (System.Exception exception_) 
+                                return result_;
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -359,10 +360,10 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-            
+
                         return default(TransportOrderState);
                     }
                     finally
@@ -378,7 +379,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>使用指定名称创建一个新的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="unnamed">业务订单的详细信息</param>
@@ -388,7 +389,7 @@ namespace DeviceAsset
         {
             System.Threading.Tasks.Task.Run(async () => await TransportOrders2Async(nAME, unnamed, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>使用指定名称创建一个新的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="unnamed">业务订单的详细信息</param>
@@ -399,26 +400,28 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transportOrders/{NAME}");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
+                    // var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(unnamed, new IsoDateTimeConverter()));
+
                     var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(unnamed, _settings.Value));
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -428,54 +431,54 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
                             return;
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
                             throw new SwaggerException<System.Collections.Generic.List<string>>("RoboRoute \u627e\u4e0d\u5230\u8bf7\u6c42\u4e2d\u5305\u542b\u7684\u5bf9\u8c61", (int)response_.StatusCode, responseData_, headers_, result_, null);
                         }
                         else
-                        if (status_ == "409") 
+                        if (status_ == "409")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
                             throw new SwaggerException<System.Collections.Generic.List<string>>("\u5728 RoboRoute \u4e2d\uff0c\u5df2\u5b58\u5728\u76f8\u540c\u540d\u79f0\u7684\u5bf9\u8c61\u3002", (int)response_.StatusCode, responseData_, headers_, result_, null);
                         }
                         else
-                        if (status_ == "500") 
+                        if (status_ == "500")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -484,7 +487,7 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                     }
@@ -501,7 +504,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>撤销指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -512,7 +515,7 @@ namespace DeviceAsset
         {
             System.Threading.Tasks.Task.Run(async () => await WithdrawalAsync(nAME, immediate, disableVehicle, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>撤销指定名称的业务订单</summary>
         /// <param name="nAME">业务订单的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -524,20 +527,20 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/transportOrders/{NAME}/withdrawal?");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
-            if (immediate != null) 
+            if (immediate != null)
             {
                 urlBuilder_.Append("immediate=").Append(System.Uri.EscapeDataString(ConvertToString(immediate, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
-            if (disableVehicle != null) 
+            if (disableVehicle != null)
             {
                 urlBuilder_.Append("disableVehicle=").Append(System.Uri.EscapeDataString(ConvertToString(disableVehicle, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -545,12 +548,12 @@ namespace DeviceAsset
                 {
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -560,24 +563,24 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
                             return;
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -586,7 +589,7 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                     }
@@ -603,7 +606,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>获取机器人的信息集合</summary>
         /// <param name="procState">以机器人的业务状态，对机器人进行筛选
         /// - UNAVAILABLE：机器人不可利用
@@ -616,7 +619,7 @@ namespace DeviceAsset
         {
             return System.Threading.Tasks.Task.Run(async () => await VehiclesAllAsync(procState, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>获取机器人的信息集合</summary>
         /// <param name="procState">以机器人的业务状态，对机器人进行筛选
         /// - UNAVAILABLE：机器人不可利用
@@ -630,12 +633,12 @@ namespace DeviceAsset
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/vehicles?");
-            if (procState != null) 
+            if (procState != null)
             {
                 urlBuilder_.Append("procState=").Append(System.Uri.EscapeDataString(ConvertToString(procState, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -643,12 +646,12 @@ namespace DeviceAsset
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -658,20 +661,20 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<VehicleState>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<VehicleState>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<VehicleState>>(responseData_, _settings.Value);
-                                return result_; 
-                            } 
-                            catch (System.Exception exception_) 
+                                return result_;
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -679,10 +682,10 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-            
+
                         return default(System.Collections.Generic.List<VehicleState>);
                     }
                     finally
@@ -698,7 +701,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>获取指定名称的机器人的信息</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <returns>请求已成功</returns>
@@ -707,7 +710,7 @@ namespace DeviceAsset
         {
             return System.Threading.Tasks.Task.Run(async () => await VehiclesAsync(nAME, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>获取指定名称的机器人的信息</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <returns>请求已成功</returns>
@@ -717,11 +720,11 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/vehicles/{NAME}");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -729,12 +732,12 @@ namespace DeviceAsset
                 {
                     request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -744,34 +747,34 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(VehicleState); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(VehicleState);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<VehicleState>(responseData_, _settings.Value);
-                                return result_; 
-                            } 
-                            catch (System.Exception exception_) 
+                                return result_;
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -780,10 +783,10 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-            
+
                         return default(VehicleState);
                     }
                     finally
@@ -799,7 +802,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>撤销指定的机器人正在执行的业务订单</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -810,7 +813,7 @@ namespace DeviceAsset
         {
             System.Threading.Tasks.Task.Run(async () => await Withdrawal2Async(nAME, immediate, disableVehicle, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>撤销指定的机器人正在执行的业务订单</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="immediate">如果为 true ，RoboRoute 将立即撤销业务订单；否则会等到正在进行的命令执行完毕后，再撤销业务订单</param>
@@ -822,20 +825,20 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/vehicles/{NAME}/withdrawal?");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
-            if (immediate != null) 
+            if (immediate != null)
             {
                 urlBuilder_.Append("immediate=").Append(System.Uri.EscapeDataString(ConvertToString(immediate, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
-            if (disableVehicle != null) 
+            if (disableVehicle != null)
             {
                 urlBuilder_.Append("disableVehicle=").Append(System.Uri.EscapeDataString(ConvertToString(disableVehicle, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -843,12 +846,12 @@ namespace DeviceAsset
                 {
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -858,24 +861,24 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
                             return;
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -884,7 +887,7 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                     }
@@ -901,7 +904,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         /// <summary>为指定的机器人设置在线状态</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="newValue">指定的机器人在线状态
@@ -915,7 +918,7 @@ namespace DeviceAsset
         {
             System.Threading.Tasks.Task.Run(async () => await IntegrationLevelAsync(nAME, newValue, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
         }
-    
+
         /// <summary>为指定的机器人设置在线状态</summary>
         /// <param name="nAME">机器人的名称</param>
         /// <param name="newValue">指定的机器人在线状态
@@ -930,16 +933,16 @@ namespace DeviceAsset
         {
             if (nAME == null)
                 throw new System.ArgumentNullException("nAME");
-    
+
             if (newValue == null)
                 throw new System.ArgumentNullException("newValue");
-    
+
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/vehicles/{NAME}/integrationLevel?");
             urlBuilder_.Replace("{NAME}", System.Uri.EscapeDataString(ConvertToString(nAME, System.Globalization.CultureInfo.InvariantCulture)));
             urlBuilder_.Append("newValue=").Append(System.Uri.EscapeDataString(ConvertToString(newValue, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
-    
+
             var client_ = new System.Net.Http.HttpClient();
             try
             {
@@ -947,12 +950,12 @@ namespace DeviceAsset
                 {
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-    
+
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
                     request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
                     PrepareRequest(client_, request_, url_);
-    
+
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
                     try
                     {
@@ -962,24 +965,24 @@ namespace DeviceAsset
                             foreach (var item_ in response_.Content.Headers)
                                 headers_[item_.Key] = item_.Value;
                         }
-    
+
                         ProcessResponse(client_, response_);
-    
+
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200") 
+                        if (status_ == "200")
                         {
                             return;
                         }
                         else
-                        if (status_ == "404") 
+                        if (status_ == "404")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
-                            var result_ = default(System.Collections.Generic.List<string>); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            var result_ = default(System.Collections.Generic.List<string>);
                             try
                             {
                                 result_ = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.List<string>>(responseData_, _settings.Value);
-                            } 
-                            catch (System.Exception exception_) 
+                            }
+                            catch (System.Exception exception_)
                             {
                                 throw new SwaggerException("Could not deserialize the response body.", (int)response_.StatusCode, responseData_, headers_, exception_);
                             }
@@ -988,7 +991,7 @@ namespace DeviceAsset
                         else
                         if (status_ != "200" && status_ != "204")
                         {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false); 
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
                     }
@@ -1005,7 +1008,7 @@ namespace DeviceAsset
                     client_.Dispose();
             }
         }
-    
+
         private string ConvertToString(object value, System.Globalization.CultureInfo cultureInfo)
         {
             if (value is System.Enum)
@@ -1016,7 +1019,7 @@ namespace DeviceAsset
                     var field = System.Reflection.IntrospectionExtensions.GetTypeInfo(value.GetType()).GetDeclaredField(name);
                     if (field != null)
                     {
-                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute)) 
+                        var attribute = System.Reflection.CustomAttributeExtensions.GetCustomAttribute(field, typeof(System.Runtime.Serialization.EnumMemberAttribute))
                             as System.Runtime.Serialization.EnumMemberAttribute;
                         if (attribute != null)
                         {
@@ -1025,36 +1028,37 @@ namespace DeviceAsset
                     }
                 }
             }
-            else if (value is bool) {
+            else if (value is bool)
+            {
                 return System.Convert.ToString(value, cultureInfo).ToLowerInvariant();
             }
             else if (value is byte[])
             {
-                return System.Convert.ToBase64String((byte[]) value);
+                return System.Convert.ToBase64String((byte[])value);
             }
             else if (value != null && value.GetType().IsArray)
             {
-                var array = System.Linq.Enumerable.OfType<object>((System.Array) value);
+                var array = System.Linq.Enumerable.OfType<object>((System.Array)value);
                 return string.Join(",", System.Linq.Enumerable.Select(array, o => ConvertToString(o, cultureInfo)));
             }
-        
+
             return System.Convert.ToString(value, cultureInfo);
         }
     }
-    
-    
+
+
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class TransportOrderState 
+    public partial class TransportOrderState
     {
         /// <summary>业务订单的名称</summary>
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
-    
+
         /// <summary>业务订单的业务类型</summary>
         [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Category { get; set; }
-    
+
         /// <summary>业务订单当前的状态
         /// - RAW：初始状态
         /// - ACTIVE：业务订单已激活
@@ -1067,44 +1071,44 @@ namespace DeviceAsset
         [Newtonsoft.Json.JsonProperty("state", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public TransportOrderStateState? State { get; set; }
-    
+
         /// <summary>预期执行此业务订单的机器人名称</summary>
         [Newtonsoft.Json.JsonProperty("intendedVehicle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string IntendedVehicle { get; set; }
-    
+
         /// <summary>正在执行此业务订单的机器人名称</summary>
         [Newtonsoft.Json.JsonProperty("processingVehicle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ProcessingVehicle { get; set; }
-    
+
         /// <summary>业务订单包含的目标工作站的序列</summary>
         [Newtonsoft.Json.JsonProperty("destinations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.List<DestinationState> Destinations { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static TransportOrderState FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<TransportOrderState>(data);
         }
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class DestinationState 
+    public partial class DestinationState
     {
         /// <summary>工作站的名称</summary>
         [Newtonsoft.Json.JsonProperty("locationName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string LocationName { get; set; }
-    
+
         /// <summary>机器人在工作站要执行的操作的名称</summary>
         [Newtonsoft.Json.JsonProperty("operation", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Operation { get; set; }
-    
+
         /// <summary>业务订单子任务的执行状态
         /// - PRISTINE：任务处于初始状态
         /// - ACTIVE：任务处于激活状态
@@ -1116,40 +1120,40 @@ namespace DeviceAsset
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DestinationStateState State { get; set; }
-    
+
         /// <summary>业务订单子任务的元属性</summary>
         [Newtonsoft.Json.JsonProperty("properties", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(2147483647)]
         public System.Collections.Generic.List<Property> Properties { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static DestinationState FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DestinationState>(data);
         }
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class TransportOrder 
+    public partial class TransportOrder
     {
         /// <summary>执行业务订单的截止时间（UTC时区）</summary>
         [Newtonsoft.Json.JsonProperty("deadline", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTime Deadline { get; set; }
-    
+
         /// <summary>（可选）预期执行此业务订单的机器人名称</summary>
         [Newtonsoft.Json.JsonProperty("intendedVehicle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string IntendedVehicle { get; set; }
-    
+
         /// <summary>（可选）业务订单的业务类型</summary>
         [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Category { get; set; }
-    
+
         /// <summary>（特殊用途，暂不启用）业务订单所归属的业务订单序列</summary>
         [Newtonsoft.Json.JsonProperty("wrappingSequence", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string WrappingSequence { get; set; }
@@ -1165,81 +1169,81 @@ namespace DeviceAsset
         [Newtonsoft.Json.JsonProperty("properties", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(2147483647)]
         public System.Collections.Generic.List<Property> Properties { get; set; }
-    
+
         /// <summary>订单依赖。执行本业务订单前，需要已经执行完毕的业务订单的名称列表</summary>
         [Newtonsoft.Json.JsonProperty("dependencies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(2147483647)]
         public System.Collections.Generic.List<string> Dependencies { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static TransportOrder FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<TransportOrder>(data);
         }
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class DestinationOrder 
+    public partial class DestinationOrder
     {
         /// <summary>目标工作站的名称</summary>
         [Newtonsoft.Json.JsonProperty("locationName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string LocationName { get; set; }
-    
+
         /// <summary>机器人在工作站要执行的操作的名称</summary>
         [Newtonsoft.Json.JsonProperty("operation", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Operation { get; set; }
-    
+
         /// <summary>业务订单子任务的元属性</summary>
         [Newtonsoft.Json.JsonProperty("properties", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(2147483647)]
         public System.Collections.Generic.List<Property> Properties { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static DestinationOrder FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DestinationOrder>(data);
         }
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class VehicleState 
+    public partial class VehicleState
     {
         /// <summary>机器人的名称</summary>
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
-    
+
         /// <summary>机器人的元属性</summary>
         [Newtonsoft.Json.JsonProperty("properties", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.Dictionary<string, string> Properties { get; set; }
-    
+
         /// <summary>机器人的长度（单位：mm）</summary>
         [Newtonsoft.Json.JsonProperty("length", Required = Newtonsoft.Json.Required.Always)]
         public int Length { get; set; }
-    
+
         /// <summary>机器人的剩余电量大于或者等于该值时，RoboRoute 将判断机器人的电量状态为：良好</summary>
         [Newtonsoft.Json.JsonProperty("energyLevelGood", Required = Newtonsoft.Json.Required.Always)]
         public int EnergyLevelGood { get; set; }
-    
+
         /// <summary>机器人的剩余电量小于或者等于该值时，RoboRoute 将判断机器人的电量状态为：严重降低</summary>
         [Newtonsoft.Json.JsonProperty("energyLevelCritical", Required = Newtonsoft.Json.Required.Always)]
         public int EnergyLevelCritical { get; set; }
-    
+
         /// <summary>机器人的剩余电量值（单位：整数百分比）</summary>
         [Newtonsoft.Json.JsonProperty("energyLevel", Required = Newtonsoft.Json.Required.Always)]
         public int EnergyLevel { get; set; }
-    
+
         /// <summary>机器人在 RoboRoute 系统中的在线状态
         /// - TO_BE_IGNORED：机器人处于离线状态
         /// - TO_BE_NOTICED：RoboRoute 标识出机器人的位置，但在任何处理中均不考虑该机器人的存在
@@ -1248,7 +1252,7 @@ namespace DeviceAsset
         [Newtonsoft.Json.JsonProperty("integrationLevel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public VehicleStateIntegrationLevel? IntegrationLevel { get; set; }
-    
+
         /// <summary>机器人当前的业务订单执行状态
         /// - UNAVAILABLE：无法执行任何业务订单和任务
         /// - IDLE：空闲状态
@@ -1257,15 +1261,15 @@ namespace DeviceAsset
         [Newtonsoft.Json.JsonProperty("procState", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public VehicleStateProcState? ProcState { get; set; }
-    
+
         /// <summary>机器人正在执行的业务订单的名称</summary>
         [Newtonsoft.Json.JsonProperty("transportOrder", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string TransportOrder { get; set; }
-    
+
         /// <summary>机器人当前占据的点位的名称</summary>
         [Newtonsoft.Json.JsonProperty("currentPosition", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string CurrentPosition { get; set; }
-    
+
         /// <summary>机器人当前的自身状态
         /// - UNKNOWN：未知状态
         /// - UNAVAILABLE：通信超时或者已断开连接
@@ -1276,45 +1280,45 @@ namespace DeviceAsset
         [Newtonsoft.Json.JsonProperty("state", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public VehicleStateState? State { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static VehicleState FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<VehicleState>(data);
         }
-    
+
     }
-    
+
     /// <summary>对象的元属性，以键值对的方式出现</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class Property 
+    public partial class Property
     {
         /// <summary>属性的键</summary>
         [Newtonsoft.Json.JsonProperty("key", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Key { get; set; }
-    
+
         /// <summary>属性的值</summary>
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Value { get; set; }
-    
-        public string ToJson() 
+
+        public string ToJson()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
-    
+
         public static Property FromJson(string data)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<Property>(data);
         }
-    
+
     }
-    
+
     /// <summary>以机器人的业务状态，对机器人进行筛选
     /// - UNAVAILABLE：机器人不可利用
     /// - IDLE：机器人处于空闲状态
@@ -1325,18 +1329,18 @@ namespace DeviceAsset
     {
         [System.Runtime.Serialization.EnumMember(Value = @"UNAVAILABLE")]
         UNAVAILABLE = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"IDLE")]
         IDLE = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"AWAITING_ORDER")]
         AWAITING_ORDER = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"PROCESSING_ORDER")]
         PROCESSING_ORDER = 3,
-    
+
     }
-    
+
     /// <summary>指定的机器人在线状态
     /// - TO_BE_IGNORED：机器人处于离线状态
     /// - TO_BE_NOTICED：RoboRoute 标识出机器人的位置，但在任何处理中均不考虑该机器人的存在
@@ -1347,125 +1351,125 @@ namespace DeviceAsset
     {
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_UTILIZED")]
         TO_BE_UTILIZED = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_RESPECTED")]
         TO_BE_RESPECTED = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_NOTICED")]
         TO_BE_NOTICED = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_IGNORED")]
         TO_BE_IGNORED = 3,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum TransportOrderStateState
     {
         [System.Runtime.Serialization.EnumMember(Value = @"RAW")]
         RAW = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"ACTIVE")]
         ACTIVE = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"DISPATCHABLE")]
         DISPATCHABLE = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"BEING_PROCESSED")]
         BEING_PROCESSED = 3,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"WITHDRAWN")]
         WITHDRAWN = 4,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"FINISHED")]
         FINISHED = 5,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"FAILED")]
         FAILED = 6,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"UNROUTABLE")]
         UNROUTABLE = 7,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum DestinationStateState
     {
         [System.Runtime.Serialization.EnumMember(Value = @"PRISTINE")]
         PRISTINE = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"ACTIVE")]
         ACTIVE = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TRAVELLING")]
         TRAVELLING = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"OPERATING")]
         OPERATING = 3,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"FINISHED")]
         FINISHED = 4,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"FAILED")]
         FAILED = 5,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum VehicleStateIntegrationLevel
     {
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_IGNORED")]
         TO_BE_IGNORED = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_NOTICED")]
         TO_BE_NOTICED = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_RESPECTED")]
         TO_BE_RESPECTED = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"TO_BE_UTILIZED")]
         TO_BE_UTILIZED = 3,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum VehicleStateProcState
     {
         [System.Runtime.Serialization.EnumMember(Value = @"UNAVAILABLE")]
         UNAVAILABLE = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"IDLE")]
         IDLE = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"AWAITING_ORDER")]
         AWAITING_ORDER = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"PROCESSING_ORDER")]
         PROCESSING_ORDER = 3,
-    
+
     }
-    
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "9.13.36.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum VehicleStateState
     {
         [System.Runtime.Serialization.EnumMember(Value = @"UNKNOWN")]
         UNKNOWN = 0,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"UNAVAILABLE")]
         UNAVAILABLE = 1,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"ERROR")]
         ERROR = 2,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"IDLE")]
         IDLE = 3,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"EXECUTING")]
         EXECUTING = 4,
-    
+
         [System.Runtime.Serialization.EnumMember(Value = @"CHARGING")]
         CHARGING = 5,
-    
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.2.4.0 (NJsonSchema v9.13.36.0 (Newtonsoft.Json v11.0.0.0))")]
@@ -1477,11 +1481,11 @@ namespace DeviceAsset
 
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException) 
+        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException)
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + response.Substring(0, response.Length >= 512 ? 512 : response.Length), innerException)
         {
             StatusCode = statusCode;
-            Response = response; 
+            Response = response;
             Headers = headers;
         }
 
@@ -1496,12 +1500,12 @@ namespace DeviceAsset
     {
         public TResult Result { get; private set; }
 
-        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException) 
+        public SwaggerException(string message, int statusCode, string response, System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception innerException)
             : base(message, statusCode, response, headers, innerException)
         {
             Result = result;
         }
     }
 
-    #pragma warning restore
+#pragma warning restore
 }

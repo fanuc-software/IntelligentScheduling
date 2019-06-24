@@ -85,8 +85,8 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            //var leftSrv = new TestLeftMaterialService();
-            //leftSrv.Start();
+            var leftSrv = new TestLeftMaterialService();
+            leftSrv.Start();
 
 
 
