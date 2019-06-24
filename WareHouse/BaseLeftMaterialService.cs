@@ -24,6 +24,9 @@ namespace LeftMaterialService
 
             Task.Factory.StartNew(async () =>
             {
+                SendLeftMaterialServiceStateMessage(
+                    new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "START！", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
+
 
                 Temp_S_House_RequestFCS_Last = false;
 
@@ -34,6 +37,7 @@ namespace LeftMaterialService
                 ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
                 if (ret == false)
                 {
+
                     while (ret == false)
                     {
                         ret = ControlDevice.SetHouseFCSAlarm(true);
@@ -62,6 +66,7 @@ namespace LeftMaterialService
                     var ret_tuple = await LeftMaterialFlow();
                     if (ret_tuple.Item1 == false)
                     {
+                        ret = false;
                         while (ret == false)
                         {
                             ret = ControlDevice.SetHouseFCSAlarm(true);
@@ -81,8 +86,7 @@ namespace LeftMaterialService
                     }
                     else
                     {
-                        SendLeftMaterialServiceStateMessage(
-                                new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "左侧料库请求调用完成！", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
+
                     }
 
                 }
@@ -158,6 +162,9 @@ namespace LeftMaterialService
                         return ret_in;
                     }
                 }
+
+                SendLeftMaterialServiceStateMessage(
+                    new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "左侧料库请求调用完成！", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
 
             }
             else

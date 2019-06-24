@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using Modbus.Net;
 using System.IO;
+using System.Threading;
 
 namespace DeviceAsset
 {
@@ -31,14 +32,28 @@ namespace DeviceAsset
             {
                 return tcpClient;
             }
-            for (int i = 0; i < MaxCount; i++)
+            //for (int i = 0; i < MaxCount; i++)
             {
                 if (tcpClient == null || !tcpClient.Connected)
                 {
                     try
                     {
-                        tcpClient = new TcpClient(IP, Port);
-                        return tcpClient;
+
+                        tcpClient = new TcpClient() { SendTimeout = 2000, ReceiveTimeout = 2000 };
+                        var result = tcpClient.BeginConnect(IP, Port, null, null);
+
+                        var sucess = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(2));
+                        return sucess == true ? tcpClient : null;
+
+
+                        //tcpClient = new TcpClient(IP, Port);
+                        //return tcpClient;
+
+                        //tcpClient = new TcpClient() { SendTimeout = 2000, ReceiveTimeout = 2000 };
+
+                        //tcpClient.ConnectAsync(IP, Port);
+                        //Thread.Sleep(2000);
+                        //return tcpClient.Connected ? tcpClient : null;
 
                     }
 #pragma warning disable CS0168 // 声明了变量“ex”，但从未使用过
@@ -77,13 +92,13 @@ namespace DeviceAsset
                     nsStream.Write(message, 0, message.Length);
                     // Buffer to store the response bytes.
                     var readData = new Byte[256];
-                    
+
                     Int32 bytes = nsStream.Read(readData, 0, readData.Length);
-                    var  responseData = System.Text.Encoding.ASCII.GetString(readData, 0, bytes);
+                    var responseData = System.Text.Encoding.ASCII.GetString(readData, 0, bytes);
                     return new Tuple<bool, string>(true, responseData);
 
                 }
-               
+
             }
 #pragma warning disable CS0168 // 声明了变量“ex”，但从未使用过
             catch (Exception ex)
@@ -91,7 +106,7 @@ namespace DeviceAsset
             {
                 return new Tuple<bool, string>(false, "");
             }
-            
+
         }
 
 

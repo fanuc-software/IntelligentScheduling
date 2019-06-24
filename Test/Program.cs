@@ -39,6 +39,10 @@ namespace Test
         static void Main(string[] args)
         {
 
+            //var ab = new AllenBradleyControlDevice();
+            //bool in_out = false;
+            //var ret = ab.GetHouseInOut(ref in_out);
+
             //var robot = new FanucRobotModbus("192.168.1.172");
             //var ret = robot.Read(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = (161).ToString() });
 
@@ -62,14 +66,29 @@ namespace Test
             //var count = test.Count();
 
 
-            //var modula = new LefModulaWareHouseClient("TEST");
-            //modula.ResetTray();
+            for(int i=0;i<100;i++)
+            {
+                var modula = new LefModulaWareHouseClient("TEST");
 
-            //modula.MoveInTray(1, 2);
 
-            // int prod = 0;
+                var ret = modula.MoveInTray(1, 2);
+
+                System.Threading.Thread.Sleep(30000);
+                int prod = 0;
+                int tray = 0;
+                ret = modula.GetPositionInfo(1, 2, out prod, out tray);
+
+                System.Threading.Thread.Sleep(30000);
+                ret = modula.ResetTray();
+            }
+
+
+            //var ret = modula.MoveInTray(1, 2);
+
+
+            //int prod = 0;
             // int tray = 0;
-            //var ret = modula.GetPositionInfo(1, 2, out prod, out tray);
+            //ret = modula.GetPositionInfo(1, 2, out prod, out tray);
             //    var ret = modula.ResetTray();
             //   var ret = modula.MoveOutTray(1, 1);
 
@@ -85,7 +104,7 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            //var leftSrv = new TestLeftMaterialService();
+            // var leftSrv = new TestLeftMaterialService();
             //leftSrv.Start();
 
 
