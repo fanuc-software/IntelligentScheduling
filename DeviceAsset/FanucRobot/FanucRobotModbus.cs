@@ -15,12 +15,14 @@ namespace DeviceAsset
 
         private ModbusMachine _clinet;
 
+        private const int MaxRecon = 3;
+
         public FanucRobotModbus(string ip)
         {
             IP = ip;
             _clinet = new ModbusMachine(ModbusType.Tcp, IP, null, true, 2, 0);
         }
-
+        
         public OperateResult Write(FanucRobotDataConfig dataConfig, string dataValue)
         {
             try
@@ -140,16 +142,19 @@ namespace DeviceAsset
                 }
             };
 
-            _clinet.GetAddresses = addresses;
-            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
-
-            if(ans==null)
+            for (int j = 0; j < MaxRecon; j++)
             {
-                return false;
-            }
+                _clinet.GetAddresses = addresses;
+                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
-            data = ans["DI" + adr].PlcValue > 0 ? true : false;
-            return true;
+                if (ans != null)
+                {
+                    data = ans["DI" + adr].PlcValue > 0 ? true : false;
+                    return true;
+                }
+            }
+            
+            return false;
 
 
         }
@@ -173,16 +178,19 @@ namespace DeviceAsset
                 }
             };
 
-            _clinet.GetAddresses = addresses;
-            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
-
-            if (ans == null)
+            for (int j = 0; j < MaxRecon; j++)
             {
-                return false;
+                _clinet.GetAddresses = addresses;
+                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+
+                if (ans != null)
+                {
+                    data = ans["DO" + adr].PlcValue > 0 ? true : false;
+                    return true;
+                }
             }
 
-            data = ans["DO" + adr].PlcValue > 0 ? true : false;
-            return true;
+            return false;
         }
 
         private bool WriteDI(string adr, bool data)
@@ -202,8 +210,13 @@ namespace DeviceAsset
                 }
             };
 
-            ret = AsyncHelper.RunSync(() => 
-                _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
+            for (int j = 0; j < MaxRecon; j++)
+            {
+                ret = AsyncHelper.RunSync(() =>
+                    _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
+
+                if (ret == true) break;
+            }
 
             return ret;
         }
@@ -236,17 +249,19 @@ namespace DeviceAsset
                 },
             };
 
-            _clinet.GetAddresses = addresses;
-
-            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
-
-            if(ans==null)
+            for (int j = 0; j < MaxRecon; j++)
             {
-                return false;
+                _clinet.GetAddresses = addresses;
+                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+
+                if (ans != null)
+                {
+                    data = (ushort)(ans["LOWPART"].PlcValue + ans["HIGHPART"].PlcValue * 256);
+                    return true;
+                }
             }
 
-            data = (ushort)(ans["LOWPART"].PlcValue + ans["HIGHPART"].PlcValue * 256);
-            return true;
+            return false;
         }
 
         private bool ReadGI(string adr, ref ushort data)
@@ -276,18 +291,22 @@ namespace DeviceAsset
                     DataType = typeof(byte)
                 },
             };
-
-            _clinet.GetAddresses = addresses;
-
-            var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
-
-            if (ans == null)
+            
+            for (int j = 0; j < MaxRecon; j++)
             {
-                return false;
+                _clinet.GetAddresses = addresses;
+                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+
+                if (ans != null)
+                {
+                    data = (ushort)(ans["LOWPART"].PlcValue + ans["HIGHPART"].PlcValue * 256);
+                    return true;
+                } 
             }
 
-            data = (ushort)(ans["LOWPART"].PlcValue + ans["HIGHPART"].PlcValue * 256);
-            return true;
+            return false;
+
+            
         }
         
         private bool WriteGI(string adr, ushort data)
@@ -308,23 +327,20 @@ namespace DeviceAsset
                     }
                 };
 
-                ret = AsyncHelper.RunSync(() =>
-                    _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
+                for (int j = 0; j < MaxRecon; j++)
+                {
+                    ret = AsyncHelper.RunSync(() =>
+                        _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
 
+                    if (ret == true) break; 
+                }
                 if(ret!=true)
                 {
                     return ret;
                 }
 
             }
-
-
-
-
-
-
             
-
             return true;
         }
     }

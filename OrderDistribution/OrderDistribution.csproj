@@ -57,6 +57,7 @@
     <Compile Include="IOrderDevice.cs" />
     <Compile Include="OrderDistributionService.cs" />
     <Compile Include="OrderItem.cs" />
+    <Compile Include="OrderServiceErrorCodeEnum.cs" />
     <Compile Include="OrderServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -25,7 +25,7 @@ namespace OrderDistribution
 
         public AllenBradleyDevice()
         {
-            m_ABDevice = new AllenBradley("192.168.1.81", 44818);
+            m_ABDevice = new AllenBradley("192.168.1.10", 44818);
 
             m_OrderModeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.Sts.MESMode" };
             m_OrderAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AllowMES" };
@@ -280,8 +280,39 @@ namespace OrderDistribution
         {
             var ret = m_ABDevice.Write(m_OrderConfirm, confirm.ToString());
             if (ret.IsSuccess == false) return false;
+            
+            bool check_state = false;
+            DateTime temp_time = DateTime.Now;
+            while (check_state == false && (DateTime.Now - temp_time).TotalSeconds < 20)
+            {
+                int temp = 0;
 
-            return true;
+                var check_ret = m_ABDevice.Read(m_CheckProductType);
+                if (check_ret.IsSuccess == false) continue;
+                var pret = int.TryParse(check_ret.Content, out temp);
+                if (pret == false || temp!=0) continue;
+
+                check_ret = m_ABDevice.Read(m_CheckQuantity);
+                if (check_ret.IsSuccess == false) continue;
+                pret = int.TryParse(check_ret.Content, out temp);
+                if (pret == false || temp != 0) continue;
+
+                check_ret = m_ABDevice.Read(m_ProductType);
+                if (check_ret.IsSuccess == false) continue;
+                pret = int.TryParse(check_ret.Content, out temp);
+                if (pret == false || temp != 0) continue;
+
+                check_ret = m_ABDevice.Read(m_Quantity);
+                if (check_ret.IsSuccess == false) continue;
+                pret = int.TryParse(check_ret.Content, out temp);
+                if (pret == false || temp != 0) continue;
+
+                ret = m_ABDevice.Write(m_OrderConfirm, "false");
+                return true;
+            }
+
+            ret = m_ABDevice.Write(m_OrderConfirm, "false");
+            return false;
         }
 
         /// <summary>

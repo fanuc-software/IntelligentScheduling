@@ -26,8 +26,6 @@ namespace OrderDistribution
         public BaseOrderService(OrderServiceEnum orderServiceEnum)
         {
             ServiceEnum = orderServiceEnum;
-
-
         }
 
 
@@ -36,6 +34,9 @@ namespace OrderDistribution
 
             Task.Factory.StartNew(() =>
             {
+
+                SendOrderServiceStateMessage?.Invoke(
+                    new OrderServiceState { State = OrderServiceStateEnum.WARN, Message = "ORDER SERVICE START!", ErrorCode = OrderServiceErrorCodeEnum.NORMAL });
 
                 Device.Temp_S_Order_AllowMES_Last = false;
 
@@ -72,14 +73,15 @@ namespace OrderDistribution
                 {
 
                     //订单下发服务
-                    ret = OrderService();
-                    if (ret == false)
+                    var srv_ret = OrderService();
+                    if (srv_ret.Item1 == false)
                     {
+                        ret = false;
                         while (ret == false)
                         {
                             ret = Device.SetOrderAlarm(true);
                             SendOrderServiceStateMessage?.Invoke(
-                                new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "订单下发失败,发送错误信息至设备!" });
+                                new OrderServiceState { State = OrderServiceStateEnum.ERROR, Message = "订单下发失败,发送错误信息至设备!" , ErrorCode = srv_ret.Item2});
                             Thread.Sleep(1000);
                         }
 
@@ -89,7 +91,7 @@ namespace OrderDistribution
                         {
                             Device.GetOrderReset(ref dev_reset);
                             SendOrderServiceStateMessage?.Invoke(
-                                new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "订单下发失败,等待设备的复位信号" });
+                                new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "订单下发失败,等待设备的复位信号" ,ErrorCode=OrderServiceErrorCodeEnum.NORMAL});
                             Thread.Sleep(1000);
                         }
 
@@ -113,19 +115,25 @@ namespace OrderDistribution
         }
 
        
-        private bool OrderService()
+        private Tuple<bool, OrderServiceErrorCodeEnum> OrderService()
         {
             bool ret = false;
 
             bool mode = false;
             ret = Device.GetOrderMode(ref mode);
-            if (ret != true) return ret;
+            if (ret != true)
+            {
+                return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.GETMODE);
+            }
          
             if (mode == true)
             {
                 bool S_Order_AllowMES = false;
                 ret = Device.GetOrderAllow(ref S_Order_AllowMES);
-                if (ret != true) return ret;
+                if (ret != true)
+                {
+                    return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.GETALLOW);
+                }
 
                 //if (S_Order_AllowMES == true && Device.Temp_S_Order_AllowMES_Last == false)
                 if(S_Order_AllowMES == true)
@@ -139,7 +147,7 @@ namespace OrderDistribution
                     if (ret != true)
                     {
                         Device.Temp_S_Order_AllowMES_Last = S_Order_AllowMES;
-                        return ret;
+                        return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.CHECKONBEGIN);
                     }
 
                     //下单
@@ -147,7 +155,7 @@ namespace OrderDistribution
             
                     if (first_order == null)
                     {
-                        return true;
+                        return new Tuple<bool, OrderServiceErrorCodeEnum>(true, OrderServiceErrorCodeEnum.NORMAL); ;
                     }
                     else
                     {
@@ -155,9 +163,15 @@ namespace OrderDistribution
 
                         //向PLC写入订单信息
                         ret = Device.SetProductType(first_order.Type);
-                        if (ret != true) return ret;
+                        if (ret != true)
+                        {
+                            return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.SETPRODUCTTYPE);
+                        }
                         ret = Device.SetQuantity(first_order.Quantity);
-                        if (ret != true) return ret;
+                        if (ret != true)
+                        {
+                            return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.SETQUANTITY);
+                        }
 
                         //检查下单是否成功
                         DateTime temp_time = DateTime.Now;
@@ -174,16 +188,22 @@ namespace OrderDistribution
                                 check_state = true;
                             }
                         }
-                        if (check_state == false) return false;
+                        if (check_state == false)
+                        {
+
+                            return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.CHECKCONFIRM); 
+                        }
 
                         //发出二次确认信号
                         ret = Device.SetOrderConfirm(true);
-                        if (ret != true) return ret;
+                        if (ret != true)
+                        {
+                            return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.SETCONFIRRM); 
+                        }
 
                         //变更软件订单状态
                         first_order.State = OrderItemStateEnum.DOWORK;//test
                         OrderStateChangeEvent?.Invoke(first_order, ServiceEnum, 0);
-
                     }
                 }
                 else
@@ -201,7 +221,7 @@ namespace OrderDistribution
 
             }
 
-            return true;
+            return new Tuple<bool, OrderServiceErrorCodeEnum>(true, OrderServiceErrorCodeEnum.NORMAL); ;
 
         }
 

@@ -16,7 +16,7 @@ namespace DeviceAsset.Tests
         {
 
             Client client = new Client();
-            var res = client.VehiclesAllAsync(ProcState.IDLE).Result;
+            //var res = client.VehiclesAllAsync(ProcState.IDLE).Result;
             var time = DateTime.UtcNow.ToShortTimeString();
             client.TransportOrders2Async($"TestOrder_{time}", new TransportOrder()
             {
@@ -26,9 +26,6 @@ namespace DeviceAsset.Tests
                     new DestinationOrder(){ LocationName="A",Operation="JackLoad",Properties=new List<Property>()},
                     new DestinationOrder(){ LocationName="B",Operation="JackUnload",Properties=new List<Property>()},
                     new DestinationOrder(){ LocationName="C",Operation="JackLoad",Properties=new List<Property>()},
-
-                // new DestinationOrder(){ LocationName="AP8",Operation="JackUnload"}
-
                 },
                 Properties = new List<Property>(),
                 Dependencies = new List<string>()

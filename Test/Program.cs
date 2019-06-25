@@ -25,7 +25,7 @@ namespace Test
 
     class TestOrderService : BaseOrderService
     {
-        public override IOrderDevice Device => new FanucRobotDevice();
+        public override IOrderDevice Device => new AllenBradleyDevice();
 
         public TestOrderService(OrderServiceEnum serviceEnum) : base(serviceEnum)
         {
@@ -36,6 +36,7 @@ namespace Test
 
     class Program
     {
+
         static void Main(string[] args)
         {
 
@@ -66,21 +67,21 @@ namespace Test
             //var count = test.Count();
 
 
-            for(int i=0;i<100;i++)
-            {
-                var modula = new LefModulaWareHouseClient("TEST");
+            //for(int i=0;i<100;i++)
+            //{
+            //    var modula = new LefModulaWareHouseClient("TEST");
 
 
-                var ret = modula.MoveInTray(1, 2);
+            //    var ret = modula.MoveInTray(1, 2);
 
-                System.Threading.Thread.Sleep(30000);
-                int prod = 0;
-                int tray = 0;
-                ret = modula.GetPositionInfo(1, 2, out prod, out tray);
+            //    System.Threading.Thread.Sleep(30000);
+            //    int prod = 0;
+            //    int tray = 0;
+            //    ret = modula.GetPositionInfo(1, 2, out prod, out tray);
 
-                System.Threading.Thread.Sleep(30000);
-                ret = modula.ResetTray();
-            }
+            //    System.Threading.Thread.Sleep(30000);
+            //    ret = modula.ResetTray();
+            //}
 
 
             //var ret = modula.MoveInTray(1, 2);
@@ -95,9 +96,13 @@ namespace Test
             //System.Threading.Thread.Sleep(2000);
 
 
-            //BaseOrderService srv = new BaseOrderService(OrderServiceEnum.OrderDistribution);
-            //srv.Start();
+            BaseOrderService srv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            srv.SendOrderServiceStateMessage += PrintErrorMessage;
+            srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            srv.Start();
 
+
+            
             // eventBus.Deregister(mytest);
 
             //var dev = new AllenBradleyDevice();
@@ -121,10 +126,18 @@ namespace Test
             }
         }
 
+        private static void PrintErrorMessage(OrderServiceState state)
+        {
+            Console.WriteLine($"【ORDER】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+        }
+
         private static OrderItem Srv_GetFirstOrderEvent(OrderServiceEnum arg)
         {
-            Console.WriteLine("==============GetFirstOrder==============Start");
-            return new OrderItem { Id = "test", CreateDateTime = DateTime.Now, Type = 1, State = OrderItemStateEnum.NEW, Quantity = 1 };
+            Console.WriteLine($"==============GetFirstOrder==============Start============={DateTime.Now.ToString()}");
+
+            var ram = new Random();
+            var count = ram.Next(10, 50);
+            return new OrderItem { Id = "test", CreateDateTime = DateTime.Now, Type = 1, State = OrderItemStateEnum.NEW, Quantity = count };
         }
 
     }

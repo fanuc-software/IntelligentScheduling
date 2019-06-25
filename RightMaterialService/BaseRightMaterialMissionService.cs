@@ -19,15 +19,7 @@ namespace RightMaterialService
         #region 任务
         private List<RightMaterialOutMisson> OutMissions { get; set; }
         private List<RightMaterialInMisson> InMissions { get; set; }
-
-#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
-        public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
-#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
-
-#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
-        public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
-#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
-
+        
         #endregion
 
         #region ctor
@@ -62,6 +54,7 @@ namespace RightMaterialService
 
         #endregion
 
+        #region 外部接口
         public void PushOutMission(RightMaterialOutMisson mission)
         {
             if (OutMissions.Where(x => x.Id == mission.Id).Count() == 0)
@@ -78,19 +71,35 @@ namespace RightMaterialService
             }
         }
 
+#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
+        public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
+
+#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
+        public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
+
+        #endregion
+
         public void Start()
         {
             Task.Factory.StartNew(() =>
             {
                 while (!token.IsCancellationRequested)
                 {
-                    var ret = CheckMissionConflict();
+                    bool ret=false;
+                    //防冲突
+                    //var ret = CheckMissionConflict();
                     if (ret == false)
                     {
                         while (ret == false)
                         {
+                            //TODO:停止所有AGV小车动作
+
+
+                            //设定报警
                             ret = SetAlarm(true);
-                            //TODO:
+                            //TODO:通知界面
                             //SendStationClientStateMessage(
                             //    new StationClientState { State = StationClientStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!" });
                             Thread.Sleep(1000);
@@ -100,7 +109,7 @@ namespace RightMaterialService
                         while (dev_reset == false)
                         {
                             GetReset(ref dev_reset);
-                            //TODO:
+                            //TODO:通知界面
                             //SendStationClientStateMessage(
                             //    new StationClientState { State = StationClientStateEnum.INFO, Message = "物料调用失败,等待设备的复位信号" });
                             Thread.Sleep(1000);
@@ -113,21 +122,21 @@ namespace RightMaterialService
                     var undo_outmissions = OutMissions
                         .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
 
-                    //没有料库入库任务
-                    if (undo_inmissions.Count() == 0)
+                    //小于两个料库入库任务 添加一个入库任务
+                    if (undo_inmissions.Count() < 2)
                     {
                         var new_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.NEW).FirstOrDefault();
                         if (new_inmission != null) new_inmission.Process = RightMaterialInMissonProcessEnum.START;
                     }
 
-                    //小于两个出料库任务
+                    //小于两个出料库任务 添加一个出库任务
                     if (undo_outmissions.Count() < 2)
                     {
                         var new_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.NEW).FirstOrDefault();
                         if (new_inmission != null) new_inmission.Process = RightMaterialInMissonProcessEnum.START;
                     }
 
-                    //通知料库入料动作
+                    //通知料库入库动作
                     var warehouse_inmission = undo_inmissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.PLACEANDLEAVE).FirstOrDefault();
                     if (warehouse_inmission != null)
                     {
@@ -168,7 +177,7 @@ namespace RightMaterialService
                     var warehouse_outmission = undo_outmissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.START).FirstOrDefault();
                     if (warehouse_outmission != null)
                     {
-                        warehouse_outmission.Process = RightMaterialOutMissonProcessEnum.WHSTART;
+                        //warehouse_outmission.Process = RightMaterialOutMissonProcessEnum.WHSTART;
 
                         Task.Factory.StartNew(async () =>
                         {
@@ -308,6 +317,28 @@ namespace RightMaterialService
                 }
             }, token.Token);
         }
+        
+        public bool CloseOutMission(string missionId)
+        {
+            var finished_outmission = OutMissions.Where(x => x.Id==missionId && x.Process == RightMaterialOutMissonProcessEnum.FINISHED).FirstOrDefault();
+            if (finished_outmission != null)
+            {
+                finished_outmission.Process = RightMaterialOutMissonProcessEnum.CLOSE;
+            }
+
+            return true;
+        }
+
+        public bool CloseInMission(string missionId)
+        {
+            var finished_inmission = InMissions.Where(x => x.Id == missionId && x.Process == RightMaterialInMissonProcessEnum.FINISHED).FirstOrDefault();
+            if (finished_inmission != null)
+            {
+                finished_inmission.Process = RightMaterialInMissonProcessEnum.CLOSE;
+            }
+
+            return true;
+        }
 
         //TODO:
         public void Stop()
@@ -331,7 +362,7 @@ namespace RightMaterialService
 
         }
 
-        private bool CheckMissionConflict()
+        private Tuple<bool, RightMaterialMissionServiceErrorCodeEnum> CheckMissionConflict()
         {
             var undo_inmissions = InMissions
                 .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
@@ -341,23 +372,40 @@ namespace RightMaterialService
             //存在相同ID的任务
             var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
             var max_outmission = undo_outmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
-            if (max_inmission.num > 1 || max_outmission.num > 1) return false;
+            if (max_inmission.num > 1 || max_outmission.num > 1)
+            {
+                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+                    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            }
 
             //多于2个任务正在执行
             var count_inmissions = undo_inmissions.Count();
             var count_outmissions = undo_outmissions.Count();
-            if (count_inmissions + count_outmissions > 2) return false;
+            if (count_inmissions + count_outmissions > 2)
+            {
+                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+                    (false, RightMaterialMissionServiceErrorCodeEnum.QUANTITYLIMIT);
+            }
 
             //存在两个出料库任务，已经达到AGVSTART， 但是小于AGVLEAVEPICK
             var count_outmission_conflict = undo_outmissions
                 .Where(x => x.Process >= RightMaterialOutMissonProcessEnum.AGVSTART && x.Process < RightMaterialOutMissonProcessEnum.AGVLEAVEPICK).Count();
-            if (count_outmission_conflict > 1) return false;
+            if (count_outmission_conflict > 1)
+            {
+                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+                    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            }
 
             //只能有一个入料库任务
             var count_inmission_conflict = undo_inmissions.Count();
-            if (count_inmission_conflict > 1) return false;
+            if (count_inmission_conflict > 1)
+            {
+                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            }
 
-            return true;
+            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
         }
 
         //TODO:发送入库任务给小车调度中心
