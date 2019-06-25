@@ -53,6 +53,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IControlDevice.cs" />
     <Compile Include="IWareHouseClient.cs" />
+    <Compile Include="RightMaterialMissionServiceErrorCodeEnum.cs" />
+    <Compile Include="RightMaterialServiceErrorCodeEnum.cs" />
     <Compile Include="RightMaterialServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RightMaterialInMisson.cs" />

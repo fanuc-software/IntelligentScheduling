@@ -14,20 +14,23 @@ namespace RightMaterialService
         //开始处理
         START=1,
 
+        //通知小车前往PICK等待点
+        AGVTOPREPICK = 2,
+
         //通知料库出库
-        WHSTART = 2,
+        WHPICK = 3,
 
-        //出库物料
-        PICKED =3,
+        //物料出库完成
+        WHPICKED =4,
 
-        //通知小车前往PICK
-        AGVSTART=4,
+        //通知小车进入出料道
+        AGVTOPICK=5,
 
-        //小车从出料道搬离物料
-        AGVLEAVEPICK = 5,
+        //小车从出料道搬离物料并离开
+        AGVPICKEDANDLEAVE = 6,
 
-        //小车准备进入单元入料道
-        INPLACE=6,
+        //小车前往PLACE等待点
+        AGVTOPREPLACE=7,
 
         //放置完成离开
         FINISHED=7,

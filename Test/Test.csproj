@@ -68,10 +68,6 @@
       <Project>{f67fbb7e-6d6d-4d76-b390-fb4c90a84cae}</Project>
       <Name>OrderDistribution</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RightMaterialService\RightMaterialService.csproj">
-      <Project>{943bebc8-e05e-417f-9273-ffd1f2e10d31}</Project>
-      <Name>RightMaterialService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WareHouse\LeftMaterialService.csproj">
       <Project>{a86ceba4-dd92-42c2-96cd-74a0eac92401}</Project>
       <Name>LeftMaterialService</Name>

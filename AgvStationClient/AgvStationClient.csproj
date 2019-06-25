@@ -34,6 +34,12 @@
     <Reference Include="EventBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e3081d91662be497, processorArchitecture=MSIL">
       <HintPath>..\packages\EventBus.1.1.2\lib\net46\EventBus.dll</HintPath>
     </Reference>
+    <Reference Include="HslCommunication, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
+      <HintPath>..\packages\HslCommunication.7.0.0\lib\net451\HslCommunication.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgvStationCommand.cs" />
+    <Compile Include="AllenBradleyClientDevice.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IStationDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +59,10 @@
     <Compile Include="StationClientState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+      <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
+      <Name>DeviceAsset</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RightMaterialService\RightMaterialService.csproj">
       <Project>{943bebc8-e05e-417f-9273-ffd1f2e10d31}</Project>
       <Name>RightMaterialService</Name>

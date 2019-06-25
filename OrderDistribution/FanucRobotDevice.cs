@@ -23,6 +23,8 @@ namespace OrderDistribution
 
         private FanucRobotModbus m_FanucRobotDevice;
 
+        
+
         public FanucRobotDevice()
         {
             m_FanucRobotDevice = new FanucRobotModbus("192.168.1.172");

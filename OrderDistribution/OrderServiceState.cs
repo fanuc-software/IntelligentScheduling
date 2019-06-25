@@ -22,6 +22,8 @@ namespace OrderDistribution
 
         public string Message { get; set; }
 
+        public OrderServiceErrorCodeEnum ErrorCode { get; set; }
+
         public override string ToString()
         {
             return $"【{State}】{Message}";

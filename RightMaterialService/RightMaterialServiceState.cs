@@ -22,5 +22,7 @@ namespace RightMaterialService
         public RightMaterialServiceStateEnum State { get; set; }
 
         public string Message { get; set; }
+
+        public RightMaterialServiceErrorCodeEnum ErrorCode { get; set; }
     }
 }
