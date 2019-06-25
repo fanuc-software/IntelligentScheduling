@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceAssetTests", "DeviceA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGVConsoleTest", "AGVConsoleTest\AGVConsoleTest.csproj", "{F317821F-E291-49A9-90DE-4EAB0998756B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGV.Web.Host", "AGV.Web.Host\AGV.Web.Host.csproj", "{C06029BA-1236-4CAE-ADBE-8414BC30110E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{F317821F-E291-49A9-90DE-4EAB0998756B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F317821F-E291-49A9-90DE-4EAB0998756B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F317821F-E291-49A9-90DE-4EAB0998756B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06029BA-1236-4CAE-ADBE-8414BC30110E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06029BA-1236-4CAE-ADBE-8414BC30110E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06029BA-1236-4CAE-ADBE-8414BC30110E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06029BA-1236-4CAE-ADBE-8414BC30110E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
