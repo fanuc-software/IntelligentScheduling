@@ -364,48 +364,48 @@ namespace RightMaterialService
 
         private Tuple<bool, RightMaterialMissionServiceErrorCodeEnum> CheckMissionConflict()
         {
-            var undo_inmissions = InMissions
-                .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
-            var undo_outmissions = OutMissions
-                .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
+    //        var undo_inmissions = InMissions
+    //            .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
+    //        var undo_outmissions = OutMissions
+    //            .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
 
-            //存在相同ID的任务
-            var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
-            var max_outmission = undo_outmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
-            if (max_inmission.num > 1 || max_outmission.num > 1)
-            {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
-            }
+    //        //存在相同ID的任务
+    //        var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
+    //        var max_outmission = undo_outmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
+    //        if (max_inmission.num > 1 || max_outmission.num > 1)
+    //        {
+    //            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    //                (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+    //        }
 
-            //多于2个任务正在执行
-            var count_inmissions = undo_inmissions.Count();
-            var count_outmissions = undo_outmissions.Count();
-            if (count_inmissions + count_outmissions > 2)
-            {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                    (false, RightMaterialMissionServiceErrorCodeEnum.QUANTITYLIMIT);
-            }
+    //        //多于2个任务正在执行
+    //        var count_inmissions = undo_inmissions.Count();
+    //        var count_outmissions = undo_outmissions.Count();
+    //        if (count_inmissions + count_outmissions > 2)
+    //        {
+    //            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    //                (false, RightMaterialMissionServiceErrorCodeEnum.QUANTITYLIMIT);
+    //        }
 
-            //存在两个出料库任务，已经达到AGVSTART， 但是小于AGVLEAVEPICK
-            var count_outmission_conflict = undo_outmissions
-                .Where(x => x.Process >= RightMaterialOutMissonProcessEnum.AGVSTART && x.Process < RightMaterialOutMissonProcessEnum.AGVLEAVEPICK).Count();
-            if (count_outmission_conflict > 1)
-            {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
-            }
+    //        //存在两个出料库任务，已经达到AGVSTART， 但是小于AGVLEAVEPICK
+    //        var count_outmission_conflict = undo_outmissions
+    //            .Where(x => x.Process >= RightMaterialOutMissonProcessEnum.AGVSTART && x.Process < RightMaterialOutMissonProcessEnum.AGVLEAVEPICK).Count();
+    //        if (count_outmission_conflict > 1)
+    //        {
+    //            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    //                (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+    //        }
 
-            //只能有一个入料库任务
-            var count_inmission_conflict = undo_inmissions.Count();
-            if (count_inmission_conflict > 1)
-            {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
-            }
+    //        //只能有一个入料库任务
+    //        var count_inmission_conflict = undo_inmissions.Count();
+    //        if (count_inmission_conflict > 1)
+    //        {
+    //            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
+    //(false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            //}
 
             return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+                (true, RightMaterialMissionServiceErrorCodeEnum.NORMAL);
         }
 
         //TODO:发送入库任务给小车调度中心
@@ -484,49 +484,49 @@ namespace RightMaterialService
         private async Task<bool> WareHouseOutMission(RightMaterialOutMisson mission)
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
-            int temp_type = 0;
-            var ret = int.TryParse(mission.ProductId, out temp_type);
-            if (ret == false) return ret;
+            //int temp_type = 0;
+            //var ret = int.TryParse(mission.ProductId, out temp_type);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseProductType(temp_type);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseProductType(temp_type);
+            //if (ret == false) return ret;
 
-            int temp_material = 0;
-            ret = int.TryParse(mission.MaterialId, out temp_material);
-            if (ret == false) return ret;
+            //int temp_material = 0;
+            //ret = int.TryParse(mission.MaterialId, out temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseMaterialType(temp_material);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseMaterialType(temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseInOut(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseInOut(true);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseRequest(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(true);
+            //if (ret == false) return ret;
 
-            var in_fin = false;
-            while (in_fin == false || ret == false)
-            {
-                ret = controlDevice.GetRHouseFin(ref in_fin);
+            //var in_fin = false;
+            //while (in_fin == false || ret == false)
+            //{
+            //    ret = controlDevice.GetRHouseFin(ref in_fin);
 
-                var in_reset = false;
-                controlDevice.GetRHouseReset(ref in_reset);
-                if (in_reset == true)
-                {
-                    break;
-                }
-            }
+            //    var in_reset = false;
+            //    controlDevice.GetRHouseReset(ref in_reset);
+            //    if (in_reset == true)
+            //    {
+            //        break;
+            //    }
+            //}
 
-            mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
+            //mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
 
-            ret = controlDevice.SetRHouseRequest(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
             return true;
         }
