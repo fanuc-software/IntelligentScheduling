@@ -24,8 +24,7 @@ namespace DeviceAsset.Tests
                 Destinations = new List<DestinationOrder>()
                 {
                     new DestinationOrder(){ LocationName="A",Operation="JackLoad",Properties=new List<Property>()},
-                    new DestinationOrder(){ LocationName="B",Operation="JackUnload",Properties=new List<Property>()},
-                    new DestinationOrder(){ LocationName="C",Operation="JackLoad",Properties=new List<Property>()},
+                    new DestinationOrder(){ LocationName="LM28",Operation="JackUnload",Properties=new List<Property>()},
 
                 // new DestinationOrder(){ LocationName="AP8",Operation="JackUnload"}
 
@@ -34,7 +33,21 @@ namespace DeviceAsset.Tests
                 Dependencies = new List<string>()
             }).Wait();
 
+            client.TransportOrders2Async($"TestOrder_{time}_1", new TransportOrder()
+            {
+                Deadline = DateTime.UtcNow.AddHours(8).AddMinutes(10),
+                Destinations = new List<DestinationOrder>()
+                {
+                    new DestinationOrder(){ LocationName="C",Operation="JackLoad",Properties=new List<Property>()},
+                    new DestinationOrder(){ LocationName="B",Operation="JackUnload",Properties=new List<Property>()},
 
+                // new DestinationOrder(){ LocationName="AP8",Operation="JackUnload"}
+
+                },
+                Properties = new List<Property>(),
+                Dependencies = new List<string>() { $"TestOrder_{time}" }
+            }).Wait(); 
+            // $"TestOrder_{time}"
         }
     }
 }
