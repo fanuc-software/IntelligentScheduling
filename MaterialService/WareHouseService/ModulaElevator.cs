@@ -10,7 +10,7 @@ namespace WareHouseService
     public class ModulaElevator
     {
         private static ModulaElevator _instance = null;
-        private static readonly Mutex mutex = new Mutex(false,"MODULA_ELEVATOR");
+        private static readonly Mutex mutex = new Mutex(true,"MODULA_ELEVATOR");
 
         public static ModulaElevator CreateInstance()
         {
@@ -24,12 +24,12 @@ namespace WareHouseService
 
         public void GetElevator()
         {
-            mutex.WaitOne();
+            //mutex.WaitOne();
         }
 
         public void ReleaseElevator()
         {
-            mutex.ReleaseMutex();
+            //mutex.ReleaseMutex();
         }
     }
 }

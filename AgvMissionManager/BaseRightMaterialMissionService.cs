@@ -6,13 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using DeviceAsset;
 
-namespace RightMaterialService
+namespace AgvMissionManager
 {
     public class BaseRightMaterialMissionService
     {
-        private SeerRoboRoute seerRoboRoute;
-        private IControlDevice controlDevice;
-        
         private RightMaterialMissionServiceErrorCodeEnum cur_Display_ErrorCode;
         private string cur_Display_Message;
 
@@ -45,16 +42,12 @@ namespace RightMaterialService
         {
             OutMissions = new List<RightMaterialOutMisson>();
             InMissions = new List<RightMaterialInMisson>();
-
-            seerRoboRoute = SeerRoboRoute.CreateInstance();
-            controlDevice = new AllenBradleyControlDevice();
             
             //关联任务
             brotherMissionType.Add(RightMaterialMissionTypeEnum.RAW_IN, RightMaterialMissionTypeEnum.EMPTY_OUT);
             brotherMissionType.Add(RightMaterialMissionTypeEnum.EMPTY_IN, RightMaterialMissionTypeEnum.FIN_OUT);
 
             #region 初始化任务
-            seerRoboRoute.OnInitial();
 
             OutMissions.Clear();
             InMissions.Clear();
@@ -549,49 +542,49 @@ namespace RightMaterialService
         //TODO:异步料库执行入库
         private bool WareHouseInMission(RightMaterialInMisson mission)
         {
-            int temp_type = 0;
-            var ret = int.TryParse(mission.ProductId, out temp_type);
-            if (ret == false) return ret;
+            //int temp_type = 0;
+            //var ret = int.TryParse(mission.ProductId, out temp_type);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseProductType(temp_type);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseProductType(temp_type);
+            //if (ret == false) return ret;
 
-            int temp_material = 0;
-            ret = int.TryParse(mission.MaterialId, out temp_material);
-            if (ret == false) return ret;
+            //int temp_material = 0;
+            //ret = int.TryParse(mission.MaterialId, out temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseMaterialType(temp_material);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseMaterialType(temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseInOut(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseInOut(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseRequest(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(true);
+            //if (ret == false) return ret;
 
-            var in_fin = false;
-            while (in_fin == false || ret == false)
-            {
-                ret = controlDevice.GetRHouseFin(ref in_fin);
+            //var in_fin = false;
+            //while (in_fin == false || ret == false)
+            //{
+            //    ret = controlDevice.GetRHouseFin(ref in_fin);
 
-                var in_reset = false;
-                controlDevice.GetRHouseReset(ref in_reset);
-                if (in_reset == true)
-                {
-                    break;
-                }
-            }
+            //    var in_reset = false;
+            //    controlDevice.GetRHouseReset(ref in_reset);
+            //    if (in_reset == true)
+            //    {
+            //        break;
+            //    }
+            //}
 
-            mission.Process = RightMaterialInMissonProcessEnum.FINISHED;
+            //mission.Process = RightMaterialInMissonProcessEnum.FINISHED;
 
-            ret = controlDevice.SetRHouseRequest(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
 
             return true;
@@ -600,49 +593,49 @@ namespace RightMaterialService
         //TODO:异步料库执行出库
         private bool WareHouseOutMission(RightMaterialOutMisson mission)
         {
-            int temp_type = 0;
-            var ret = int.TryParse(mission.ProductId, out temp_type);
-            if (ret == false) return ret;
+            //int temp_type = 0;
+            //var ret = int.TryParse(mission.ProductId, out temp_type);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseProductType(temp_type);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseProductType(temp_type);
+            //if (ret == false) return ret;
 
-            int temp_material = 0;
-            ret = int.TryParse(mission.MaterialId, out temp_material);
-            if (ret == false) return ret;
+            //int temp_material = 0;
+            //ret = int.TryParse(mission.MaterialId, out temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseMaterialType(temp_material);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseMaterialType(temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseInOut(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseInOut(true);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseRequest(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(true);
+            //if (ret == false) return ret;
 
-            var in_fin = false;
-            while (in_fin == false || ret == false)
-            {
-                ret = controlDevice.GetRHouseFin(ref in_fin);
+            //var in_fin = false;
+            //while (in_fin == false || ret == false)
+            //{
+            //    ret = controlDevice.GetRHouseFin(ref in_fin);
 
-                var in_reset = false;
-                controlDevice.GetRHouseReset(ref in_reset);
-                if (in_reset == true)
-                {
-                    break;
-                }
-            }
+            //    var in_reset = false;
+            //    controlDevice.GetRHouseReset(ref in_reset);
+            //    if (in_reset == true)
+            //    {
+            //        break;
+            //    }
+            //}
 
-            //mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
+            ////mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
 
-            ret = controlDevice.SetRHouseRequest(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
 
             return true;
         }

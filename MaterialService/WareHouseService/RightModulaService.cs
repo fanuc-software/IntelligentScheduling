@@ -164,15 +164,13 @@ namespace WareHouseService
             var ret = m_Modula.Send(message);
             if (ret.Item1 == false)
             {
-                var elevator2 = ModulaElevator.CreateInstance();
-                elevator2.ReleaseElevator();
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
             if (ret.Item2.Count() < 10)
             {
-                var elevator2 = ModulaElevator.CreateInstance();
-                elevator2.ReleaseElevator();
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
@@ -191,8 +189,7 @@ namespace WareHouseService
             }
             else
             {
-                var elevator2 = ModulaElevator.CreateInstance();
-                elevator2.ReleaseElevator();
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
         }
