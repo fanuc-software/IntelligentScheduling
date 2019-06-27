@@ -32,6 +32,8 @@ namespace LeftMaterialService
 
         bool SetHouseTrayPostion(int tray_pos);
 
+        bool SetHouseQuantity(int quantity);
+
         bool SetHouseConfirmMaterialType(int type);
 
         bool SetHouseRequestFCSFin(bool req_fin);

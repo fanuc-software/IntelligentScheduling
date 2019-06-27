@@ -14,16 +14,17 @@ namespace RightMaterialService
 
         public RightModulaWareHouseClient(string id)
         {
-            m_wareHouseSrv = new ModulaService(id, "192.168.1.23", 103);
+            m_wareHouseSrv = new RightModulaService(id, "192.168.1.22", 103);
             m_wareHouseSrv.ServiceInfoEvent += (s) => Console.WriteLine(s);
         }
 
-        public bool GetPositionInfo(int product_type, int material_type, out int material_position, out int tray_position)
+        public bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position, out int quantity)
         {
             var temp = m_wareHouseSrv.GetPositionInfo(new WareHousePara { Product_Type = product_type, Material_Type = material_type });
 
-            tray_position = temp.Result1;
-            material_position = temp.Result2;
+            product_position = temp.Result1;
+            tray_position = temp.Result2;
+            quantity = temp.Result3;
 
             return temp.IsSuccessed;
         }

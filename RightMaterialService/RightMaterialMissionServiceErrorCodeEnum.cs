@@ -12,5 +12,7 @@ namespace RightMaterialService
 		IDCONFLICT=1,
         QUANTITYLIMIT=2,
         TWOOUTPICKING=3,
+        WAREHOUSEIN=100,
+        WAREHOUSEOUT = 150,
     }
 }

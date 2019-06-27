@@ -52,7 +52,6 @@
     <Compile Include="AllenBradleyControlDevice.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IControlDevice.cs" />
-    <Compile Include="INewWareHouseClient.cs" />
     <Compile Include="IWareHouseClient.cs" />
     <Compile Include="BaseLeftMaterialService.cs" />
     <Compile Include="LeftMaterialServiceErrorCodeEnum.cs" />

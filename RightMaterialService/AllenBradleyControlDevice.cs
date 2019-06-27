@@ -31,6 +31,7 @@ namespace RightMaterialService
         private AllenBradleyDataConfig m_HouseInConfig;
         private AllenBradleyDataConfig m_HouseProductPostionConfig;
         private AllenBradleyDataConfig m_HouseTrayPostionConfig;
+        private AllenBradleyDataConfig m_HouseQuantityConfig;
         private AllenBradleyDataConfig m_HouseConfirmMaterialTypeConfig;
         private AllenBradleyDataConfig m_HouseTrayOutInpositionConfig;
 
@@ -62,6 +63,7 @@ namespace RightMaterialService
             m_HouseInConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Storage_In" };
             m_HouseProductPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Product_Pos" };
             m_HouseTrayPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Tray_Number" };
+            m_HouseQuantityConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Current_Quantity_In_Box" };
             m_HouseConfirmMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Material_Type" };
             m_HouseTrayOutInpositionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Tray_Inposition" };
         }
@@ -309,6 +311,14 @@ namespace RightMaterialService
         public bool SetHouseTrayPostion(int tray_pos)
         {
             var ret = m_ABDevice.Write(m_HouseTrayPostionConfig, tray_pos.ToString());
+            if (ret.IsSuccess == false) return false;
+
+            return true;
+        }
+
+        public bool SetHouseQuantity(int quantity)
+        {
+            var ret = m_ABDevice.Write(m_HouseQuantityConfig, quantity.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;

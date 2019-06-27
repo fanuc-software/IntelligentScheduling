@@ -30,6 +30,9 @@ namespace WareHouseService
 
         public WareHouseResult GetPositionInfo(WareHousePara para)
         {
+            var elevator = ModulaElevator.CreateInstance();
+            elevator.ReleaseElevator();
+
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【GetPositionInfo】 {DateTime.Now}");
 
             var result = new WareHouseResult() { IsSuccessed = false };
@@ -70,6 +73,9 @@ namespace WareHouseService
 
         public WareHouseResult MoveOutTray(WareHousePara para)
         {
+            var elevator = ModulaElevator.CreateInstance();
+            elevator.GetElevator();
+
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveOutTray】 {DateTime.Now}");
 
             var message = "PART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
@@ -77,11 +83,13 @@ namespace WareHouseService
             var ret = m_Modula.Send(message);
             if (ret.Item1 == false)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
             if (ret.Item2.Count() < 34)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
@@ -92,12 +100,16 @@ namespace WareHouseService
             }
             else
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
         }
 
         public WareHouseResult MoveInTray(WareHousePara para)
         {
+            var elevator = ModulaElevator.CreateInstance();
+            elevator.GetElevator();
+
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveInTray】 {DateTime.Now}");
 
             var message = "RVART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
@@ -105,11 +117,13 @@ namespace WareHouseService
             var ret = m_Modula.Send(message);
             if (ret.Item1 == false)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
             if (ret.Item2.Count() < 35)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
@@ -120,6 +134,7 @@ namespace WareHouseService
             }
             else
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
         }
@@ -139,6 +154,9 @@ namespace WareHouseService
 
         public WareHouseResult ResetTray(WareHousePara para)
         {
+            var elevator = ModulaElevator.CreateInstance();
+            elevator.GetElevator();
+
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【ResetTray】 {DateTime.Now}");
 
             var message = "FPICK=1";
