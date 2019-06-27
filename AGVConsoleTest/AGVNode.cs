@@ -9,10 +9,15 @@ namespace AGVConsoleTest
     public enum AGVAction
     {
         JackLoad,
-        JackUnload
+        JackUnload,
+        Wait
     }
     public class AGVNode
     {
         public string StationName { get; set; }
+
+        public string OrderName { get; set; }
+        public AGVAction Action { get; set; }
     }
+
 }

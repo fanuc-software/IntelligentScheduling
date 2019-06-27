@@ -18,7 +18,7 @@ namespace AGV.Web.Host
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+            WebHost.CreateDefaultBuilder(args).UseUrls("http://*:6540")
                 .UseStartup<Startup>();
     }
 }

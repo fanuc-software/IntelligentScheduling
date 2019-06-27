@@ -9,10 +9,12 @@ namespace AGV.Web.Host.Controllers
 {
     public class LocationDevicesController : Controller
     {
+        static bool isArrived = false;
 
         [HttpPost]
         public JsonResult Arrived(string action)
         {
+            isArrived = !isArrived;
             return null;
         }
 
@@ -24,8 +26,8 @@ namespace AGV.Web.Host.Controllers
             {
                 lastAction = query,
                 name = "WaitQuery",
-                lastActionStatus = ActionStatus.DONE,
-                status = Status.IDLE
+                lastActionStatus = isArrived ? ActionStatus.DONE : ActionStatus.EXECUTING,
+                status = isArrived ? Status.IDLE : Status.EXECUTING
             };
             return Json(node);
 
