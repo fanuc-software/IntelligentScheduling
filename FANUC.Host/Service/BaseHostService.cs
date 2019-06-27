@@ -21,13 +21,13 @@ namespace FANUC.Host.Service
 
         public BaseHostService()
         {
-         
+
 
             srv = GetOrderServce;
             srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
             srv.OrderStateChangeEvent += Srv_OrderStateChangeEvent;
             srv.UpdateOrderActualQuantityEvent += Srv_UpdateOrderActualQuantityEvent;
-            srv.SendOrderServiceStateMessage += (s) => logger.Warn(s);
+            srv.SendOrderServiceStateMessage += (s) => { logger.Warn(s); ShowMessageEvent?.Invoke(s.ToString()); };
 
 
         }

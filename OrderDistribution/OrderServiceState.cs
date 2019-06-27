@@ -26,7 +26,7 @@ namespace OrderDistribution
 
         public override string ToString()
         {
-            return $"【{State}】{Message}";
+            return $"【ProcessInfo】【{State}】{Message} {ErrorCode}- {DateTime.Now}";
         }
 
     }
