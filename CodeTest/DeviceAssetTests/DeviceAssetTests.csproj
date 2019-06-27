@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A5CFBD6F-410B-4CC5-B79A-7D344539D1A4}</ProjectGuid>
+    <ProjectGuid>{65B0CD88-A829-4DD7-A1FB-F005B1CCC0CE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DeviceAssetTests</RootNamespace>
@@ -63,7 +63,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+    <ProjectReference Include="..\..\Asset\DeviceAsset\DeviceAsset.csproj">
       <Project>{108A2162-2608-44CE-9CD6-6E3FA2E583F3}</Project>
       <Name>DeviceAsset</Name>
     </ProjectReference>

@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}</ProjectGuid>
+    <ProjectGuid>{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeftWareHouseService</RootNamespace>
-    <AssemblyName>LeftWareHouseService</AssemblyName>
+    <RootNamespace>OrderDistribution</RootNamespace>
+    <AssemblyName>OrderDistribution</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,8 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v18.1, Version=18.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpo.v18.1, Version=18.1.10.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="HslCommunication, Version=6.2.5.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
       <HintPath>..\packages\HslCommunication.6.2.5\lib\net451\HslCommunication.dll</HintPath>
     </Reference>
@@ -49,25 +48,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllenBradleyControlDevice.cs" />
+    <Compile Include="AllenBradleyDevice.cs" />
+    <Compile Include="BaseOrderService.cs" />
+    <Compile Include="FanucRobotDevice.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="IControlDevice.cs" />
-    <Compile Include="IWareHouseClient.cs" />
-    <Compile Include="BaseLeftMaterialService.cs" />
-    <Compile Include="LeftMaterialServiceErrorCodeEnum.cs" />
-    <Compile Include="LeftMaterialServiceState.cs" />
-    <Compile Include="ModulaWareHouseClient.cs" />
-    <Compile Include="LefModulaWareHouseClient.cs" />
+    <Compile Include="IOrderDevice.cs" />
+    <Compile Include="OrderDistributionService.cs" />
+    <Compile Include="OrderItem.cs" />
+    <Compile Include="OrderServiceErrorCodeEnum.cs" />
+    <Compile Include="OrderServiceState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeviceAsset\DeviceAsset.csproj">
+    <ProjectReference Include="..\..\Asset\DeviceAsset\DeviceAsset.csproj">
       <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
       <Name>DeviceAsset</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WareHouseService\WareHouseService.csproj">
-      <Project>{d1c2a203-e904-451d-874a-301f9e1448c9}</Project>
-      <Name>WareHouseService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
