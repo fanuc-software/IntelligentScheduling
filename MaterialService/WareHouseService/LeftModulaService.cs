@@ -112,7 +112,7 @@ namespace WareHouseService
         {
             var elevator = ModulaElevator.CreateInstance();
             elevator.GetElevator();
-
+            
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveInTray】 {DateTime.Now}");
 
             var message = "RVART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
@@ -200,7 +200,7 @@ namespace WareHouseService
         public WareHouseResult ReleaseWriterLock(WareHousePara para)
         {
             m_readerWriterLock.ReleaseWriterLock();
-
+            
             return new WareHouseResult { IsSuccessed = true };
         }
 

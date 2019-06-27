@@ -10,7 +10,7 @@ namespace WareHouseService
     public class ModulaElevator
     {
         private static ModulaElevator _instance = null;
-        private static ReaderWriterLock m_elevatorLock = new ReaderWriterLock();
+        private static readonly Mutex mutex = new Mutex(false,"MODULA_ELEVATOR");
 
         public static ModulaElevator CreateInstance()
         {
@@ -24,12 +24,12 @@ namespace WareHouseService
 
         public void GetElevator()
         {
-            m_elevatorLock.AcquireWriterLock(100000);
+            mutex.WaitOne();
         }
 
         public void ReleaseElevator()
         {
-            m_elevatorLock.ReleaseWriterLock();
+            mutex.ReleaseMutex();
         }
     }
 }
