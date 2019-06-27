@@ -12,20 +12,20 @@ using EventBus;
 using System.Diagnostics;
 using LeftMaterialService;
 using DeviceAsset;
-//using RightMaterialService;
+using RightMaterialService;
 
 namespace Test
 {
 
     class TestLeftMaterialService : BaseLeftMaterialService
     {
-        public override IControlDevice ControlDevice => new AllenBradleyControlDevice();
+        public override LeftMaterialService.IControlDevice ControlDevice => new LeftMaterialService.AllenBradleyControlDevice();
 
     }
 
     class TestOrderService : BaseOrderService
     {
-        public override IOrderDevice Device => new AllenBradleyDevice();
+        public override IOrderDevice Device => new FanucRobotDevice();
 
         public TestOrderService(OrderServiceEnum serviceEnum) : base(serviceEnum)
         {
@@ -67,22 +67,35 @@ namespace Test
             //var count = test.Count();
 
 
-            //for(int i=0;i<100;i++)
+            //for (int i = 0; i < 100; i++)
             //{
-            //    var modula = new LefModulaWareHouseClient("TEST");
+            bool ret;
+            var modula = new RightModulaWareHouseClient("TESTR");
 
+            ret = modula.ResetTray();
+            //ret = modula.MoveInTray(1, 1);
 
-            //    var ret = modula.MoveInTray(1, 2);
+            var modula2 = new LefModulaWareHouseClient("TESTL");
+            ret = modula2.ResetTray();
+            //ret = modula2.MoveInTray(1, 3);
+            //modula2.ResetTray();
+            //    System.Threading.Thread.Sleep(30000);
+            //int prod = 0;
+            //int tray = 0;
+            //int qty = 0;
+            //ret = modula.GetPositionInfo(1, 1, out prod, out tray,out qty);
+
+            //var device = new AllenBradleyControlDevice();
+            //device.SetHouseProductPostion(prod);
+            //device.SetHouseTrayPostion(tray);
+            //device.SetHouseQuantity(qty);
 
             //    System.Threading.Thread.Sleep(30000);
-            //    int prod = 0;
-            //    int tray = 0;
-            //    ret = modula.GetPositionInfo(1, 2, out prod, out tray);
-
-            //    System.Threading.Thread.Sleep(30000);
-            //    ret = modula.ResetTray();
+            //modula.ResetTray();
             //}
 
+
+            //modula.WriteBackData(1, 1, false);
 
             //var ret = modula.MoveInTray(1, 2);
 
@@ -96,26 +109,24 @@ namespace Test
             //System.Threading.Thread.Sleep(2000);
 
 
-            BaseOrderService srv = new TestOrderService(OrderServiceEnum.OrderDistribution);
-            srv.SendOrderServiceStateMessage += PrintErrorMessage;
-            srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
-            srv.Start();
+            //BaseOrderService srv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            //srv.SendOrderServiceStateMessage += PrintErrorMessage;
+            //srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //srv.Start();
 
-
-            
             // eventBus.Deregister(mytest);
 
             //var dev = new AllenBradleyDevice();
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            // var leftSrv = new TestLeftMaterialService();
+            //var leftSrv = new TestLeftMaterialService();
+            //leftSrv.SendLeftMaterialServiceStateMessageEvent += PrintLeftMaterialServiceError;
             //leftSrv.Start();
-
-
 
             //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
             //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //orderSrv.SendOrderServiceStateMessage += PrintErrorMessage;
             //orderSrv.Start();
 
 
@@ -129,6 +140,11 @@ namespace Test
         private static void PrintErrorMessage(OrderServiceState state)
         {
             Console.WriteLine($"【ORDER】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+        }
+
+        private static void PrintLeftMaterialServiceError(LeftMaterialServiceState state)
+        {
+            Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
         }
 
         private static OrderItem Srv_GetFirstOrderEvent(OrderServiceEnum arg)

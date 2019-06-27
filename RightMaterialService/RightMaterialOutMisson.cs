@@ -11,38 +11,47 @@ namespace RightMaterialService
         //未处理
         NEW=0,
 
-        //开始处理
-        START=1,
-
         //通知小车前往PICK等待点
-        AGVTOPREPICK = 2,
+        START = 1,
 
         //通知料库出库
-        WHPICK = 3,
+        WHSTART = 2,
 
         //物料出库完成
-        WHPICKED =4,
+        WHPICKED =3,
 
-        //通知小车进入出料道
-        AGVTOPICK=5,
+        //小车在出料道进入等待位等待
+        AGVATPREPICK = 4,
+
+        //小车在出料道等待
+        AGVATPICK =5,
+
+        //小车升降机构提升
+        AGVPICKUP=6,
 
         //小车从出料道搬离物料并离开
-        AGVPICKEDANDLEAVE = 6,
+        AGVPICKEDANDLEAVE = 7,
 
-        //小车前往PLACE等待点
-        AGVTOPREPLACE=7,
+        //小车到达PLACE等待点
+        AGVATPREPLACE=8,
 
-        //放置完成离开
-        FINISHED=7,
+        //进入单元入料道
+        AGVATPLACE=9,
+
+        //小车放置完成并离开
+        AGVPLACEDANDLEAVE=10,
+
+        //任务结束
+        FINISHED=11,
 
         //任务撤销
-        CANCEL = 8,
+        CANCEL = 12,
 
         //任务已撤销
-        CANCELED = 9,
+        CANCELED = 13,
 
         //任务关闭
-        CLOSE = 10,
+        CLOSE = 14,
     }
 
     public class RightMaterialOutMisson
@@ -50,6 +59,8 @@ namespace RightMaterialService
         public string Id { get; set; }
 
         public string TimeId { get; set; }
+
+        public string ClientId { get; set; }
 
         public RightMaterialMissionTypeEnum Type { get; set; }
 
@@ -62,6 +73,8 @@ namespace RightMaterialService
         public string MaterialId { get; set; }
 
         public int Quantity { get; set; }
+
+        public DateTime CreateDateTime { get; set; }
 
         public RightMaterialOutMissonProcessEnum Process { get; set; }
     }

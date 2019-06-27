@@ -13,5 +13,7 @@ namespace WareHouseService
         public int Result1 { get; set; }
 
         public int Result2 { get; set; }
+
+        public int Result3 { get; set; }
     }
 }

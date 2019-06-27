@@ -14,20 +14,23 @@ namespace RightMaterialService
         //开始处理
         START = 1,
 
-        //通知小车前往PICK
-        AGVSTART = 2,
+        //小车在料道进入等待点等待
+        AGVATPREPICK = 2,
+
+        //小车在单元料道作业
+        AGVATPICK = 3,
         
-        //小车从单元出料道搬离物料
-        AGVLEAVEPICK = 3,
+        //小车从单元料道搬离物料
+        AGVPICKEDANDLEAVE = 4,
 
-        //小车准备进入料库入料道
-        BEFOREPLACE = 4,
+        //小车在入料道进入等待位等待
+        AGVATPREPLACE = 4,
 
-        //小车进入料库入料道
-        INPLACE=5,
+        //小车在料库入料道
+        AGVATPLACE=5,
 
         //放置完成
-        PLACEANDLEAVE = 6,
+        AGVPLACEDANDLEAVE = 6,
 
         //通知入库动作
         WHSTART=7,
@@ -53,6 +56,8 @@ namespace RightMaterialService
 
         public string TimeId { get; set; }
 
+        public string ClientId { get; set; }
+
         public RightMaterialMissionTypeEnum Type { get; set; }
 
         public string PickStationId { get; set; }
@@ -64,6 +69,8 @@ namespace RightMaterialService
         public string MaterialId { get; set; }
 
         public int Quantity { get; set; }
+
+        public DateTime CreateDateTime { get; set; }
 
         public RightMaterialInMissonProcessEnum Process { get; set; }
     }

@@ -199,6 +199,7 @@ namespace RightMaterialService
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
                 if (ret_prod_type == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_prod_type, RightMaterialServiceErrorCodeEnum.OUT_GETPRODUCTTYPE);
                 }
 
@@ -206,12 +207,14 @@ namespace RightMaterialService
                 var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
                 if (ret_material_type == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_material_type, RightMaterialServiceErrorCodeEnum.OUT_GETMATERIALTYPE);
                 }
 
                 var ret_moveout = WareHouse.MoveOutTray(S_House_ProductType, S_House_MaterialType);
                 if (ret_moveout == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_moveout, RightMaterialServiceErrorCodeEnum.OUT_MOVEOUTTRAY);
                 }
 
@@ -222,6 +225,7 @@ namespace RightMaterialService
                     var ret_inposition_info = ControlDevice.GetHouseTrayInposition(ref S_House_TrayInposition);
                     if (ret_inposition_info == false)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_inposition_info, RightMaterialServiceErrorCodeEnum.OUT_GETTRAYINPOSITION);
                     }
 
@@ -237,6 +241,7 @@ namespace RightMaterialService
                     ControlDevice.GetHouseFCSReset(ref ret_reset);
                     if (ret_reset == true)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_reset, RightMaterialServiceErrorCodeEnum.OUT_TRAYINPOSITIONRESET);
                     }
                 }
@@ -245,10 +250,12 @@ namespace RightMaterialService
 
                 int S_House_ProductPosition = 0;
                 int S_House_TrayPosition = 0;
+                int S_House_Quantity = 0;
                 var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
-                    out S_House_ProductPosition, out S_House_TrayPosition);
+                    out S_House_ProductPosition, out S_House_TrayPosition,out S_House_Quantity);
                 if (ret_warehouse_info == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_info, RightMaterialServiceErrorCodeEnum.OUT_GETTRAYPOSITION);
                 }
 
@@ -256,24 +263,35 @@ namespace RightMaterialService
                 var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
                 if (ret_warehouse_product_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_product_position, RightMaterialServiceErrorCodeEnum.OUT_SETPRODUCTPOS);
                 }
 
-                var ret_warehouse_tray_position = ControlDevice.SetHouseTrayPostion(S_House_TrayPosition);
+                var ret_warehouse_tray_position = ControlDevice.SetHouseTrayPostion(S_House_Quantity);
                 if (ret_warehouse_tray_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_tray_position, RightMaterialServiceErrorCodeEnum.OUT_SETTRAYPOS);
+                }
+
+                var ret_warehouse_quantity = ControlDevice.SetHouseTrayPostion(S_House_TrayPosition);
+                if (ret_warehouse_quantity == false)
+                {
+                    WareHouse.ReleaseWriterLock();
+                    return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_quantity, RightMaterialServiceErrorCodeEnum.OUT_SETQUANTITY);
                 }
 
                 var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
                 if (ret_confirm_materialtype_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_confirm_materialtype_position, RightMaterialServiceErrorCodeEnum.OUT_SETMATERIALTYPECONFIRM);
                 }
 
                 var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);
                 if (ret_req_fin == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_req_fin, RightMaterialServiceErrorCodeEnum.OUT_SETREQUESTFIN);
                 }
 
@@ -281,12 +299,10 @@ namespace RightMaterialService
 
                 while (S_House_RequestInfoFCS == false)
                 {
-
-
-
                     var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
                     if (ret_req_info == false)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_req_info, RightMaterialServiceErrorCodeEnum.OUT_GETREQINFO);
                     }
 
@@ -302,6 +318,7 @@ namespace RightMaterialService
                     ControlDevice.GetHouseFCSReset(ref ret_reset);
                     if (ret_reset == true)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_reset, RightMaterialServiceErrorCodeEnum.OUT_REQINFORESET);
                     }
                 }
@@ -309,15 +326,18 @@ namespace RightMaterialService
                 var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, true);
                 if (ret_data_input == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_data_input, RightMaterialServiceErrorCodeEnum.OUT_WRITEDATA);
                 }
 
                 var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
                 if (ret_info_fin == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_info_fin, RightMaterialServiceErrorCodeEnum.OUT_SETREQINFOFIN);
                 }
 
+                WareHouse.ReleaseWriterLock();
                 return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(true, RightMaterialServiceErrorCodeEnum.NORMAL); ;
             });
 
@@ -334,6 +354,7 @@ namespace RightMaterialService
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
                 if (ret_prod_type == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_prod_type, RightMaterialServiceErrorCodeEnum.IN_GETPRODUCTTYPE);
                 }
 
@@ -341,12 +362,14 @@ namespace RightMaterialService
                 var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
                 if (ret_material_type == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_material_type, RightMaterialServiceErrorCodeEnum.IN_GETMATERIALTYPE);
                 }
 
                 var ret_movein = WareHouse.MoveInTray(S_House_ProductType, S_House_MaterialType);
                 if (ret_movein == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_movein, RightMaterialServiceErrorCodeEnum.IN_MOVEINTRAY);
                 }
 
@@ -357,6 +380,7 @@ namespace RightMaterialService
                     var ret_inposition_info = ControlDevice.GetHouseTrayInposition(ref S_House_TrayInposition);
                     if (ret_inposition_info == false)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_inposition_info, RightMaterialServiceErrorCodeEnum.IN_GETTRAYINPOSITION);
                     }
 
@@ -372,6 +396,7 @@ namespace RightMaterialService
                     ControlDevice.GetHouseFCSReset(ref ret_reset);
                     if (ret_reset == true)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_reset, RightMaterialServiceErrorCodeEnum.IN_TRAYINPOSITIONRESET);
                     }
                 }
@@ -380,34 +405,47 @@ namespace RightMaterialService
 
                 int S_House_ProductPosition = 0;
                 int S_House_TrayPosition = 0;
+                int S_House_Quantity = 0;
                 var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
-                    out S_House_ProductPosition, out S_House_TrayPosition);
+                    out S_House_ProductPosition, out S_House_TrayPosition,out S_House_Quantity);
                 if (ret_warehouse_info == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_info, RightMaterialServiceErrorCodeEnum.IN_GETTRAYPOSITION);
                 }
 
                 var ret_warehouse_product_position = ControlDevice.SetHouseProductPostion(S_House_ProductPosition);
                 if (ret_warehouse_product_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_product_position, RightMaterialServiceErrorCodeEnum.IN_SETPRODUCTPOS);
                 }
 
                 var ret_warehouse_tray_position = ControlDevice.SetHouseTrayPostion(S_House_TrayPosition);
                 if (ret_warehouse_tray_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_tray_position, RightMaterialServiceErrorCodeEnum.IN_SETTRAYPOS);
+                }
+
+                var ret_warehouse_quantity = ControlDevice.SetHouseTrayPostion(S_House_Quantity);
+                if (ret_warehouse_quantity == false)
+                {
+                    WareHouse.ReleaseWriterLock();
+                    return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_quantity, RightMaterialServiceErrorCodeEnum.IN_SETQUANTITY);
                 }
 
                 var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
                 if (ret_confirm_materialtype_position == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_confirm_materialtype_position, RightMaterialServiceErrorCodeEnum.IN_SETMATERIALTYPECONFIRM);
                 }
 
                 var ret_req_fin = ControlDevice.SetHouseRequestFCSFin(true);
                 if (ret_req_fin == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_req_fin, RightMaterialServiceErrorCodeEnum.IN_SETREQUESTFIN);
                 }
 
@@ -419,6 +457,7 @@ namespace RightMaterialService
                     var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
                     if (ret_req_info == false)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_req_info, RightMaterialServiceErrorCodeEnum.IN_GETREQINFO);
                     }
 
@@ -434,6 +473,7 @@ namespace RightMaterialService
                     ControlDevice.GetHouseFCSReset(ref reset);
                     if (reset == true)
                     {
+                        WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_req_info, RightMaterialServiceErrorCodeEnum.IN_REQINFORESET);
                     }
                 }
@@ -441,15 +481,18 @@ namespace RightMaterialService
                 var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, false);
                 if (ret_data_input == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_data_input, RightMaterialServiceErrorCodeEnum.IN_WRITEDATA);
                 }
 
                 var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
                 if (ret_info_fin == false)
                 {
+                    WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_info_fin, RightMaterialServiceErrorCodeEnum.IN_SETREQINFOFIN);
                 }
 
+                WareHouse.ReleaseWriterLock();
                 return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(true, RightMaterialServiceErrorCodeEnum.NORMAL);
             });
         }

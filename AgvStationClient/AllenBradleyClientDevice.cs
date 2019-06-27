@@ -10,28 +10,70 @@ namespace AgvStationClient
     public class AllenBradleyClientDevice: IStationDevice
     {
 
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInRequireStateConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInRequireStateConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInRequireStateConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutStateConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyOutStateConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutStateConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInStateConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyInStateConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInStateConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutStateConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_FinOutStateConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutStateConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInFinConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInFinConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInFinConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutFinConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyOutFinConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutFinConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInFinConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyInFinConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInFinConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutFinConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_FinOutFinConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutFinConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_AlarmConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_AlarmConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_AlarmConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_ResetConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_ResetConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_ResetConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInRequireAllowConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInRequireAllowConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInRequireAllowConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInAllowConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyInAllowConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInAllowConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInProductTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInProductTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInProductTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInMaterialTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInMaterialTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInMaterialTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInProductTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyInProductTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInProductTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInMaterialTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyInMaterialTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyInMaterialTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutProductTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyOutProductTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutProductTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutMaterialTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_EmptyOutMaterialTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_EmptyOutMaterialTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutProductTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_FinOutProductTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutProductTypeConfig”赋值，字段将一直保持其默认值 null
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutMaterialTypeConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_FinOutMaterialTypeConfig;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_FinOutMaterialTypeConfig”赋值，字段将一直保持其默认值 null
 
+#pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_ABDevice”赋值，字段将一直保持其默认值 null
         private AllenBradley m_ABDevice;
+#pragma warning restore CS0649 // 从未对字段“AllenBradleyClientDevice.m_ABDevice”赋值，字段将一直保持其默认值 null
 
         /// <summary>
         /// 获得原料输入请求

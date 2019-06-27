@@ -8,7 +8,7 @@ namespace LeftMaterialService
 {
     public interface IWareHouseClient
     {
-        bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position);
+        bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position,out int quantity);
 
         bool MoveOutTray(int product_type, int material_type);
 

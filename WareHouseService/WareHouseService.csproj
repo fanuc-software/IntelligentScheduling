@@ -43,7 +43,8 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IWareHouseService.cs" />
-    <Compile Include="ModulaService.cs" />
+    <Compile Include="LeftModulaService.cs" />
+    <Compile Include="ModulaElevator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RightModulaService.cs" />
     <Compile Include="WareHousePara.cs" />

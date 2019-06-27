@@ -35,8 +35,8 @@ namespace OrderDistribution
             m_Quantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GI, DataAdr = "161" };
             m_CheckProductType = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "0" };
             m_CheckQuantity = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "161" };
-            m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "136" };
-            m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "136" };
+            m_OrderAlarm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "129" };
+            m_OrderReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "129" };
             m_OrderConfirm = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "132" };
             m_OrderConfirmReset = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "132" };
             m_OrderProcess = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.GO, DataAdr = "193" };

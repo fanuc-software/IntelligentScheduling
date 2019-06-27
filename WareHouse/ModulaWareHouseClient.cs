@@ -16,10 +16,11 @@ namespace LeftMaterialService
             m_Modula = new ModulaClient("192.168.1.22", 102);
         }
 
-        public bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position)
+        public bool GetPositionInfo(int product_type, int material_type, out int product_position, out int tray_position,out int quantity)
         {
             product_position = 0;
             tray_position = 0;
+            quantity = 0;
 
             var message = "?DPICK";
 
