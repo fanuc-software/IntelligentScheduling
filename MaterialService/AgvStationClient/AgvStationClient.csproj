@@ -59,6 +59,10 @@
     <Compile Include="StationClientState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AgvMissionManager\AgvMissionManager.csproj">
+      <Project>{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}</Project>
+      <Name>AgvMissionManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Asset\DeviceAsset\DeviceAsset.csproj">
       <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
       <Name>DeviceAsset</Name>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AgvMissionManager
 {
-    public enum RightMaterialMissionServiceStateEnum
+    public enum AgvMissionServiceStateEnum
     {
         OFF,
         FATAL,
@@ -16,12 +16,12 @@ namespace AgvMissionManager
         DEBUG
     }
 
-    public class RightMaterialMissionServiceState
+    public class AgvMissionServiceState
     {
-        public RightMaterialMissionServiceStateEnum State { get; set; }
+        public AgvMissionServiceStateEnum State { get; set; }
 
         public string Message { get; set; }
 
-        public RightMaterialMissionServiceErrorCodeEnum ErrorCode { get; set; }
+        public AgvMissionServiceErrorCodeEnum ErrorCode { get; set; }
     }
 }

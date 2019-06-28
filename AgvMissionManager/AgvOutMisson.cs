@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AgvMissionManager
 {
-    public enum RightMaterialOutMissonProcessEnum
+    public enum AgvOutMissonProcessEnum
     {
         //未处理
         NEW=0,
@@ -54,7 +54,7 @@ namespace AgvMissionManager
         CLOSE = 14,
     }
 
-    public class RightMaterialOutMisson
+    public class AgvOutMisson
     {
         public string Id { get; set; }
 
@@ -62,7 +62,7 @@ namespace AgvMissionManager
 
         public string ClientId { get; set; }
 
-        public RightMaterialMissionTypeEnum Type { get; set; }
+        public AgvMissionTypeEnum Type { get; set; }
 
         public string PickStationId { get; set; }
 
@@ -76,6 +76,6 @@ namespace AgvMissionManager
 
         public DateTime CreateDateTime { get; set; }
 
-        public RightMaterialOutMissonProcessEnum Process { get; set; }
+        public AgvOutMissonProcessEnum Process { get; set; }
     }
 }

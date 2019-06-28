@@ -41,13 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseRightMaterialMissionService.cs" />
+    <Compile Include="BaseAgvMissionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RightMaterialInMisson.cs" />
-    <Compile Include="RightMaterialMissionServiceErrorCodeEnum.cs" />
-    <Compile Include="RightMaterialMissionServiceState.cs" />
-    <Compile Include="RightMaterialMissionTypeEnum.cs" />
-    <Compile Include="RightMaterialOutMisson.cs" />
+    <Compile Include="AgvInMisson.cs" />
+    <Compile Include="AgvMissionServiceErrorCodeEnum.cs" />
+    <Compile Include="AgvMissionServiceState.cs" />
+    <Compile Include="AgvMissionTypeEnum.cs" />
+    <Compile Include="AgvOutMisson.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Asset\DeviceAsset\DeviceAsset.csproj">

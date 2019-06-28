@@ -8,44 +8,44 @@ using DeviceAsset;
 
 namespace AgvMissionManager
 {
-    public class BaseRightMaterialMissionService
+    public class BaseAgvMissionService
     {
-        private RightMaterialMissionServiceErrorCodeEnum cur_Display_ErrorCode;
+        private AgvMissionServiceErrorCodeEnum cur_Display_ErrorCode;
         private string cur_Display_Message;
 
 
-        private static BaseRightMaterialMissionService _instance = null;
+        private static BaseAgvMissionService _instance = null;
         private CancellationTokenSource token = new CancellationTokenSource();
 
-        Dictionary<RightMaterialMissionTypeEnum, RightMaterialMissionTypeEnum> brotherMissionType = new Dictionary<RightMaterialMissionTypeEnum, RightMaterialMissionTypeEnum>();
+        Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum> brotherMissionType = new Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum>();
 
-        public event Action<RightMaterialMissionServiceState> SendRightMaterialMissionServiceStateMessageEvent;
+        public event Action<AgvMissionServiceState> SendAgvMissionServiceStateMessageEvent;
 
         #region 任务
-        private List<RightMaterialOutMisson> OutMissions { get; set; }
-        private List<RightMaterialInMisson> InMissions { get; set; }
+        private List<AgvOutMisson> OutMissions { get; set; }
+        private List<AgvInMisson> InMissions { get; set; }
         
         #endregion
 
         #region ctor
-        public static BaseRightMaterialMissionService CreateInstance()
+        public static BaseAgvMissionService CreateInstance()
         {
             if (_instance == null)
 
             {
-                _instance = new BaseRightMaterialMissionService();
+                _instance = new BaseAgvMissionService();
             }
             return _instance;
         }
 
-        public BaseRightMaterialMissionService()
+        public BaseAgvMissionService()
         {
-            OutMissions = new List<RightMaterialOutMisson>();
-            InMissions = new List<RightMaterialInMisson>();
+            OutMissions = new List<AgvOutMisson>();
+            InMissions = new List<AgvInMisson>();
             
             //关联任务
-            brotherMissionType.Add(RightMaterialMissionTypeEnum.RAW_IN, RightMaterialMissionTypeEnum.EMPTY_OUT);
-            brotherMissionType.Add(RightMaterialMissionTypeEnum.EMPTY_IN, RightMaterialMissionTypeEnum.FIN_OUT);
+            brotherMissionType.Add(AgvMissionTypeEnum.RAW_IN, AgvMissionTypeEnum.EMPTY_OUT);
+            brotherMissionType.Add(AgvMissionTypeEnum.EMPTY_IN, AgvMissionTypeEnum.FIN_OUT);
 
             #region 初始化任务
 
@@ -58,7 +58,7 @@ namespace AgvMissionManager
         #endregion
 
         #region 外部接口
-        public void PushOutMission(RightMaterialOutMisson mission)
+        public void PushOutMission(AgvOutMisson mission)
         {
             if (OutMissions.Where(x => x.Id == mission.Id).Count() == 0)
             {
@@ -66,7 +66,7 @@ namespace AgvMissionManager
             }
         }
 
-        public void PushInMission(RightMaterialInMisson mission)
+        public void PushInMission(AgvInMisson mission)
         {
             if (InMissions.Where(x => x.Id == mission.Id).Count() == 0)
             {
@@ -74,13 +74,13 @@ namespace AgvMissionManager
             }
         }
 
-#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
-        public event Action<RightMaterialInMisson> UpdateRightMaterialInMissonEvent;
-#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialInMissonEvent”
+#pragma warning disable CS0067 // 从不使用事件“BaseAgvMissionService.UpdateAgvInMissonEvent”
+        public event Action<AgvInMisson> UpdateAgvInMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseAgvMissionService.UpdateAgvInMissonEvent”
 
-#pragma warning disable CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
-        public event Action<RightMaterialOutMisson> UpdateRightMaterialOutMissonEvent;
-#pragma warning restore CS0067 // 从不使用事件“BaseRightMaterialMissionService.UpdateRightMaterialOutMissonEvent”
+#pragma warning disable CS0067 // 从不使用事件“BaseAgvMissionService.UpdateAgvOutMissonEvent”
+        public event Action<AgvOutMisson> UpdateAgvOutMissonEvent;
+#pragma warning restore CS0067 // 从不使用事件“BaseAgvMissionService.UpdateAgvOutMissonEvent”
 
         #endregion
 
@@ -102,8 +102,8 @@ namespace AgvMissionManager
                             //设定报警
                             var ret_alarm = SetAlarm(true);
                             //TODO:通知界面
-                            SendRightMaterialMissionServiceStateMessage(
-                                new RightMaterialMissionServiceState { State = RightMaterialMissionServiceStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!",ErrorCode= ret.Item2 });
+                            SendAgvMissionServiceStateMessage(
+                                new AgvMissionServiceState { State = AgvMissionServiceStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!",ErrorCode= ret.Item2 });
                             Thread.Sleep(1000);
                         }
 
@@ -112,28 +112,28 @@ namespace AgvMissionManager
                         {
                             GetReset(ref dev_reset);
                             //TODO:通知界面
-                            SendRightMaterialMissionServiceStateMessage(
-                                new RightMaterialMissionServiceState { State = RightMaterialMissionServiceStateEnum.WARN, Message = "物料调用失败,请复位设备!", ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL });
+                            SendAgvMissionServiceStateMessage(
+                                new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,请复位设备!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
                             Thread.Sleep(1000);
                         }
 
-                        SendRightMaterialMissionServiceStateMessage(
-                            new RightMaterialMissionServiceState { State = RightMaterialMissionServiceStateEnum.WARN, Message = "物料调用失败,设备已复位!", ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL });
+                        SendAgvMissionServiceStateMessage(
+                            new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,设备已复位!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
 
                     }
 
                     #endregion
 
                     var undo_inmissions = InMissions
-                        .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
+                        .Where(x => x.Process > AgvInMissonProcessEnum.NEW && x.Process < AgvInMissonProcessEnum.CLOSE);
                     var undo_outmissions = OutMissions
-                        .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
+                        .Where(x => x.Process > AgvOutMissonProcessEnum.NEW && x.Process < AgvOutMissonProcessEnum.CLOSE);
 
                     #region 小于两个在执行任务 添加一个入库任务
                     if ((undo_inmissions.Count() + undo_outmissions.Count()) < 2)
                     {
-                        var new_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.NEW).FirstOrDefault();
-                        if (new_inmission != null) new_inmission.Process = RightMaterialInMissonProcessEnum.START;
+                        var new_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.NEW).FirstOrDefault();
+                        if (new_inmission != null) new_inmission.Process = AgvInMissonProcessEnum.START;
                     }
 
                     #endregion
@@ -141,7 +141,7 @@ namespace AgvMissionManager
                     #region 小于两个在执行任务 添加一个出库任务
                     if ((undo_inmissions.Count() + undo_outmissions.Count()) < 2)
                     {
-                        var new_outmission = OutMissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.NEW).FirstOrDefault();
+                        var new_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.NEW).FirstOrDefault();
                         if (new_outmission != null)
                         {
                             //检索出库任务之前是否有前置的入库任务
@@ -149,12 +149,12 @@ namespace AgvMissionManager
                             var brother_inmission = OutMissions
                                 .Where(x => x.ClientId == new_outmission.ClientId
                                     && x.Type == brother_mission_type
-                                    && x.Process == RightMaterialOutMissonProcessEnum.NEW)
+                                    && x.Process == AgvOutMissonProcessEnum.NEW)
                                 .FirstOrDefault();
 
                             if (brother_inmission != null)
                             {
-                                new_outmission.Process = RightMaterialOutMissonProcessEnum.START;
+                                new_outmission.Process = AgvOutMissonProcessEnum.START;
                             }
                             
                         }
@@ -163,26 +163,26 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 通知料库入库动作
-                    var warehouse_inmission = undo_inmissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.AGVPLACEDANDLEAVE).FirstOrDefault();
+                    var warehouse_inmission = undo_inmissions.Where(x => x.Process == AgvInMissonProcessEnum.AGVPLACEDANDLEAVE).FirstOrDefault();
                     if (warehouse_inmission != null)
                     {
-                        warehouse_inmission.Process = RightMaterialInMissonProcessEnum.WHSTART;
+                        warehouse_inmission.Process = AgvInMissonProcessEnum.WHSTART;
 
                         Task.Factory.StartNew(() =>
                         {
                             var ret_whinmission = WareHouseInMission(warehouse_inmission);
                             if (ret_whinmission == false)
                             {
-                                warehouse_inmission.Process = RightMaterialInMissonProcessEnum.CANCEL;
+                                warehouse_inmission.Process = AgvInMissonProcessEnum.CANCEL;
 
                                 while (ret_whinmission == false)
                                 {
                                     ret_whinmission = SetAlarm(true);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                        new RightMaterialMissionServiceState {
-                                            State = RightMaterialMissionServiceStateEnum.ERROR,
+                                    SendAgvMissionServiceStateMessage(
+                                        new AgvMissionServiceState {
+                                            State = AgvMissionServiceStateEnum.ERROR,
                                             Message = "物料调用失败,料库入库动作错误!",
-                                            ErrorCode = RightMaterialMissionServiceErrorCodeEnum.WAREHOUSEIN
+                                            ErrorCode = AgvMissionServiceErrorCodeEnum.WAREHOUSEIN
                                         });
                                     Thread.Sleep(1000);
                                 }
@@ -191,21 +191,21 @@ namespace AgvMissionManager
                                 while (dev_reset == false)
                                 {
                                     GetReset(ref dev_reset);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                        new RightMaterialMissionServiceState{
-                                            State = RightMaterialMissionServiceStateEnum.WARN,
+                                    SendAgvMissionServiceStateMessage(
+                                        new AgvMissionServiceState{
+                                            State = AgvMissionServiceStateEnum.WARN,
                                             Message = "物料调用失败,请复位设备!",
-                                            ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                            ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                     });
                                     Thread.Sleep(1000);
                                 }
 
-                                SendRightMaterialMissionServiceStateMessage(
-                                    new RightMaterialMissionServiceState
+                                SendAgvMissionServiceStateMessage(
+                                    new AgvMissionServiceState
                                     {
-                                        State = RightMaterialMissionServiceStateEnum.WARN,
+                                        State = AgvMissionServiceStateEnum.WARN,
                                         Message = "物料调用失败,设备已复位!",
-                                        ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                        ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                     });
                             }
                         });
@@ -215,10 +215,10 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 通知料库出库动作
-                    var warehouse_outmission = undo_outmissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.START).FirstOrDefault();
+                    var warehouse_outmission = undo_outmissions.Where(x => x.Process == AgvOutMissonProcessEnum.START).FirstOrDefault();
                     if (warehouse_outmission != null)
                     {
-                        warehouse_outmission.Process = RightMaterialOutMissonProcessEnum.WHSTART;
+                        warehouse_outmission.Process = AgvOutMissonProcessEnum.WHSTART;
 
                         Task.Factory.StartNew(() =>
                         {
@@ -226,17 +226,17 @@ namespace AgvMissionManager
 
                             if (ret_whoutmission == false)
                             {
-                                warehouse_outmission.Process = RightMaterialOutMissonProcessEnum.CANCEL;
+                                warehouse_outmission.Process = AgvOutMissonProcessEnum.CANCEL;
 
                                 while (ret_whoutmission == false)
                                 {
                                     ret_whoutmission = SetAlarm(true);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                          new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                          new AgvMissionServiceState
                                           {
-                                              State = RightMaterialMissionServiceStateEnum.ERROR,
+                                              State = AgvMissionServiceStateEnum.ERROR,
                                               Message = "物料调用失败,料库出库动作错误!",
-                                              ErrorCode = RightMaterialMissionServiceErrorCodeEnum.WAREHOUSEOUT
+                                              ErrorCode = AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT
                                           });
                                     Thread.Sleep(1000);
                                 }
@@ -245,22 +245,22 @@ namespace AgvMissionManager
                                 while (dev_reset == false)
                                 {
                                     GetReset(ref dev_reset);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                        new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                        new AgvMissionServiceState
                                         {
-                                            State = RightMaterialMissionServiceStateEnum.WARN,
+                                            State = AgvMissionServiceStateEnum.WARN,
                                             Message = "物料调用失败,请复位设备!",
-                                            ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                            ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                         });
                                     Thread.Sleep(1000);
                                 }
 
-                                SendRightMaterialMissionServiceStateMessage(
-                                    new RightMaterialMissionServiceState
+                                SendAgvMissionServiceStateMessage(
+                                    new AgvMissionServiceState
                                     {
-                                        State = RightMaterialMissionServiceStateEnum.WARN,
+                                        State = AgvMissionServiceStateEnum.WARN,
                                         Message = "物料调用失败,设备已复位!",
-                                        ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                        ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                     });
                             }
                         });
@@ -270,7 +270,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 发布小车搬运入库任务
-                    var agv_inmission = undo_inmissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.START).FirstOrDefault();
+                    var agv_inmission = undo_inmissions.Where(x => x.Process == AgvInMissonProcessEnum.START).FirstOrDefault();
                     if (agv_inmission != null)
                     {
                         Task.Factory.StartNew(async () =>
@@ -278,17 +278,17 @@ namespace AgvMissionManager
                             var ret_agvinmission =await AgvInMission(agv_inmission);
                             if (ret_agvinmission == false)
                             {
-                                agv_inmission.Process = RightMaterialInMissonProcessEnum.CANCEL;
+                                agv_inmission.Process = AgvInMissonProcessEnum.CANCEL;
 
                                 while (ret_agvinmission == false)
                                 {
                                     ret_agvinmission = SetAlarm(true);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                          new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                          new AgvMissionServiceState
                                           {
-                                              State = RightMaterialMissionServiceStateEnum.ERROR,
+                                              State = AgvMissionServiceStateEnum.ERROR,
                                               Message = "物料调用失败,小车搬运入库错误!",
-                                              ErrorCode = RightMaterialMissionServiceErrorCodeEnum.WAREHOUSEOUT
+                                              ErrorCode = AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT
                                           });
                                     Thread.Sleep(1000);
                                 }
@@ -297,22 +297,22 @@ namespace AgvMissionManager
                                 while (dev_reset == false)
                                 {
                                     GetReset(ref dev_reset);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                        new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                        new AgvMissionServiceState
                                         {
-                                            State = RightMaterialMissionServiceStateEnum.WARN,
+                                            State = AgvMissionServiceStateEnum.WARN,
                                             Message = "物料调用失败,请复位设备!",
-                                            ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                            ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                         });
                                     Thread.Sleep(1000);
                                 }
 
-                                SendRightMaterialMissionServiceStateMessage(
-                                    new RightMaterialMissionServiceState
+                                SendAgvMissionServiceStateMessage(
+                                    new AgvMissionServiceState
                                     {
-                                        State = RightMaterialMissionServiceStateEnum.WARN,
+                                        State = AgvMissionServiceStateEnum.WARN,
                                         Message = "物料调用失败,设备已复位!",
-                                        ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                        ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                     });
                             }
                         });
@@ -321,7 +321,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 发布小车搬运出库任务
-                    var agv_outmission = undo_outmissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.START).FirstOrDefault();
+                    var agv_outmission = undo_outmissions.Where(x => x.Process == AgvOutMissonProcessEnum.START).FirstOrDefault();
                     if (agv_outmission != null)
                     {
                         Task.Factory.StartNew(async () =>
@@ -329,17 +329,17 @@ namespace AgvMissionManager
                             var ret_agvoutmission = await AgvOutMission(agv_outmission);
                             if (ret_agvoutmission == false)
                             {
-                                agv_outmission.Process = RightMaterialOutMissonProcessEnum.CANCEL;
+                                agv_outmission.Process = AgvOutMissonProcessEnum.CANCEL;
 
                                 while (ret_agvoutmission == false)
                                 {
                                     ret_agvoutmission = SetAlarm(true);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                          new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                          new AgvMissionServiceState
                                           {
-                                              State = RightMaterialMissionServiceStateEnum.ERROR,
+                                              State = AgvMissionServiceStateEnum.ERROR,
                                               Message = "物料调用失败,小车搬运出库错误!",
-                                              ErrorCode = RightMaterialMissionServiceErrorCodeEnum.WAREHOUSEOUT
+                                              ErrorCode = AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT
                                           });
                                     Thread.Sleep(1000);
                                 }
@@ -348,22 +348,22 @@ namespace AgvMissionManager
                                 while (dev_reset == false)
                                 {
                                     GetReset(ref dev_reset);
-                                    SendRightMaterialMissionServiceStateMessage(
-                                        new RightMaterialMissionServiceState
+                                    SendAgvMissionServiceStateMessage(
+                                        new AgvMissionServiceState
                                         {
-                                            State = RightMaterialMissionServiceStateEnum.WARN,
+                                            State = AgvMissionServiceStateEnum.WARN,
                                             Message = "物料调用失败,请复位设备!",
-                                            ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                            ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                         });
                                     Thread.Sleep(1000);
                                 }
 
-                                SendRightMaterialMissionServiceStateMessage(
-                                    new RightMaterialMissionServiceState
+                                SendAgvMissionServiceStateMessage(
+                                    new AgvMissionServiceState
                                     {
-                                        State = RightMaterialMissionServiceStateEnum.WARN,
+                                        State = AgvMissionServiceStateEnum.WARN,
                                         Message = "物料调用失败,设备已复位!",
-                                        ErrorCode = RightMaterialMissionServiceErrorCodeEnum.NORMAL
+                                        ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL
                                     });
                             }
                         });
@@ -372,38 +372,38 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 入库完工处理
-                    var finished_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.FINISHED).FirstOrDefault();
+                    var finished_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED).FirstOrDefault();
                     if (finished_inmission != null)
                     {
-                        finished_inmission.Process = RightMaterialInMissonProcessEnum.CLOSE;
+                        finished_inmission.Process = AgvInMissonProcessEnum.CLOSE;
                     }
 
                     #endregion
 
                     #region 出库完工处理
-                    var finished_outmission = OutMissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.FINISHED).FirstOrDefault();
+                    var finished_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.FINISHED).FirstOrDefault();
                     if (finished_outmission != null)
                     {
-                        finished_outmission.Process = RightMaterialOutMissonProcessEnum.CLOSE;
+                        finished_outmission.Process = AgvOutMissonProcessEnum.CLOSE;
                     }
 
                     #endregion
 
                     #region 入库异常处理
-                    var cancel_inmission = InMissions.Where(x => x.Process == RightMaterialInMissonProcessEnum.CANCEL).FirstOrDefault();
+                    var cancel_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.CANCEL).FirstOrDefault();
                     if (cancel_inmission != null)
                     {
-                        cancel_inmission.Process = RightMaterialInMissonProcessEnum.CANCELED;
+                        cancel_inmission.Process = AgvInMissonProcessEnum.CANCELED;
                         AgvInMissionCancel(cancel_inmission);
                     }
 
                     #endregion
 
                     #region 出库异常处理
-                    var cancel_outmission = OutMissions.Where(x => x.Process == RightMaterialOutMissonProcessEnum.CANCELED).FirstOrDefault();
+                    var cancel_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.CANCELED).FirstOrDefault();
                     if (cancel_outmission != null)
                     {
-                        cancel_outmission.Process = RightMaterialOutMissonProcessEnum.CANCELED;
+                        cancel_outmission.Process = AgvOutMissonProcessEnum.CANCELED;
                         AgvOutMissionCancel(cancel_outmission);
                     }
 
@@ -414,10 +414,10 @@ namespace AgvMissionManager
         
         public bool CloseOutMission(string missionId)
         {
-            var finished_outmission = OutMissions.Where(x => x.Id==missionId && x.Process == RightMaterialOutMissonProcessEnum.FINISHED).FirstOrDefault();
+            var finished_outmission = OutMissions.Where(x => x.Id==missionId && x.Process == AgvOutMissonProcessEnum.FINISHED).FirstOrDefault();
             if (finished_outmission != null)
             {
-                finished_outmission.Process = RightMaterialOutMissonProcessEnum.CLOSE;
+                finished_outmission.Process = AgvOutMissonProcessEnum.CLOSE;
             }
 
             return true;
@@ -425,10 +425,10 @@ namespace AgvMissionManager
 
         public bool CloseInMission(string missionId)
         {
-            var finished_inmission = InMissions.Where(x => x.Id == missionId && x.Process == RightMaterialInMissonProcessEnum.FINISHED).FirstOrDefault();
+            var finished_inmission = InMissions.Where(x => x.Id == missionId && x.Process == AgvInMissonProcessEnum.FINISHED).FirstOrDefault();
             if (finished_inmission != null)
             {
-                finished_inmission.Process = RightMaterialInMissonProcessEnum.CLOSE;
+                finished_inmission.Process = AgvInMissonProcessEnum.CLOSE;
             }
 
             return true;
@@ -446,11 +446,11 @@ namespace AgvMissionManager
 
         }
 
-        private void SendRightMaterialMissionServiceStateMessage(RightMaterialMissionServiceState state)
+        private void SendAgvMissionServiceStateMessage(AgvMissionServiceState state)
         {
             if (cur_Display_ErrorCode != state.ErrorCode || state.Message != cur_Display_Message)
             {
-                SendRightMaterialMissionServiceStateMessageEvent?.Invoke(state);
+                SendAgvMissionServiceStateMessageEvent?.Invoke(state);
 
                 cur_Display_ErrorCode = state.ErrorCode;
                 cur_Display_Message = state.Message;
@@ -464,7 +464,7 @@ namespace AgvMissionManager
             }
         }
 
-        private void UpdataRightMaterialInMisson()
+        private void UpdataAgvInMisson()
         {
 
         }
@@ -474,20 +474,20 @@ namespace AgvMissionManager
 
         }
 
-        private Tuple<bool, RightMaterialMissionServiceErrorCodeEnum> CheckMissionConflict()
+        private Tuple<bool, AgvMissionServiceErrorCodeEnum> CheckMissionConflict()
         {
             var undo_inmissions = InMissions
-                .Where(x => x.Process > RightMaterialInMissonProcessEnum.NEW && x.Process < RightMaterialInMissonProcessEnum.CLOSE);
+                .Where(x => x.Process > AgvInMissonProcessEnum.NEW && x.Process < AgvInMissonProcessEnum.CLOSE);
             var undo_outmissions = OutMissions
-                .Where(x => x.Process > RightMaterialOutMissonProcessEnum.NEW && x.Process < RightMaterialOutMissonProcessEnum.CLOSE);
+                .Where(x => x.Process > AgvOutMissonProcessEnum.NEW && x.Process < AgvOutMissonProcessEnum.CLOSE);
 
             //存在相同ID的任务
             var max_inmission = undo_inmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
             var max_outmission = undo_outmissions.GroupBy(x => x.Id).Select(x => new { num = x.Count() }).Max() ?? new { num = 0 };
             if (max_inmission.num > 1 || max_outmission.num > 1)
             {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                    (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+                return new Tuple<bool, AgvMissionServiceErrorCodeEnum>
+                    (false, AgvMissionServiceErrorCodeEnum.IDCONFLICT);
             }
 
             //多于2个任务正在执行
@@ -495,33 +495,33 @@ namespace AgvMissionManager
             var count_outmissions = undo_outmissions.Count();
             if (count_inmissions + count_outmissions > 2)
             {
-                return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                    (false, RightMaterialMissionServiceErrorCodeEnum.QUANTITYLIMIT);
+                return new Tuple<bool, AgvMissionServiceErrorCodeEnum>
+                    (false, AgvMissionServiceErrorCodeEnum.QUANTITYLIMIT);
             }
 
             //存在两个出料库任务，已经达到AGVSTART， 但是小于AGVLEAVEPICK
             //var count_outmission_conflict = undo_outmissions
-            //    .Where(x => x.Process >= RightMaterialOutMissonProcessEnum.AGVSTART && x.Process < RightMaterialOutMissonProcessEnum.AGVLEAVEPICK).Count();
+            //    .Where(x => x.Process >= AgvOutMissonProcessEnum.AGVSTART && x.Process < AgvOutMissonProcessEnum.AGVLEAVEPICK).Count();
             //if (count_outmission_conflict > 1)
             //{
-            //    return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-            //        (false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            //    return new Tuple<bool, AgvMissionServiceErrorCodeEnum>
+            //        (false, AgvMissionServiceErrorCodeEnum.IDCONFLICT);
             //}
 
             //        //只能有一个入料库任务
             //        var count_inmission_conflict = undo_inmissions.Count();
             //        if (count_inmission_conflict > 1)
             //        {
-            //            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-            //(false, RightMaterialMissionServiceErrorCodeEnum.IDCONFLICT);
+            //            return new Tuple<bool, AgvMissionServiceErrorCodeEnum>
+            //(false, AgvMissionServiceErrorCodeEnum.IDCONFLICT);
             //}
 
-            return new Tuple<bool, RightMaterialMissionServiceErrorCodeEnum>
-                (true, RightMaterialMissionServiceErrorCodeEnum.NORMAL);
+            return new Tuple<bool, AgvMissionServiceErrorCodeEnum>
+                (true, AgvMissionServiceErrorCodeEnum.NORMAL);
         }
 
         //TODO:发送入库任务给小车调度中心
-        private void SendInMissionToAgvRoboRoute(RightMaterialInMisson mission)
+        private void SendInMissionToAgvRoboRoute(AgvInMisson mission)
         {
 
 
@@ -540,7 +540,7 @@ namespace AgvMissionManager
         }
 
         //TODO:异步料库执行入库
-        private bool WareHouseInMission(RightMaterialInMisson mission)
+        private bool WareHouseInMission(AgvInMisson mission)
         {
             //int temp_type = 0;
             //var ret = int.TryParse(mission.ProductId, out temp_type);
@@ -578,7 +578,7 @@ namespace AgvMissionManager
             //    }
             //}
 
-            //mission.Process = RightMaterialInMissonProcessEnum.FINISHED;
+            //mission.Process = AgvInMissonProcessEnum.FINISHED;
 
             //ret = controlDevice.SetRHouseRequest(false);
             //if (ret == false) return ret;
@@ -591,7 +591,7 @@ namespace AgvMissionManager
         }
 
         //TODO:异步料库执行出库
-        private bool WareHouseOutMission(RightMaterialOutMisson mission)
+        private bool WareHouseOutMission(AgvOutMisson mission)
         {
             //int temp_type = 0;
             //var ret = int.TryParse(mission.ProductId, out temp_type);
@@ -629,7 +629,7 @@ namespace AgvMissionManager
             //    }
             //}
 
-            ////mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
+            ////mission.Process = AgvOutMissonProcessEnum.PICKED;
 
             //ret = controlDevice.SetRHouseRequest(false);
             //if (ret == false) return ret;
@@ -641,7 +641,7 @@ namespace AgvMissionManager
         }
 
         //TODO:异步小车入库搬运
-        private async Task<bool> AgvInMission(RightMaterialInMisson mission)
+        private async Task<bool> AgvInMission(AgvInMisson mission)
         {
             var agv_order_id = mission.Id + "_" + mission.TimeId;
             IClient client = new Client();
@@ -663,12 +663,12 @@ namespace AgvMissionManager
                     var order = await client.TransportOrdersAsync(agv_order_id);
                     if (order.State == TransportOrderStateState.FINISHED)
                     {
-                        mission.Process = RightMaterialInMissonProcessEnum.FINISHED;
+                        mission.Process = AgvInMissonProcessEnum.FINISHED;
                         break;
                     }
                     else if (order.State == TransportOrderStateState.WITHDRAWN || order.State == TransportOrderStateState.FAILED)
                     {
-                        mission.Process = RightMaterialInMissonProcessEnum.CANCEL;
+                        mission.Process = AgvInMissonProcessEnum.CANCEL;
                         break;
                     }
                 }
@@ -678,27 +678,27 @@ namespace AgvMissionManager
 
         //TODO:异步小车出库搬运
 #pragma warning disable CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
-        private async Task<bool> AgvOutMission(RightMaterialOutMisson mission)
+        private async Task<bool> AgvOutMission(AgvOutMisson mission)
 #pragma warning restore CS1998 // 此异步方法缺少 "await" 运算符，将以同步方式运行。请考虑使用 "await" 运算符等待非阻止的 API 调用，或者使用 "await Task.Run(...)" 在后台线程上执行占用大量 CPU 的工作。
         {
             return true;
         }
 
         //TODO:小车入库任务取消
-        private bool AgvInMissionCancel(RightMaterialInMisson mission)
+        private bool AgvInMissionCancel(AgvInMisson mission)
         {
             //TODO:添加异常处理
 
-            mission.Process = RightMaterialInMissonProcessEnum.CLOSE;
+            mission.Process = AgvInMissonProcessEnum.CLOSE;
             return true;
         }
 
         //TODO:小车出库任务取消
-        private bool AgvOutMissionCancel(RightMaterialOutMisson mission)
+        private bool AgvOutMissionCancel(AgvOutMisson mission)
         {
             //TODO:添加异常处理
 
-            mission.Process = RightMaterialOutMissonProcessEnum.CLOSE;
+            mission.Process = AgvOutMissonProcessEnum.CLOSE;
             return true;
         }
     }

@@ -205,39 +205,41 @@ namespace RightCarryService
                 return ret;
             }
 
-            int temp_material = 0;
-            ret = int.TryParse(material, out temp_material);
-            if (ret == false) return ret;
+            //int temp_material = 0;
+            //ret = int.TryParse(material, out temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseMaterialType(temp_material);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseMaterialType(temp_material);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseInOut(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseInOut(true);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseRequest(true);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(true);
+            //if (ret == false) return ret;
 
-            var in_fin = false;
-            while (in_fin == false || ret == false)
-            {
-                ret = controlDevice.GetRHouseFin(ref in_fin);
+            //var in_fin = false;
+            //while (in_fin == false || ret == false)
+            //{
+            //    ret = controlDevice.GetRHouseFin(ref in_fin);
 
-                var in_reset = false;
-                controlDevice.GetRHouseReset(ref in_reset);
-                if (in_reset == true)
-                {
-                    break;
-                }
-            }
+            //    var in_reset = false;
+            //    controlDevice.GetRHouseReset(ref in_reset);
+            //    if (in_reset == true)
+            //    {
+            //        break;
+            //    }
+            //}
 
-            //mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
+            ////mission.Process = RightMaterialOutMissonProcessEnum.PICKED;
 
-            ret = controlDevice.SetRHouseRequest(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseRequest(false);
+            //if (ret == false) return ret;
 
-            ret = controlDevice.SetRHouseFin(false);
-            if (ret == false) return ret;
+            //ret = controlDevice.SetRHouseFin(false);
+            //if (ret == false) return ret;
+
+            return true;
         }
     }
 }

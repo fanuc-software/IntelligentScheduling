@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AgvMissionManager
 {
-    public enum RightMaterialMissionServiceErrorCodeEnum
+    public enum AgvMissionServiceErrorCodeEnum
     {
         NORMAL=0,
 		IDCONFLICT=1,

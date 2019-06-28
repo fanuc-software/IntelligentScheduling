@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AgvMissionManager
 {
-    public enum RightMaterialMissionTypeEnum
+    public enum AgvMissionTypeEnum
     {
         RAW_IN,
         EMPTY_OUT,
