@@ -25,7 +25,7 @@ namespace OrderDistribution
 
         public AllenBradleyDevice()
         {
-            m_ABDevice = new AllenBradley("192.168.1.10", 44818);
+            m_ABDevice = new AllenBradley("192.168.1.81", 44818);
 
             m_OrderModeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.Sts.MESMode" };
             m_OrderAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AllowMES" };

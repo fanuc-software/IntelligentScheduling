@@ -9,12 +9,23 @@ namespace AGV.Web.Host.Controllers
 {
     public class DeviceController : Controller
     {
+        static bool isArrived = false;
+
+        [HttpGet]
+        [HttpPost]
+        public JsonResult Init()
+        {
+            isArrived = false;
+            return Json(new { state = true });
+        }
+
         [HttpGet]
         [HttpPost]
         public JsonResult LocationDevices(string id)
         {
             if (Request.Method == "POST")
             {
+                isArrived = true;
 
             }
             var query = Request.Query["action"];
@@ -22,8 +33,8 @@ namespace AGV.Web.Host.Controllers
             {
                 lastAction = query,
                 name = id,
-                lastActionStatus = ActionStatus.DONE,
-                status = Status.IDLE
+                lastActionStatus = isArrived ? ActionStatus.DONE : ActionStatus.EXECUTING,
+                status = isArrived ? Status.IDLE : Status.EXECUTING
             };
             return Json(node);
         }
