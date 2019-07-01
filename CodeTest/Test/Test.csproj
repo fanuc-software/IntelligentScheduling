@@ -76,6 +76,10 @@
       <Project>{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}</Project>
       <Name>OrderDistribution</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RightCarryService\RightCarryService.csproj">
+      <Project>{2130dca2-bcdb-4117-aee7-16abe1f8d503}</Project>
+      <Name>RightCarryService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

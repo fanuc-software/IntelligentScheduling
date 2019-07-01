@@ -29,6 +29,8 @@ namespace RightCarryService
 
         bool SetRHouseReset(bool reset);
 
+        bool GetRHouseQuantity(ref int quantity);
+
         bool GetHouseRequestFCS(ref bool req);
 
         bool GetHouseRequestFCSFin(ref bool req_fin);

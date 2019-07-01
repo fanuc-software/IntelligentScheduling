@@ -54,6 +54,10 @@
       <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
       <Name>DeviceAsset</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RightCarryService\RightCarryService.csproj">
+      <Project>{2130dca2-bcdb-4117-aee7-16abe1f8d503}</Project>
+      <Name>RightCarryService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

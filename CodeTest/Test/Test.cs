@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using LeftMaterialService;
 using RightMaterialService;
+using RightCarryService;
 
 namespace Test
 {
@@ -20,7 +21,7 @@ namespace Test
 
     class TestOrderService : BaseOrderService
     {
-        public override IOrderDevice Device => new FanucRobotDevice();
+        public override IOrderDevice Device => new AllenBradleyDevice();
 
         public TestOrderService(OrderServiceEnum serviceEnum) : base(serviceEnum)
         {
@@ -64,7 +65,29 @@ namespace Test
 
             //for (int i = 0; i < 100; i++)
             //{
-            bool ret1,ret2;
+            //bool ret1,ret2;
+            Task.Factory.StartNew(() =>
+            {
+                TestRightCarryService carry = new TestRightCarryService();
+                Console.WriteLine("TASK1");
+                carry.CarryIn("1", "2");
+
+                Console.WriteLine("TASK1");
+                System.Threading.Thread.Sleep(5000);
+
+
+            });
+            Task.Factory.StartNew(() =>
+            {
+                TestRightCarryService carry = new TestRightCarryService();
+                Console.WriteLine("TASK2");
+                carry.CarryIn("1", "2");
+
+                
+                System.Threading.Thread.Sleep(5000);
+
+
+            });
             //var modula = new RightModulaWareHouseClient("TESTR");
             //ret1 = modula.ResetTray();
             //ret1 = modula.MoveInTray(1, 1);

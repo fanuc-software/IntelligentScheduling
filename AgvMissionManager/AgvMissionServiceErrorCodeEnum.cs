@@ -13,6 +13,8 @@ namespace AgvMissionManager
         QUANTITYLIMIT=2,
         TWOOUTPICKING=3,
         WAREHOUSEIN=100,
+        CARRYIN = 101,
         WAREHOUSEOUT = 150,
+        CARRYOUT=151,
     }
 }

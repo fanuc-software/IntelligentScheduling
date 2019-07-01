@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DeviceAsset;
+using RightCarryService;
 
 namespace AgvMissionManager
 {
@@ -12,8 +13,7 @@ namespace AgvMissionManager
     {
         private AgvMissionServiceErrorCodeEnum cur_Display_ErrorCode;
         private string cur_Display_Message;
-
-
+        
         private static BaseAgvMissionService _instance = null;
         private CancellationTokenSource token = new CancellationTokenSource();
 
@@ -411,7 +411,19 @@ namespace AgvMissionManager
                 }
             }, token.Token);
         }
-        
+
+        //TODO:
+        public void Stop()
+        {
+
+        }
+
+        //TODO:
+        public void Suspend()
+        {
+
+        }
+
         public bool CloseOutMission(string missionId)
         {
             var finished_outmission = OutMissions.Where(x => x.Id==missionId && x.Process == AgvOutMissonProcessEnum.FINISHED).FirstOrDefault();
@@ -434,17 +446,24 @@ namespace AgvMissionManager
             return true;
         }
 
-        //TODO:
-        public void Stop()
+        //TODO:小车入库任务取消
+        private bool AgvInMissionCancel(AgvInMisson mission)
         {
+            //TODO:添加异常处理
 
+            mission.Process = AgvInMissonProcessEnum.CLOSE;
+            return true;
         }
 
-        //TODO:
-        public void Suspend()
+        //TODO:小车出库任务取消
+        private bool AgvOutMissionCancel(AgvOutMisson mission)
         {
+            //TODO:添加异常处理
 
+            mission.Process = AgvOutMissonProcessEnum.CLOSE;
+            return true;
         }
+        
 
         private void SendAgvMissionServiceStateMessage(AgvMissionServiceState state)
         {
@@ -527,119 +546,54 @@ namespace AgvMissionManager
 
         }
 
-        //TODO:发送错误消息给系统
+        //TODO:发送错误消息给小车任务管理系统
         private bool SetAlarm(bool alarm)
         {
             return true;
         }
 
-        //TODO:从系统获得复位信号
+        //TODO:从小车任务管理系统获得复位信号
         private bool GetReset(ref bool reset)
         {
             return true;
         }
 
-        //TODO:异步料库执行入库
+        //料库执行入库
         private bool WareHouseInMission(AgvInMisson mission)
         {
-            //int temp_type = 0;
-            //var ret = int.TryParse(mission.ProductId, out temp_type);
-            //if (ret == false) return ret;
+            TestRightCarryService carry = new TestRightCarryService();
+            
+            var ret = carry.CarryIn(mission.ProductId, mission.MaterialId);
 
-            //ret = controlDevice.SetRHouseFin(false);
-            //if (ret == false) return ret;
+            if (ret == false)
+            {
+                mission.Process = AgvInMissonProcessEnum.CANCEL;
+                return false;
+            }
 
-            //ret = controlDevice.SetRHouseProductType(temp_type);
-            //if (ret == false) return ret;
-
-            //int temp_material = 0;
-            //ret = int.TryParse(mission.MaterialId, out temp_material);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseMaterialType(temp_material);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseInOut(false);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseRequest(true);
-            //if (ret == false) return ret;
-
-            //var in_fin = false;
-            //while (in_fin == false || ret == false)
-            //{
-            //    ret = controlDevice.GetRHouseFin(ref in_fin);
-
-            //    var in_reset = false;
-            //    controlDevice.GetRHouseReset(ref in_reset);
-            //    if (in_reset == true)
-            //    {
-            //        break;
-            //    }
-            //}
-
-            //mission.Process = AgvInMissonProcessEnum.FINISHED;
-
-            //ret = controlDevice.SetRHouseRequest(false);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseFin(false);
-            //if (ret == false) return ret;
-
-
+            mission.Process = AgvInMissonProcessEnum.FINISHED;
             return true;
         }
 
-        //TODO:异步料库执行出库
+        //料库执行出库
         private bool WareHouseOutMission(AgvOutMisson mission)
         {
-            //int temp_type = 0;
-            //var ret = int.TryParse(mission.ProductId, out temp_type);
-            //if (ret == false) return ret;
 
-            //ret = controlDevice.SetRHouseFin(false);
-            //if (ret == false) return ret;
+            TestRightCarryService carry = new TestRightCarryService();
 
-            //ret = controlDevice.SetRHouseProductType(temp_type);
-            //if (ret == false) return ret;
+            int quantity = 0;
+            var ret = carry.CarryOut(mission.ProductId,mission.MaterialId,ref quantity);
 
-            //int temp_material = 0;
-            //ret = int.TryParse(mission.MaterialId, out temp_material);
-            //if (ret == false) return ret;
+            if(ret==false)
+            {
+                mission.Process = AgvOutMissonProcessEnum.CANCEL;
+                return false;
+            }
 
-            //ret = controlDevice.SetRHouseMaterialType(temp_material);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseInOut(true);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseRequest(true);
-            //if (ret == false) return ret;
-
-            //var in_fin = false;
-            //while (in_fin == false || ret == false)
-            //{
-            //    ret = controlDevice.GetRHouseFin(ref in_fin);
-
-            //    var in_reset = false;
-            //    controlDevice.GetRHouseReset(ref in_reset);
-            //    if (in_reset == true)
-            //    {
-            //        break;
-            //    }
-            //}
-
-            ////mission.Process = AgvOutMissonProcessEnum.PICKED;
-
-            //ret = controlDevice.SetRHouseRequest(false);
-            //if (ret == false) return ret;
-
-            //ret = controlDevice.SetRHouseFin(false);
-            //if (ret == false) return ret;
-
+            mission.Process = AgvOutMissonProcessEnum.WHPICKED;
             return true;
         }
-
+        
         //TODO:异步小车入库搬运
         private async Task<bool> AgvInMission(AgvInMisson mission)
         {
@@ -684,22 +638,6 @@ namespace AgvMissionManager
             return true;
         }
 
-        //TODO:小车入库任务取消
-        private bool AgvInMissionCancel(AgvInMisson mission)
-        {
-            //TODO:添加异常处理
 
-            mission.Process = AgvInMissonProcessEnum.CLOSE;
-            return true;
-        }
-
-        //TODO:小车出库任务取消
-        private bool AgvOutMissionCancel(AgvOutMisson mission)
-        {
-            //TODO:添加异常处理
-
-            mission.Process = AgvOutMissonProcessEnum.CLOSE;
-            return true;
-        }
     }
 }
