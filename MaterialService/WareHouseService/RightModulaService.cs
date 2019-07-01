@@ -109,7 +109,7 @@ namespace WareHouseService
         {
             var elevator = ModulaElevator.CreateInstance();
             elevator.GetElevator();
-
+            
             ServiceInfoEvent?.Invoke($"【{Thread.CurrentThread.Name}】【{m_client}】: 【MoveInTray】 {DateTime.Now}");
 
             var message = "RVART=" + para.Material_Type.ToString().PadLeft(25, ' ') + "11";
@@ -164,21 +164,32 @@ namespace WareHouseService
             var ret = m_Modula.Send(message);
             if (ret.Item1 == false)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
             if (ret.Item2.Count() < 10)
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
             var ok_back = ret.Item2.Substring(8, 2);
             if (ok_back == "10")
             {
+                Task.Factory.StartNew(() =>
+                {
+                    System.Threading.Thread.Sleep(30);
+
+                    var elevator2 = ModulaElevator.CreateInstance();
+                    elevator2.ReleaseElevator();
+                });
+
                 return new WareHouseResult() { IsSuccessed = true };
             }
             else
             {
+                elevator.ReleaseElevator();
                 return new WareHouseResult() { IsSuccessed = false };
             }
         }
@@ -186,7 +197,7 @@ namespace WareHouseService
         public WareHouseResult ReleaseWriterLock(WareHousePara para)
         {
             m_readerWriterLock.ReleaseWriterLock();
-
+           
             return new WareHouseResult { IsSuccessed = true };
         }
 

@@ -5,14 +5,10 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-#pragma warning disable CS0105 // “OrderDistribution”的 using 指令以前在此命名空间中出现过
-using OrderDistribution;
-#pragma warning restore CS0105 // “OrderDistribution”的 using 指令以前在此命名空间中出现过
-using EventBus;
 using System.Diagnostics;
 using LeftMaterialService;
-using DeviceAsset;
 using RightMaterialService;
+using RightCarryService;
 
 namespace Test
 {
@@ -25,7 +21,7 @@ namespace Test
 
     class TestOrderService : BaseOrderService
     {
-        public override IOrderDevice Device => new FanucRobotDevice();
+        public override IOrderDevice Device => new AllenBradleyDevice();
 
         public TestOrderService(OrderServiceEnum serviceEnum) : base(serviceEnum)
         {
@@ -34,7 +30,7 @@ namespace Test
 
     }
 
-    class Program
+    class Test
     {
 
         static void Main(string[] args)
@@ -69,15 +65,36 @@ namespace Test
 
             //for (int i = 0; i < 100; i++)
             //{
-            bool ret;
-            var modula = new RightModulaWareHouseClient("TESTR");
+            //bool ret1,ret2;
+            Task.Factory.StartNew(() =>
+            {
+                TestRightCarryService carry = new TestRightCarryService();
+                Console.WriteLine("TASK1");
+                carry.CarryIn("1", "2");
 
-            ret = modula.ResetTray();
-            //ret = modula.MoveInTray(1, 1);
+                Console.WriteLine("TASK1");
+                System.Threading.Thread.Sleep(5000);
 
-            var modula2 = new LefModulaWareHouseClient("TESTL");
-            ret = modula2.ResetTray();
-            //ret = modula2.MoveInTray(1, 3);
+
+            });
+            Task.Factory.StartNew(() =>
+            {
+                TestRightCarryService carry = new TestRightCarryService();
+                Console.WriteLine("TASK2");
+                carry.CarryIn("1", "2");
+
+                
+                System.Threading.Thread.Sleep(5000);
+
+
+            });
+            //var modula = new RightModulaWareHouseClient("TESTR");
+            //ret1 = modula.ResetTray();
+            //ret1 = modula.MoveInTray(1, 1);
+
+            //var modula2 = new LefModulaWareHouseClient("TESTL");
+            //ret2 = modula2.ResetTray();
+            //ret2 = modula2.MoveInTray(1, 3);
             //modula2.ResetTray();
             //    System.Threading.Thread.Sleep(30000);
             //int prod = 0;

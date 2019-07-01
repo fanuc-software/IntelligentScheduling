@@ -106,7 +106,7 @@ namespace RightMaterialService
         {
             if (cur_Display_ErrorCode != state.ErrorCode)
             {
-                Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+                Console.WriteLine($"【RIGHTMATERIAL】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
 
                 cur_Display_ErrorCode = state.ErrorCode;
             }

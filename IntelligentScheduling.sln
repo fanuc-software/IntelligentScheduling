@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29006.145
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MaterialService", "MaterialService", "{B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}"
 EndProject
@@ -42,6 +42,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WareHouseService", "MaterialService\WareHouseService\WareHouseService.csproj", "{D1C2A203-E904-451D-874A-301F9E1448C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderDistribution", "Order\OrderDistribution\OrderDistribution.csproj", "{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RightCarryService", "RightCarryService\RightCarryService.csproj", "{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgvMissionManager", "AgvMissionManager\AgvMissionManager.csproj", "{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +113,14 @@ Global
 		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +141,8 @@ Global
 		{A86CEBA4-DD92-42C2-96CD-74A0EAC92401} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
 		{D1C2A203-E904-451D-874A-301F9E1448C9} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
 		{F67FBB7E-6D6D-4D76-B390-FB4C90A84CAE} = {A1B3305F-5C68-4B63-88AD-50A8F5160F6F}
+		{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
+		{546EABBA-C5C6-45D7-9A15-3F289D0A9E68} = {B2CAAC0D-5C26-4930-9BDA-66E4671CD78D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {45B6882A-9624-4C65-AC8B-669A2C6C0558}

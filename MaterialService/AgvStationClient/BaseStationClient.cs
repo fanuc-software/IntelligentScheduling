@@ -1,4 +1,4 @@
-﻿using RightMaterialService;
+﻿using AgvMissionManager;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +8,7 @@ namespace AgvStationClient
     public abstract class BaseStationClient
     {
         private string stationId;
-        private BaseRightMaterialMissionService materialSrv;
+        private BaseAgvMissionService materialSrv;
 
         public abstract IStationDevice stationDevice { get; set; }
         
@@ -17,18 +17,18 @@ namespace AgvStationClient
         public BaseStationClient(string id)
         {
             stationId = id;
-            materialSrv = BaseRightMaterialMissionService.CreateInstance();
+            materialSrv = BaseAgvMissionService.CreateInstance();
 
-            materialSrv.UpdateRightMaterialInMissonEvent += OnRightMaterialInMissonEvent;
-            materialSrv.UpdateRightMaterialOutMissonEvent += OnRightMaterialOutMissonEvent;
+            materialSrv.UpdateAgvInMissonEvent += OnAgvInMissonEvent;
+            materialSrv.UpdateAgvOutMissonEvent += OnAgvOutMissonEvent;
         }
 
-        private void OnRightMaterialInMissonEvent(RightMaterialInMisson mission)
+        private void OnAgvInMissonEvent(AgvInMisson mission)
         {
             //毛坯空箱回库
             if (mission.Id.Equals(stationId + "_EMPTYOUT"))
             {
-                if(mission.Process>=RightMaterialInMissonProcessEnum.AGVLEAVEPICK)
+                if(mission.Process>=AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
                 {
                     stationDevice.SetEmptyOutFin(true);
                 }
@@ -36,19 +36,19 @@ namespace AgvStationClient
             //成品回库
             if (mission.Id.Equals(stationId + "_FINOUT"))
             {
-                if (mission.Process >= RightMaterialInMissonProcessEnum.AGVLEAVEPICK)
+                if (mission.Process >= AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
                 {
                     stationDevice.SetFinOutFin(true);
                 }
             }
         }
 
-        private void OnRightMaterialOutMissonEvent(RightMaterialOutMisson mission)
+        private void OnAgvOutMissonEvent(AgvOutMisson mission)
         {
             //毛坯输入
             if (mission.Id.Equals(stationId + "_RAWIN"))
             {
-                if (mission.Process >= RightMaterialOutMissonProcessEnum.FINISHED)
+                if (mission.Process >= AgvOutMissonProcessEnum.FINISHED)
                 {
                     stationDevice.SetRawInFin(true);
                 }
@@ -56,7 +56,7 @@ namespace AgvStationClient
             //成品空箱输入
             if (mission.Id.Equals(stationId + "_EMPTYIN"))
             {
-                if (mission.Process >= RightMaterialOutMissonProcessEnum.FINISHED)
+                if (mission.Process >= AgvOutMissonProcessEnum.FINISHED)
                 {
                     stationDevice.SetEmptyInFin(true);
                 }
@@ -128,15 +128,15 @@ namespace AgvStationClient
                         return false;
                     }
 
-                    SendInMission(new RightMaterialInMisson
+                    SendInMission(new AgvInMisson
                     {
                         Id = stationId + "_EMPTYOUT",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                         ClientId = stationId,
-                        Type = RightMaterialMissionTypeEnum.EMPTY_OUT,
+                        Type = AgvMissionTypeEnum.EMPTY_OUT,
                         PickStationId = stationId,
                         PlaceStationId = null,
-                        Process = RightMaterialInMissonProcessEnum.NEW,
+                        Process = AgvInMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -166,15 +166,15 @@ namespace AgvStationClient
                         return false;
                     }
 
-                    SendOutMission(new RightMaterialOutMisson
+                    SendOutMission(new AgvOutMisson
                     {
                         Id = stationId + "_RAWIN",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                         ClientId = stationId,
-                        Type = RightMaterialMissionTypeEnum.RAW_IN,
+                        Type = AgvMissionTypeEnum.RAW_IN,
                         PickStationId = null,
                         PlaceStationId = stationId,
-                        Process = RightMaterialOutMissonProcessEnum.NEW,
+                        Process = AgvOutMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -216,15 +216,15 @@ namespace AgvStationClient
                                 return false;
                             }
 
-                            SendInMission(new RightMaterialInMisson
+                            SendInMission(new AgvInMisson
                             {
                                 Id = stationId + "_FINOUT",
                                 TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                                 ClientId = stationId,
-                                Type = RightMaterialMissionTypeEnum.FIN_OUT,
+                                Type = AgvMissionTypeEnum.FIN_OUT,
                                 PickStationId = stationId,
                                 PlaceStationId = null,
-                                Process = RightMaterialInMissonProcessEnum.NEW,
+                                Process = AgvInMissonProcessEnum.NEW,
                                 Quantity = 0,
                                 MaterialId = material_type,
                                 ProductId = prod_type,
@@ -250,15 +250,15 @@ namespace AgvStationClient
                             return false;
                         }
 
-                        SendOutMission(new RightMaterialOutMisson
+                        SendOutMission(new AgvOutMisson
                         {
                             Id = stationId + "_EMPTYIN",
                             TimeId = DateTime.Now.ToString("yyMMddmmssff"),
                             ClientId = stationId,
-                            Type = RightMaterialMissionTypeEnum.EMPTY_IN,
+                            Type = AgvMissionTypeEnum.EMPTY_IN,
                             PickStationId = null,
                             PlaceStationId = stationId,
-                            Process = RightMaterialOutMissonProcessEnum.NEW,
+                            Process = AgvOutMissonProcessEnum.NEW,
                             Quantity = 0,
                             MaterialId = material_type,
                             ProductId = prod_type,
@@ -271,17 +271,17 @@ namespace AgvStationClient
             return true;
         }
 
-        private void SendOutMission(RightMaterialOutMisson mission)
+        private void SendOutMission(AgvOutMisson mission)
         {
             materialSrv.PushOutMission(mission);
         }
         
-        private void SendInMission(RightMaterialInMisson mission)
+        private void SendInMission(AgvInMisson mission)
         {
             materialSrv.PushInMission(mission);
         }
 
-        private void SendBrotherMission(RightMaterialInMisson inmission, RightMaterialOutMisson outmission)
+        private void SendBrotherMission(AgvInMisson inmission, AgvOutMisson outmission)
         {
 
         }

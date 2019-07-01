@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RightMaterialService
+namespace AgvMissionManager
 {
-    public enum RightMaterialOutMissonProcessEnum
+    public enum AgvOutMissonProcessEnum
     {
         //未处理
         NEW=0,
@@ -54,7 +54,7 @@ namespace RightMaterialService
         CLOSE = 14,
     }
 
-    public class RightMaterialOutMisson
+    public class AgvOutMisson
     {
         public string Id { get; set; }
 
@@ -62,7 +62,7 @@ namespace RightMaterialService
 
         public string ClientId { get; set; }
 
-        public RightMaterialMissionTypeEnum Type { get; set; }
+        public AgvMissionTypeEnum Type { get; set; }
 
         public string PickStationId { get; set; }
 
@@ -76,6 +76,6 @@ namespace RightMaterialService
 
         public DateTime CreateDateTime { get; set; }
 
-        public RightMaterialOutMissonProcessEnum Process { get; set; }
+        public AgvOutMissonProcessEnum Process { get; set; }
     }
 }
