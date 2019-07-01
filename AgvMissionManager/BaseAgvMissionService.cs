@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Agv.Common;
 using DeviceAsset;
 using RightCarryService;
 
@@ -13,13 +14,50 @@ namespace AgvMissionManager
     {
         private AgvMissionServiceErrorCodeEnum cur_Display_ErrorCode;
         private string cur_Display_Message;
-        
+
+        SignalrService signalrService;
         private static BaseAgvMissionService _instance = null;
         private CancellationTokenSource token = new CancellationTokenSource();
+        private List<FeedingSignal> feedingAllows = new List<FeedingSignal>();
 
         Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum> brotherMissionType = new Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum>();
 
         public event Action<AgvMissionServiceState> SendAgvMissionServiceStateMessageEvent;
+
+        #region 许可信号
+        private void InitialFeedingSignal()
+        {
+            feedingAllows.Add(new FeedingSignal
+            {
+                ClientId=AgvStationEnum.RX07,
+                Type=AgvMissionTypeEnum.RAW_IN,
+                FeedingAllow=false,
+            });
+
+            feedingAllows.Add(new FeedingSignal
+            {
+                ClientId = AgvStationEnum.RX07,
+                Type = AgvMissionTypeEnum.EMPTY_OUT,
+                FeedingAllow = false,
+            });
+
+            feedingAllows.Add(new FeedingSignal
+            {
+                ClientId = AgvStationEnum.RX08,
+                Type = AgvMissionTypeEnum.EMPTY_IN,
+                FeedingAllow = false,
+            });
+
+            feedingAllows.Add(new FeedingSignal
+            {
+                ClientId = AgvStationEnum.RX08,
+                Type = AgvMissionTypeEnum.EMPTY_OUT,
+                FeedingAllow = false,
+            });
+        }
+
+
+        #endregion
 
         #region 任务
         private List<AgvOutMisson> OutMissions { get; set; }
@@ -40,6 +78,16 @@ namespace AgvMissionManager
 
         public BaseAgvMissionService()
         {
+            signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
+            signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
+            signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) => {
+                PushOutMission(s);
+            });
+            signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionFinMessage.EnumToString(), (s) => {
+                PushInMission(s);
+            });
+
+
             OutMissions = new List<AgvOutMisson>();
             InMissions = new List<AgvInMisson>();
             
@@ -86,8 +134,10 @@ namespace AgvMissionManager
 
         public void Start()
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async() =>
             {
+                await signalrService.Start();
+
                 while (!token.IsCancellationRequested)
                 {
                     #region 防冲突
@@ -604,7 +654,7 @@ namespace AgvMissionManager
                 Deadline = DateTime.Now.AddMinutes(20),
                 Destinations = new List<DestinationOrder>()
                 {
-                    new DestinationOrder(){ LocationName=mission.PickStationId,Operation="JackLoad"}
+                  //  new DestinationOrder(){ LocationName=mission.PickStationId,Operation="JackLoad"}
                 }
             });
 

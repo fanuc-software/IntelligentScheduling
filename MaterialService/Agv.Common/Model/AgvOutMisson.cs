@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AgvMissionManager
+namespace Agv.Common
 {
     public enum AgvOutMissonProcessEnum
     {
@@ -60,13 +60,13 @@ namespace AgvMissionManager
 
         public string TimeId { get; set; }
 
-        public string ClientId { get; set; }
+        public AgvStationEnum ClientId { get; set; }
 
         public AgvMissionTypeEnum Type { get; set; }
 
-        public string PickStationId { get; set; }
+        public AgvStationEnum PickStationId { get; set; }
 
-        public string PlaceStationId { get; set; }
+        public AgvStationEnum PlaceStationId { get; set; }
 
         public string ProductId { get; set; }
 

@@ -15,11 +15,16 @@ namespace RightCarryService
         public abstract IControlDevice ControlDevice { get; }
         
         public event Action<RightCarryServiceState> SendRightCarryServiceStateMessageEvent;
-        //private static ReaderWriterLock m_readerWriterLock = new ReaderWriterLock();
+        private static ReaderWriterLock m_readerWriterLock = new ReaderWriterLock();
 
         public BaseRightCarryService()
         {
-            //m_readerWriterLock.AcquireWriterLock(100000);
+            m_readerWriterLock.AcquireWriterLock(100000);
+        }
+
+        public void ReleaseLock()
+        {
+            m_readerWriterLock.ReleaseWriterLock();
         }
 
         public bool CarryIn(string product, string material)

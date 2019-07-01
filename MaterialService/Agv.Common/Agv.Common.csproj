@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}</ProjectGuid>
+    <ProjectGuid>{0BDBA394-80CE-4FF4-96D3-15123833A493}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgvMissionManager</RootNamespace>
-    <AssemblyName>AgvMissionManager</AssemblyName>
+    <RootNamespace>Agv.Common</RootNamespace>
+    <AssemblyName>Agv.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,8 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,28 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgvMissionServiceState.cs" />
-    <Compile Include="BaseAgvMissionService.cs" />
-    <Compile Include="FeedingSignal.cs" />
+    <Compile Include="EnumExtension.cs" />
+    <Compile Include="Model\AgvInMisson.cs" />
+    <Compile Include="Model\AgvMissionTypeEnum.cs" />
+    <Compile Include="Model\AgvOutMisson.cs" />
+    <Compile Include="Model\AgvReceiveActionEnum.cs" />
+    <Compile Include="Model\AgvSendActionEnum.cs" />
+    <Compile Include="Model\AgvStationEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AgvMissionServiceErrorCodeEnum.cs" />
+    <Compile Include="SignalrService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Asset\DeviceAsset\DeviceAsset.csproj">
-      <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
-      <Name>DeviceAsset</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MaterialService\Agv.Common\Agv.Common.csproj">
-      <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
-      <Name>Agv.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RightCarryService\RightCarryService.csproj">
-      <Project>{2130dca2-bcdb-4117-aee7-16abe1f8d503}</Project>
-      <Name>RightCarryService</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

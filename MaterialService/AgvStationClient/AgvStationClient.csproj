@@ -67,12 +67,17 @@
       <Project>{108a2162-2608-44ce-9cd6-6e3fa2e583f3}</Project>
       <Name>DeviceAsset</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Agv.Common\Agv.Common.csproj">
+      <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
+      <Name>Agv.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RightMaterialService\RightMaterialService.csproj">
       <Project>{943bebc8-e05e-417f-9273-ffd1f2e10d31}</Project>
       <Name>RightMaterialService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

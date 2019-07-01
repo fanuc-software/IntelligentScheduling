@@ -9,6 +9,7 @@ using System.Diagnostics;
 using LeftMaterialService;
 using RightMaterialService;
 using RightCarryService;
+using Agv.Common;
 
 namespace Test
 {
@@ -35,7 +36,6 @@ namespace Test
 
         static void Main(string[] args)
         {
-
             //var ab = new AllenBradleyControlDevice();
             //bool in_out = false;
             //var ret = ab.GetHouseInOut(ref in_out);
@@ -66,28 +66,27 @@ namespace Test
             //for (int i = 0; i < 100; i++)
             //{
             //bool ret1,ret2;
-            Task.Factory.StartNew(() =>
-            {
-                TestRightCarryService carry = new TestRightCarryService();
-                Console.WriteLine("TASK1");
-                carry.CarryIn("1", "2");
-
-                Console.WriteLine("TASK1");
-                System.Threading.Thread.Sleep(5000);
-
-
-            });
-            Task.Factory.StartNew(() =>
-            {
-                TestRightCarryService carry = new TestRightCarryService();
-                Console.WriteLine("TASK2");
-                carry.CarryIn("1", "2");
-
+            SignalrTest.MainTest();
+            //Task.Factory.StartNew(() =>
+            //{
+            //    TestRightCarryService carry = new TestRightCarryService();
+            //    Console.WriteLine("TASK1");
+            //    carry.CarryIn("1", "2");
                 
-                System.Threading.Thread.Sleep(5000);
+            //    System.Threading.Thread.Sleep(5000);
 
+            //    carry.ReleaseLock();
 
-            });
+            //});
+            //Task.Factory.StartNew(() =>
+            //{
+            //    TestRightCarryService carry = new TestRightCarryService();
+            //    Console.WriteLine("TASK2");
+            //    carry.CarryIn("1", "2");
+            //    System.Threading.Thread.Sleep(5000);
+
+            //    carry.ReleaseLock();
+            //});
             //var modula = new RightModulaWareHouseClient("TESTR");
             //ret1 = modula.ResetTray();
             //ret1 = modula.MoveInTray(1, 1);
