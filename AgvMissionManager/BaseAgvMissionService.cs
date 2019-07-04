@@ -45,7 +45,6 @@ namespace AgvMissionManager
         public BaseAgvMissionService()
         {
             signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
-            signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
             {
                 PushOutMission(s);

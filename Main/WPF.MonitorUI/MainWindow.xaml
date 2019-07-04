@@ -5,8 +5,96 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF.MonitorUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="AGV站点客户端" Height="600" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="240"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="站点ID" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="客户端请求" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="传感器信号" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="报警与复位" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Text="请输入站点ID" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Height="240" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="毛坯出库→单元" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="0" Text="请输入产品类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="0" Text="请输入物料类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <Button Grid.Row="3" Grid.Column="0" Content="请求毛坯出库→单元" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="0" Text="请求毛坯出库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="空箱回库→料库" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="请输入产品类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="请输入物料类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <Button Grid.Row="3" Grid.Column="1" Content="请求空箱回库→料库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Text="请求空箱回库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="空箱出库→单元" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="请输入产品类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="请输入物料类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <Button Grid.Row="3" Grid.Column="2" Content="请求空箱出库→单元" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="2" Text="请求空箱出库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="成品回库→料库" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="3" Text="请输入产品类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="3" Text="请输入物料类型" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <Button Grid.Row="3" Grid.Column="3" Content="请求成品回库→料库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="3" Text="请求成品回库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ToggleButton Grid.Column="0" Content="上料道有无物料" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Column="1" Content="下料道有无物料" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ToggleButton Grid.Column="0" Content="报警" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <Button Grid.Column="1" Content="复位" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+        </Grid>
     </Grid>
 </Window>

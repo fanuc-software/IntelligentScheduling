@@ -310,9 +310,6 @@ namespace LeftMaterialService
 
                 while (S_House_RequestInfoFCS == false)
                 {
-
-
-
                     var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
                     if (ret_req_info == false)
                   {
