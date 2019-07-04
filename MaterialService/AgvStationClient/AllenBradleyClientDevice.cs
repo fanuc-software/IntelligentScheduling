@@ -248,7 +248,7 @@ namespace AgvStationClient
         /// </summary>
         /// <param name="reset">true:允许；false：不允许</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        public bool CheckRawInRequireAllow(ref bool raw_in)
+        public bool GetRawInFeedingSignal(ref bool raw_in)
         {
             var ret = m_ABDevice.Read(m_RawInRequireAllowConfig);
             if (ret.IsSuccess == false) return false;
@@ -266,7 +266,7 @@ namespace AgvStationClient
         /// </summary>
         /// <param name="reset">true:允许；false：不允许</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        public bool CheckEmptyInAllow(ref bool empty_in)
+        public bool GetEmptyInFeedingSignal(ref bool empty_in)
         {
             var ret = m_ABDevice.Read(m_EmptyInAllowConfig);
             if (ret.IsSuccess == false) return false;

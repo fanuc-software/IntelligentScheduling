@@ -91,14 +91,14 @@ namespace AgvStationClient
         /// </summary>
         /// <param name="reset">true:允许；false：不允许</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        bool CheckRawInRequireAllow(ref bool raw_in);
+        bool GetRawInFeedingSignal(ref bool raw_in);
 
         /// <summary>
         /// 获得成品空箱输入允许信号（硬件IO）
         /// </summary>
         /// <param name="reset">true:允许；false：不允许</param>
         /// <returns>true：读取正常； false：读取异常</returns>
-        bool CheckEmptyInAllow(ref bool empty_in);
+        bool GetEmptyInFeedingSignal(ref bool empty_in);
 
         /// <summary>
         /// 获得毛坯种类

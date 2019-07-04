@@ -14,38 +14,40 @@ namespace Agv.Common
         //开始处理
         START = 1,
 
+        AGVSTART=2,
+
         //小车在料道进入等待点等待
-        AGVATPREPICK = 2,
+        AGVATPREPICK = 3,
 
         //小车在单元料道作业
-        AGVATPICK = 3,
+        AGVATPICK = 4,
         
         //小车从单元料道搬离物料
-        AGVPICKEDANDLEAVE = 4,
+        AGVPICKEDANDLEAVE = 5,
 
         //小车在入料道进入等待位等待
-        AGVATPREPLACE = 4,
+        AGVATPREPLACE = 6,
 
         //小车在料库入料道
-        AGVATPLACE=5,
+        AGVATPLACE=7,
 
         //放置完成
-        AGVPLACEDANDLEAVE = 6,
+        AGVPLACEDANDLEAVE = 8,
 
         //通知入库动作
-        WHSTART=7,
+        WHSTART=9,
 
         //入库结束
-        FINISHED = 8,
+        FINISHED = 10,
 
         //任务撤销
-        CANCEL =9,
+        CANCEL =11,
         
         //任务已撤销
-        CANCELED = 10,
+        CANCELED = 12,
 
         //任务关闭
-        CLOSE =11,
+        CLOSE =13,
     }
 
     [System.Runtime.Remoting.Contexts.Synchronization]
