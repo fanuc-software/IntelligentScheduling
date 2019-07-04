@@ -1,21 +1,21 @@
-﻿using System;
+﻿using AGV.Web.Service.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using AGV.Web.Host.Models;
-using Microsoft.AspNetCore.Mvc;
+using System.Web;
+using System.Web.Mvc;
 
-namespace AGV.Web.Host.Controllers
+namespace AGV.Web.Service.Controllers
 {
     public class DeviceController : Controller
     {
-        static bool isArrived = false;
+
 
         [HttpGet]
         [HttpPost]
         public JsonResult Init()
         {
-            isArrived = false;
+
             return Json(new { state = true });
         }
 
@@ -23,12 +23,22 @@ namespace AGV.Web.Host.Controllers
         [HttpPost]
         public JsonResult LocationDevices(string id)
         {
-            if (Request.Method == "POST")
-            {
-                isArrived = true;
+            var query = Request.QueryString["action"];
 
+            if (Request.HttpMethod == "POST" && query == "arrived")
+            {
+                if (StaticData.SignalDict.ContainsKey(id))
+                {
+                    StaticData.SignalDict[id] = true;
+
+                }
+                return Json(new { state = true, id = id });
             }
-            var query = Request.Query["action"];
+            bool isArrived = false;
+            if (StaticData.SignalDict.ContainsKey(id))
+            {
+                isArrived = StaticData.SignalDict[id];
+            }
             var node = new LocationDevice()
             {
                 lastAction = query,
