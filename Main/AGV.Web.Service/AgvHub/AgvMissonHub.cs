@@ -10,11 +10,11 @@ namespace AGV.Web.Service.AgvHub
 {
     public class AgvMissonHub : Hub
     {
-        private IClient client;
+        //private IClient client;
 
         public AgvMissonHub()
         {
-          client = new Client();
+          //client = new Client();
         }
                 
         public void SendOutMission(AgvOutMisson message)
@@ -24,7 +24,7 @@ namespace AGV.Web.Service.AgvHub
 
         public void SendInMission(AgvInMisson message)
         {
-            client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
+            //client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
 
             Clients.All.receiveInMissionMessage(message);
         }
@@ -37,6 +37,11 @@ namespace AGV.Web.Service.AgvHub
         public void SendInMissionFinMessage(AgvInMisson message)
         {
             Clients.All.receiveInMissionFinMessage(message);
+        }
+
+        public void SendFeedingSignalMessage(AgvFeedingSignal message)
+        {
+            Clients.All.receiveFeedingSignalMessage(message);
         }
     }
 }

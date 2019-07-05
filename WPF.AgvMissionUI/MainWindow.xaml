@@ -49,30 +49,44 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="入库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-            <DataGrid Grid.Row="0" Grid.Column="1" Margin="5">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="启动/停止" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="3" Command="{Binding Start_Command}" Content="启动运行" Margin="5"/>
+            </Grid>
+            
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="入库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding InMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="任务ID" Width="200"/>
-                    <DataGridTextColumn Header="单元ID" Width="200"/>
-                    <DataGridTextColumn Header="任务类型" Width="200"/>
-                    <DataGridTextColumn Header="任务状态" Width="200"/>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
+                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="出库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-            <DataGrid Grid.Row="1" Grid.Column="1" Margin="5">
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="出库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding OutMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="任务ID" Width="200"/>
-                    <DataGridTextColumn Header="单元ID" Width="200"/>
-                    <DataGridTextColumn Header="任务类型" Width="200"/>
-                    <DataGridTextColumn Header="任务状态" Width="200"/>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
+                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-            <DataGrid Grid.Row="2" Grid.Column="1" Margin="5">
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="3" Grid.Column="1" Margin="5">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="信息类型" Width="200"/>
                     <DataGridTextColumn Header="信息详情" Width="auto"/>

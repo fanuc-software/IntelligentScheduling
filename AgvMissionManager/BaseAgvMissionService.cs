@@ -26,8 +26,8 @@ namespace AgvMissionManager
         public event Action<AgvMissionServiceState> SendAgvMissionServiceStateMessageEvent;
 
         #region 任务
-        private BlockingCollection<AgvOutMisson> OutMissions { get; set; }
-        private BlockingCollection<AgvInMisson> InMissions { get; set; }
+        public BlockingCollection<AgvOutMisson> OutMissions { get; set; }
+        public BlockingCollection<AgvInMisson> InMissions { get; set; }
 
         #endregion
 
@@ -45,11 +45,12 @@ namespace AgvMissionManager
         public BaseAgvMissionService()
         {
             signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
-            signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
+            
+            signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionMessage.EnumToString(), (s) =>
             {
                 PushOutMission(s);
             });
-            signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionFinMessage.EnumToString(), (s) =>
+            signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionMessage.EnumToString(), (s) =>
             {
                 PushInMission(s);
             });
@@ -58,8 +59,7 @@ namespace AgvMissionManager
             {
                 UpdataFeedingSignal(s);
             });
-
-
+            
             OutMissions = new BlockingCollection<AgvOutMisson>();
             InMissions = new BlockingCollection<AgvInMisson>();
 
@@ -183,7 +183,7 @@ namespace AgvMissionManager
                                     && x.Process == AgvOutMissonProcessEnum.NEW)
                                 .FirstOrDefault();
 
-                            if (brother_inmission != null)
+                            if (brother_inmission == null)
                             {
                                 new_outmission.Process = AgvOutMissonProcessEnum.START;
                             }
@@ -624,7 +624,7 @@ namespace AgvMissionManager
                         var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
 
 
-                        if(brother_inmission==null && feeding_signal.Value==false)
+                        if(brother_inmission==null && feeding_signal.Value==false && mission.Process==AgvOutMissonProcessEnum.AGVATPREPLACE)
                         {
                             DoWork(() => AgvOutMissionPrePlaceWait(mission).Result, () =>
                             {

@@ -9,6 +9,7 @@ namespace AgvStationClient
 {
     public class AllenBradleyClientDevice: IStationDevice
     {
+        public bool InFeedingSignal { get; set; }
 
 #pragma warning disable CS0649 // 从未对字段“AllenBradleyClientDevice.m_RawInRequireStateConfig”赋值，字段将一直保持其默认值 null
         private AllenBradleyDataConfig m_RawInRequireStateConfig;
