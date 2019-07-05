@@ -585,7 +585,7 @@ namespace AgvMissionManager
                        {
                            agv_inmission.Process = AgvInMissonProcessEnum.CANCEL;
 
-                       }, "小车搬运入库任务失败", AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT);
+                       }, "小车搬运入库任务失败", AgvMissionServiceErrorCodeEnum.AGVIN);
 
 
 
@@ -603,7 +603,7 @@ namespace AgvMissionManager
                         {
                             agv_outmission.Process = AgvOutMissonProcessEnum.CANCEL;
 
-                        }, "小车搬运出库任务失败", AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT);
+                        }, "小车搬运出库任务失败", AgvMissionServiceErrorCodeEnum.AGVOUT);
 
 
                     }
@@ -622,15 +622,14 @@ namespace AgvMissionManager
                             .FirstOrDefault();
 
                         var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
-
-
+                        
                         if(brother_inmission==null && feeding_signal.Value==false && mission.Process==AgvOutMissonProcessEnum.AGVATPREPLACE)
                         {
                             DoWork(() => AgvOutMissionPrePlaceWait(mission).Result, () =>
                             {
                                 mission.Process = AgvOutMissonProcessEnum.AGVATPLACE;
 
-                            }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT);
+                            }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.AGVOUTPREPLACEWAIT);
                         }
                     }
                     
