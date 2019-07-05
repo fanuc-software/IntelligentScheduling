@@ -11,7 +11,12 @@ namespace AGV.Web.Service.Models
         public static TransportOrder AgvMissonToTransportOrder(this AgvInMisson agvInMisson)
         {
             var key = agvInMisson.PickStationId.ToString();
-            var listNode = StaticData.ProductNodeDict[key];
+            var listNode = new List<ConfigNode>();
+            if (StaticData.ProductNodeDict.ContainsKey(key))
+            {
+                listNode = StaticData.ProductNodeDict[key];
+            }
+
             var transportOrder = new TransportOrder()
             {
 
