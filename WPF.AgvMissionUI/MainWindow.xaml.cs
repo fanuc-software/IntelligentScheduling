@@ -26,7 +26,20 @@ namespace WPF.AgvMissionUI
             DispatcherHelper.Initialize();
 
             InitializeComponent();
-            this.DataContext = new MainViewModel();
+            var main = new MainViewModel();
+            main.OutMissionItemAddEvent += Main_OutMissionItemAddEvent;
+            main.InMissionItemAddEvent += Main_InMissionItemAddEvent;
+            this.DataContext = main;
+        }
+
+        private void Main_InMissionItemAddEvent(System.Collections.ObjectModel.ObservableCollection<InMissionItem> arg1, InMissionItem arg2)
+        {
+            Dispatcher.BeginInvoke(new Action(() => arg1.Add(arg2)));
+        }
+
+        private void Main_OutMissionItemAddEvent(System.Collections.ObjectModel.ObservableCollection<OutMissionItem> arg1, OutMissionItem arg2)
+        {
+            Dispatcher.BeginInvoke(new Action(() => arg1.Add(arg2)));
         }
     }
 }

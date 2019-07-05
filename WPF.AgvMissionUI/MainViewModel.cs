@@ -58,7 +58,7 @@ namespace WPF.AgvMissionUI
                 }
             }
         }
-        
+
         private AgvMissionTypeEnum _Type;
         public AgvMissionTypeEnum Type
         {
@@ -72,7 +72,7 @@ namespace WPF.AgvMissionUI
                 }
             }
         }
-        
+
         private AgvInMissonProcessEnum _Process;
         public AgvInMissonProcessEnum Process
         {
@@ -209,6 +209,10 @@ namespace WPF.AgvMissionUI
             }
         }
 
+        public event Action<ObservableCollection<InMissionItem>, InMissionItem> InMissionItemAddEvent;
+
+        public event Action<ObservableCollection<OutMissionItem>, OutMissionItem> OutMissionItemAddEvent;
+
         public ICommand Start_Command { get; set; }
 
         private BackgroundWorker m_static_BackgroundWorker = new BackgroundWorker();
@@ -247,17 +251,15 @@ namespace WPF.AgvMissionUI
                         }
                         else
                         {
-                            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                            InMissionItemAddEvent?.Invoke(InMissions, new InMissionItem
                             {
-                                InMissions.Add(new InMissionItem
-                                {
-                                    Id = mission.Id,
-                                    ClientId = mission.ClientId,
-                                    Type = mission.Type,
-                                    Process = mission.Process,
-                                    CreateDateTime = mission.CreateDateTime,
-                                });
+                                Id = mission.Id,
+                                ClientId = mission.ClientId,
+                                Type = mission.Type,
+                                Process = mission.Process,
+                                CreateDateTime = mission.CreateDateTime,
                             });
+
                         }
                     }
 
@@ -271,23 +273,21 @@ namespace WPF.AgvMissionUI
                         }
                         else
                         {
-                            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                            OutMissionItemAddEvent?.Invoke(OutMissions, new OutMissionItem
                             {
-                                OutMissions.Add(new OutMissionItem
-                                {
-                                    Id = mission.Id,
-                                    ClientId = mission.ClientId,
-                                    Type = mission.Type,
-                                    Process = mission.Process,
-                                    CreateDateTime = mission.CreateDateTime,
-                                });
+                                Id = mission.Id,
+                                ClientId = mission.ClientId,
+                                Type = mission.Type,
+                                Process = mission.Process,
+                                CreateDateTime = mission.CreateDateTime,
                             });
+
                         }
                     }
                 }
                 catch { }
 
-                
+
 
                 System.Threading.Thread.Sleep(1000);
             }
