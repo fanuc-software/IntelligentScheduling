@@ -72,6 +72,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BoolColorConverter.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -113,6 +114,10 @@
     <ProjectReference Include="..\MaterialService\Agv.Common\Agv.Common.csproj">
       <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
       <Name>Agv.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RightCarryService\RightCarryService.csproj">
+      <Project>{2130DCA2-BCDB-4117-AEE7-16ABE1F8D503}</Project>
+      <Name>RightCarryService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

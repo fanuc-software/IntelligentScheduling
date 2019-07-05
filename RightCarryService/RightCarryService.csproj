@@ -50,6 +50,7 @@
     <Compile Include="AllenBradleyControlDevice.cs" />
     <Compile Include="BaseRightCarryService.cs" />
     <Compile Include="IControlDevice.cs" />
+    <Compile Include="TestControlDevice.cs" />
     <Compile Include="TestRightCarryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RightCarryServiceErrorCodeEnum.cs" />

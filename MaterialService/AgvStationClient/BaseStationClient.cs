@@ -45,7 +45,7 @@ namespace AgvStationClient
             //毛坯空箱回库
             if (mission.Id.Equals(Station_Id + "_EMPTYOUT"))
             {
-                if (mission.Process >= AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
+                if (mission.Process == AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
                 {
                     bool empty_out = false;
                     var ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out);
@@ -59,7 +59,7 @@ namespace AgvStationClient
             //成品回库
             if (mission.Id.Equals(Station_Id + "_FINOUT"))
             {
-                if (mission.Process >= AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
+                if (mission.Process == AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
                 {
                     bool fin_out = false;
                     var ret_fin_out = StationDevice.GetFinOutState(ref fin_out);
@@ -77,7 +77,7 @@ namespace AgvStationClient
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
             {
-                if (mission.Process >= AgvOutMissonProcessEnum.FINISHED)
+                if (mission.Process == AgvOutMissonProcessEnum.FINISHED)
                 {
                     bool raw_in = false;
                     var ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in);
@@ -90,7 +90,7 @@ namespace AgvStationClient
             //成品空箱输入
             if (mission.Id.Equals(Station_Id + "_EMPTYIN"))
             {
-                if (mission.Process >= AgvOutMissonProcessEnum.FINISHED)
+                if (mission.Process == AgvOutMissonProcessEnum.FINISHED)
                 {
                     bool empty_in = false;
                     var ret_empty_in = StationDevice.GetEmptyInState(ref empty_in);
@@ -135,6 +135,8 @@ namespace AgvStationClient
                     }
 
                     SendFeedingSignal();
+
+                    Thread.Sleep(1000);
                 }
             }, token.Token);
 
@@ -296,6 +298,7 @@ namespace AgvStationClient
                             Quantity = 0,
                             MaterialId = material_type,
                             ProductId = prod_type,
+                            CreateDateTime = DateTime.Now,
                         });
                     }
                 }
@@ -330,6 +333,7 @@ namespace AgvStationClient
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
+                        CreateDateTime = DateTime.Now,
                     });
 
                 }
@@ -411,6 +415,7 @@ namespace AgvStationClient
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
+                        CreateDateTime = DateTime.Now,
                     });
                 }
             }

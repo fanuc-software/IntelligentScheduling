@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 namespace RightCarryService
 {
     [System.Runtime.Remoting.Contexts.Synchronization]
-    public abstract class BaseRightCarryService : System.ContextBoundObject
+    public abstract class BaseRightCarryService<T>  where T : IControlDevice
     {
         private static readonly object carrylock = new object();
 
-        public abstract IControlDevice ControlDevice { get; }
+        public T ControlDevice { get; }
         
         public event Action<RightCarryServiceState> SendRightCarryServiceStateMessageEvent;
         private static ReaderWriterLock m_readerWriterLock = new ReaderWriterLock();
 
-        public BaseRightCarryService()
+        public BaseRightCarryService(T device)
         {
+            ControlDevice = device;
+
             m_readerWriterLock.AcquireWriterLock(100000);
         }
 

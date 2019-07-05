@@ -15,6 +15,65 @@ using GalaSoft.MvvmLight.Threading;
 namespace WPF.AgvMissionUI
 {
 
+    public class MessageItem : ViewModelBase
+    {
+        private AgvMissionServiceStateEnum _State;
+        public AgvMissionServiceStateEnum State
+        {
+            get { return _State; }
+            set
+            {
+                if (_State != value)
+                {
+                    _State = value;
+                    RaisePropertyChanged(() => State);
+                }
+            }
+        }
+
+        private string _Message;
+        public string Message
+        {
+            get { return _Message; }
+            set
+            {
+                if (_Message != value)
+                {
+                    _Message = value;
+                    RaisePropertyChanged(() => Message);
+                }
+            }
+        }
+
+        private AgvMissionServiceErrorCodeEnum _ErrorCode;
+        public AgvMissionServiceErrorCodeEnum ErrorCode
+        {
+            get { return _ErrorCode; }
+            set
+            {
+                if (_ErrorCode != value)
+                {
+                    _ErrorCode = value;
+                    RaisePropertyChanged(() => ErrorCode);
+                }
+            }
+        }
+
+        private DateTime _CreateDateTime;
+        public DateTime CreateDateTime
+        {
+            get { return _CreateDateTime; }
+            set
+            {
+                if (_CreateDateTime != value)
+                {
+                    _CreateDateTime = value;
+                    RaisePropertyChanged(() => CreateDateTime);
+                }
+            }
+        }
+    }
+
     public class InMissionItem : ViewModelBase
     {
         private string _Id;
@@ -179,6 +238,76 @@ namespace WPF.AgvMissionUI
 
     public class MainViewModel : ViewModelBase
     {
+        #region 属性
+        private bool _InOut;
+        public bool InOut
+        {
+            get { return _InOut; }
+            set
+            {
+                if (_InOut != value)
+                {
+                    _InOut = value;
+                    RaisePropertyChanged(() => InOut);
+                }
+            }
+        }
+
+
+
+        private int _ProdType;
+        public int ProdType
+        {
+            get { return _ProdType; }
+            set
+            {
+                if (_ProdType != value)
+                {
+                    _ProdType = value;
+                    RaisePropertyChanged(() => ProdType);
+                }
+            }
+        }
+
+
+
+        private int _MateType;
+        public int MateType
+        {
+            get { return _MateType; }
+            set
+            {
+                if (_MateType != value)
+                {
+                    _MateType = value;
+                    RaisePropertyChanged(() => MateType);
+                }
+            }
+        }
+
+
+
+        private bool _Req;
+        public bool Req
+        {
+            get { return _Req; }
+            set
+            {
+                if (_Req != value)
+                {
+                    _Req = value;
+                    RaisePropertyChanged(() => Req);
+                }
+            }
+        }
+
+        public ICommand Fin_Command { get; set; }
+
+
+        #endregion
+
+        private BackgroundWorker m_static_BackgroundWorker = new BackgroundWorker();
+
         BaseAgvMissionService agvMissionSrv = new BaseAgvMissionService();
 
         private ObservableCollection<InMissionItem> _InMissions = new ObservableCollection<InMissionItem>();
@@ -209,6 +338,20 @@ namespace WPF.AgvMissionUI
             }
         }
 
+        private ObservableCollection<MessageItem> _Messages = new ObservableCollection<MessageItem>();
+        public ObservableCollection<MessageItem> Messages
+        {
+            get { return _Messages; }
+            set
+            {
+                if (_Messages != value)
+                {
+                    _Messages = value;
+                    RaisePropertyChanged(() => Messages);
+                }
+            }
+        }
+
         public event Action<ObservableCollection<InMissionItem>, InMissionItem> InMissionItemAddEvent;
 
         public event Action<ObservableCollection<OutMissionItem>, OutMissionItem> OutMissionItemAddEvent;
@@ -219,8 +362,40 @@ namespace WPF.AgvMissionUI
         {
             Start_Command = new RelayCommand(OnStart_Command);
 
+            Fin_Command = new RelayCommand(OnFin_Command);
+
             agvMissionSrv.AgvInMissChangeEvent += AgvMissionSrv_AgvInMissChangeEvent;
             agvMissionSrv.AgvOutMissChangeEvent += AgvMissionSrv_AgvOutMissChangeEvent;
+
+            agvMissionSrv.SendAgvMissionServiceStateMessageEvent += (s) => {
+
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    Messages.Add(new MessageItem { State = s.State, Message = s.Message, ErrorCode=s.ErrorCode, CreateDateTime = DateTime.Now });
+                });
+
+            };
+
+            m_static_BackgroundWorker.WorkerReportsProgress = false;
+            m_static_BackgroundWorker.WorkerSupportsCancellation = true;
+            m_static_BackgroundWorker.DoWork += ScannerStaticFunc;
+            m_static_BackgroundWorker.RunWorkerAsync();
+        }
+
+        private void OnFin_Command()
+        {
+            Task.Factory.StartNew(()=>{
+                agvMissionSrv.carryDevice.Fin = true;
+
+                System.Threading.Thread.Sleep(1000);
+
+                agvMissionSrv.carryDevice.Fin = false;
+            });
+
+           
+
+
+
         }
 
         private void AgvMissionSrv_AgvOutMissChangeEvent(AgvOutMisson mission, bool arg2)
@@ -271,8 +446,23 @@ namespace WPF.AgvMissionUI
 
         private void OnStart_Command()
         {
-            agvMissionSrv.Start();
+            agvMissionSrv.Start(true);
         }
 
+        private void ScannerStaticFunc(object sender, DoWorkEventArgs e)
+        {
+            while (m_static_BackgroundWorker.CancellationPending == false)
+            {
+                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                {
+                    ProdType = agvMissionSrv.carryDevice.Product_Type;
+                    MateType = agvMissionSrv.carryDevice.Material_Type;
+                    InOut = agvMissionSrv.carryDevice.InOut;
+                    Req = agvMissionSrv.carryDevice.Req;
+                });
+
+                System.Threading.Thread.Sleep(1000);
+            }
+        }
     }
 }

@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace RightCarryService
 {
-    [System.Runtime.Remoting.Contexts.Synchronization]
-    public class TestRightCarryService : BaseRightCarryService
+    public class TestRightCarryService<T> : BaseRightCarryService<T> where T:IControlDevice
     {
-        public override IControlDevice ControlDevice => new AllenBradleyControlDevice();
+        //public override IControlDevice ControlDevice => new AllenBradleyControlDevice();
+        public TestRightCarryService(T testDevice) : base(testDevice)
+        {
+
+        }
     }
 }

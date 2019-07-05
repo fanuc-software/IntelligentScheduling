@@ -6,7 +6,11 @@
         xmlns:local="clr-namespace:WPF.AgvMissionUI"
         mc:Ignorable="d"
         Title="AGV任务控制器" Height="768" Width="1366">
-    <Grid>
+    <Window.Resources>
+        <local:BoolColorConverter x:Key="_bcc"/>
+        <local:BoolColorConverter2 x:Key="_bcc2"/>
+    </Window.Resources>
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
@@ -30,17 +34,17 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="搬运入库：" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
-            <TextBox Grid.Row="1"  Text="显示产品种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="2"  Text="显示物料种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <ToggleButton Grid.Row="3"  Content="请求搬运入库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <Button Grid.Row="4"  Content="搬运入库完成" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBlock Grid.Row="0" Text="搬运入库：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
+            <TextBox Grid.Row="1"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="2"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="3"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <Button Grid.Row="4"  Content="搬运入库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
 
-            <TextBlock Grid.Row="5" Text="搬运出库：" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
-            <TextBox Grid.Row="6"  Text="显示产品种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="7"  Text="显示物料种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <ToggleButton Grid.Row="8"  Content="请求搬运出库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <Button Grid.Row="9"  Content="搬运出库完成" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBlock Grid.Row="5" Text="搬运出库：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
+            <TextBox Grid.Row="6"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="7"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="8"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <Button Grid.Row="9"  Content="搬运出库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
         </Grid>
 
         <Grid Grid.Column="1">
@@ -86,10 +90,12 @@
                 </DataGrid.Columns>
             </DataGrid>
             <TextBlock Grid.Row="3" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-            <DataGrid Grid.Row="3" Grid.Column="1" Margin="5">
+            <DataGrid Grid.Row="3" Grid.Column="1" Margin="5" ItemsSource="{Binding Messages}" AutoGenerateColumns="False" CanUserAddRows="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="信息类型" Width="200"/>
-                    <DataGridTextColumn Header="信息详情" Width="auto"/>
+                    <DataGridTextColumn Header="信息类型" Binding="{Binding State}" Width="100"/>
+                    <DataGridTextColumn Header="信息" Binding="{Binding Message}" Width="400"/>
+                    <DataGridTextColumn Header="错误类型" Binding="{Binding ErrorCode}" Width="200"/>
+                    <DataGridTextColumn Header="发生时间" Binding="{Binding CreateDateTime}" Width="400"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
