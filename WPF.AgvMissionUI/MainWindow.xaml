@@ -1,0 +1,97 @@
+﻿<Window x:Class="WPF.AgvMissionUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF.AgvMissionUI"
+        mc:Ignorable="d"
+        Title="AGV任务控制器" Height="768" Width="1366">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="搬运入库：" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
+            <TextBox Grid.Row="1"  Text="显示产品种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="2"  Text="显示物料种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <ToggleButton Grid.Row="3"  Content="请求搬运入库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <Button Grid.Row="4"  Content="搬运入库完成" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+
+            <TextBlock Grid.Row="5" Text="搬运出库：" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
+            <TextBox Grid.Row="6"  Text="显示产品种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="7"  Text="显示物料种类" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <ToggleButton Grid.Row="8"  Content="请求搬运出库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <Button Grid.Row="9"  Content="搬运出库完成" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="启动/停止" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="3" Command="{Binding Start_Command}" Content="启动运行" Margin="5"/>
+            </Grid>
+            
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="入库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding InMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
+                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="出库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding OutMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
+                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+            <DataGrid Grid.Row="3" Grid.Column="1" Margin="5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="信息类型" Width="200"/>
+                    <DataGridTextColumn Header="信息详情" Width="auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,4 +1,6 @@
-﻿namespace AgvStationClient
+﻿using System;
+
+namespace AgvStationClient
 {
     public enum StationClientStateEnum
     {
@@ -7,9 +9,10 @@
         FATAL,
     }
 
-    internal class StationClientState
+    public class StationClientState
     {
-        public object State { get; set; }
+        public StationClientStateEnum State { get; set; }
         public string Message { get; set; }
+        public DateTime CreateDateTime { get; set; }
     }
 }

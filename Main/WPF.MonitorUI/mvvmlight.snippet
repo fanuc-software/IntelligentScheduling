@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>propm</Title>
+      <Shortcut>propfullmvvm</Shortcut>
+      <Description>MVVM 自动属性代码模板</Description>
+      <Author>Fanuc</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+        <SnippetType>SurroundsWith</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <Default>int</Default>
+          <ToolTip>类型</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>name</ID>
+          <Default>Name</Default>
+          <ToolTip>属性名称</ToolTip>
+        </Literal>
+        
+      </Declarations>
+
+      <Code Language="csharp">
+        <![CDATA[
+    
+         private $type$ _$name$;
+         public $type$ $name$
+        {
+            get { return _$name$; }
+            set
+            {
+                if (_$name$ != value)
+                {
+                    _$name$ = value;
+                    RaisePropertyChanged(() => $name$);
+                }
+            }
+        }   
+            ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

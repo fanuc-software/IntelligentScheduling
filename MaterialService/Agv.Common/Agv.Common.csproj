@@ -55,6 +55,7 @@
     <Compile Include="Model\AgvReceiveActionEnum.cs" />
     <Compile Include="Model\AgvSendActionEnum.cs" />
     <Compile Include="Model\AgvStationEnum.cs" />
+    <Compile Include="Model\AgvFeedingSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalrService.cs" />
   </ItemGroup>

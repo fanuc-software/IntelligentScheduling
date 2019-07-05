@@ -5,8 +5,118 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF.MonitorUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="AGV站点客户端" Height="600" Width="800">
+    <Window.Resources>
+        <local:BoolColorConverter x:Key="_bcc"/>
+        <local:BoolAlarmColorConverter x:Key="_bacc"/>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="240"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="站点ID" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="客户端请求" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="传感器信号" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="报警与复位" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox ItemsSource="{Binding Stations}" DisplayMemberPath="Station_Name" SelectedItem="{Binding SelStation}" Margin="5"/>
+            <Button Grid.Column="3" Command="{Binding Start_Command}" Content="启动运行" Margin="5"/>
+            <!--<TextBox Grid.Column="0" Text="{Binding Station_Id}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>-->
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Height="240" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="产品" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="物料" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="请求" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="完成" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="毛坯出库→单元" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding RawIn_Prod}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RawIn_Mate}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Row="3" Grid.Column="1" Command="{Binding RawIn_Command}" IsChecked="{Binding RawIn_Req}" Content="请求毛坯出库→单元" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Background="{Binding RawIn_Fin,Converter={StaticResource _bcc}}" Text="请求毛坯出库完成" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="空箱回库→料库" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding EmptyOut_Prod}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding EmptyOut_Mate}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Row="3" Grid.Column="2" Command="{Binding EmptyOut_Command}" IsChecked="{Binding EmptyOut_Req}" Content="请求空箱回库→料库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="2" Background="{Binding EmptyOut_Fin,Converter={StaticResource _bcc}}" Text="请求空箱回库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="空箱出库→单元" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding EmptyIn_Prod}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding EmptyIn_Mate}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Row="3" Grid.Column="3" Command="{Binding EmptyIn_Command}" IsChecked="{Binding EmptyIn_Req}" Content="请求空箱出库→单元" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="3" Background="{Binding EmptyIn_Fin,Converter={StaticResource _bcc}}" Text="请求空箱出库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="成品回库→料库" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding FinOut_Prod}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="2" Grid.Column="4" Text="{Binding FinOut_Mate}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Row="3" Grid.Column="4" Command="{Binding FinOut_Command}" IsChecked="{Binding FinOut_Req}" Content="请求成品回库→料库" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <TextBox Grid.Row="4" Grid.Column="4" Background="{Binding FinOut_Fin,Converter={StaticResource _bcc}}" Text="请求成品回库完成" IsReadOnly="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ToggleButton IsChecked="{Binding InFeedingSignal}" Grid.Column="0" Content="上料道有无物料" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton IsChecked="{Binding OutFeedingSignal}" Grid.Column="1" Content="下料道有无物料" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Background="{Binding Alarm,Converter={StaticResource _bacc}}" Text="报警" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            <ToggleButton Grid.Column="1" Command="{Binding Reset_Command}" IsChecked="{Binding Reset_Req}" Content="复位" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+        </Grid>
+
+        <Grid Grid.Row="4" Grid.Column="1" Margin="5">
+            <DataGrid ItemsSource="{Binding Messages}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="信息类型" Binding="{Binding State}" Width="100"/>
+                    <DataGridTextColumn Header="信息" Binding="{Binding Message}" Width="400"/>
+                    <DataGridTextColumn Header="发生时间" Binding="{Binding CreateDateTime}" Width="400"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>
