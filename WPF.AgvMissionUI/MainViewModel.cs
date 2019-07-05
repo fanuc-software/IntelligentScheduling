@@ -215,18 +215,58 @@ namespace WPF.AgvMissionUI
 
         public ICommand Start_Command { get; set; }
 
-        private BackgroundWorker m_static_BackgroundWorker = new BackgroundWorker();
-
         public MainViewModel()
         {
             Start_Command = new RelayCommand(OnStart_Command);
 
-            m_static_BackgroundWorker.WorkerReportsProgress = false;
-            m_static_BackgroundWorker.WorkerSupportsCancellation = true;
-            m_static_BackgroundWorker.DoWork += ScannerStaticFunc;
-            m_static_BackgroundWorker.RunWorkerAsync();
+            agvMissionSrv.AgvInMissChangeEvent += AgvMissionSrv_AgvInMissChangeEvent;
+            agvMissionSrv.AgvOutMissChangeEvent += AgvMissionSrv_AgvOutMissChangeEvent;
+        }
 
+        private void AgvMissionSrv_AgvOutMissChangeEvent(AgvOutMisson mission, bool arg2)
+        {
+            if (arg2)
+            {
+                OutMissionItemAddEvent?.Invoke(OutMissions, new OutMissionItem
+                {
+                    Id = mission.Id,
+                    ClientId = mission.ClientId,
+                    Type = mission.Type,
+                    Process = mission.Process,
+                    CreateDateTime = mission.CreateDateTime,
+                });
+                return;
+            }
 
+            var item = OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE).FirstOrDefault();
+            if (item != null)
+            {
+                item.Process = mission.Process;
+                item.CreateDateTime = mission.CreateDateTime;
+            }
+        }
+
+        private void AgvMissionSrv_AgvInMissChangeEvent(AgvInMisson mission, bool arg2)
+        {
+            if (arg2)
+            {
+                InMissionItemAddEvent?.Invoke(InMissions, new InMissionItem
+                {
+                    Id = mission.Id,
+                    ClientId = mission.ClientId,
+                    Type = mission.Type,
+                    Process = mission.Process,
+                    CreateDateTime = mission.CreateDateTime,
+                });
+                return;
+            }
+
+            var item = InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE).FirstOrDefault();
+            if (item != null)
+            {
+                item.Process = mission.Process;
+                item.CreateDateTime = mission.CreateDateTime;
+            }
         }
 
         private void OnStart_Command()
@@ -234,63 +274,5 @@ namespace WPF.AgvMissionUI
             agvMissionSrv.Start();
         }
 
-        private void ScannerStaticFunc(object sender, DoWorkEventArgs e)
-        {
-            while (m_static_BackgroundWorker.CancellationPending == false)
-            {
-
-                try
-                {
-                    foreach (var mission in agvMissionSrv.InMissions)
-                    {
-                        var item = InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE).FirstOrDefault();
-                        if (item != null)
-                        {
-                            item.Process = mission.Process;
-                            item.CreateDateTime = mission.CreateDateTime;
-                        }
-                        else
-                        {
-                            InMissionItemAddEvent?.Invoke(InMissions, new InMissionItem
-                            {
-                                Id = mission.Id,
-                                ClientId = mission.ClientId,
-                                Type = mission.Type,
-                                Process = mission.Process,
-                                CreateDateTime = mission.CreateDateTime,
-                            });
-
-                        }
-                    }
-
-                    foreach (var mission in agvMissionSrv.OutMissions)
-                    {
-                        var item = OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE).FirstOrDefault();
-                        if (item != null)
-                        {
-                            item.Process = mission.Process;
-                            item.CreateDateTime = mission.CreateDateTime;
-                        }
-                        else
-                        {
-                            OutMissionItemAddEvent?.Invoke(OutMissions, new OutMissionItem
-                            {
-                                Id = mission.Id,
-                                ClientId = mission.ClientId,
-                                Type = mission.Type,
-                                Process = mission.Process,
-                                CreateDateTime = mission.CreateDateTime,
-                            });
-
-                        }
-                    }
-                }
-                catch { }
-
-
-
-                System.Threading.Thread.Sleep(1000);
-            }
-        }
     }
 }

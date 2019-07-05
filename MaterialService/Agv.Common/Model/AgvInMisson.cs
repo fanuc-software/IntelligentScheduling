@@ -14,14 +14,14 @@ namespace Agv.Common
         //开始处理
         START = 1,
 
-        AGVSTART=2,
+        AGVSTART = 2,
 
         //小车在料道进入等待点等待
         AGVATPREPICK = 3,
 
         //小车在单元料道作业
         AGVATPICK = 4,
-        
+
         //小车从单元料道搬离物料
         AGVPICKEDANDLEAVE = 5,
 
@@ -29,30 +29,30 @@ namespace Agv.Common
         AGVATPREPLACE = 6,
 
         //小车在料库入料道
-        AGVATPLACE=7,
+        AGVATPLACE = 7,
 
         //放置完成
         AGVPLACEDANDLEAVE = 8,
 
         //通知入库动作
-        WHSTART=9,
+        WHSTART = 9,
 
         //入库结束
         FINISHED = 10,
 
         //任务撤销
-        CANCEL =11,
-        
+        CANCEL = 11,
+
         //任务已撤销
         CANCELED = 12,
 
         //任务关闭
-        CLOSE =13,
+        CLOSE = 13,
     }
 
     [System.Runtime.Remoting.Contexts.Synchronization]
 
-    public class AgvInMisson: System.ContextBoundObject
+    public class AgvInMisson : System.ContextBoundObject
     {
         public string Id { get; set; }
 
@@ -74,6 +74,25 @@ namespace Agv.Common
 
         public DateTime CreateDateTime { get; set; }
 
-        public AgvInMissonProcessEnum Process { get; set; }
+
+
+        private AgvInMissonProcessEnum process;
+
+        public AgvInMissonProcessEnum Process
+        {
+            get { return process; }
+            set
+            {
+                if (process != value)
+                {
+                    process = value;
+                    AgvInProcessChangeEvent?.Invoke(this, false);
+                }
+
+            }
+        }
+
+        public event Action<AgvInMisson, bool> AgvInProcessChangeEvent;
+
     }
 }

@@ -29,6 +29,10 @@ namespace AgvMissionManager
         public BlockingCollection<AgvOutMisson> OutMissions { get; set; }
         public BlockingCollection<AgvInMisson> InMissions { get; set; }
 
+
+        public event Action<AgvInMisson, bool> AgvInMissChangeEvent;
+        public event Action<AgvOutMisson, bool> AgvOutMissChangeEvent;
+
         #endregion
 
         #region ctor
@@ -45,9 +49,10 @@ namespace AgvMissionManager
         public BaseAgvMissionService()
         {
             signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
-            
+
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionMessage.EnumToString(), (s) =>
             {
+
                 PushOutMission(s);
             });
             signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionMessage.EnumToString(), (s) =>
@@ -59,7 +64,7 @@ namespace AgvMissionManager
             {
                 UpdataFeedingSignal(s);
             });
-            
+
             OutMissions = new BlockingCollection<AgvOutMisson>();
             InMissions = new BlockingCollection<AgvInMisson>();
 
@@ -76,6 +81,9 @@ namespace AgvMissionManager
         {
             if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE).Count() == 0)
             {
+                mission.AgvOutProcessChangeEvent += (obj, state) => AgvOutMissChangeEvent?.Invoke(obj, state);
+                AgvOutMissChangeEvent?.Invoke(mission, true);
+
                 OutMissions.Add(mission);
             }
         }
@@ -84,8 +92,15 @@ namespace AgvMissionManager
         {
             if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE).Count() == 0)
             {
+                mission.AgvInProcessChangeEvent += (s, e) => AgvInMissChangeEvent?.Invoke(s, e);
+                AgvInMissChangeEvent?.Invoke(mission, true);
                 InMissions.Add(mission);
             }
+        }
+
+        private void Mission_AgvInProcessChangeEvent(AgvInMisson arg1, bool arg2)
+        {
+
         }
 
         private async void SendOutMission(AgvOutMisson mission)
@@ -611,8 +626,8 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 通知小车前往单元料道输送物料等待取消
-                    var agv_outmissions_atpreplace = undo_outmissions.Where(x => x.Process == AgvOutMissonProcessEnum.AGVATPREPLACE).ToList()??new List<AgvOutMisson>();
-                    foreach(var mission in agv_outmissions_atpreplace)
+                    var agv_outmissions_atpreplace = undo_outmissions.Where(x => x.Process == AgvOutMissonProcessEnum.AGVATPREPLACE).ToList() ?? new List<AgvOutMisson>();
+                    foreach (var mission in agv_outmissions_atpreplace)
                     {
                         var brother_mission_type = brotherMissionType[mission.Type];
                         var brother_inmission = OutMissions
@@ -624,7 +639,7 @@ namespace AgvMissionManager
                         var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
 
 
-                        if(brother_inmission==null && feeding_signal.Value==false && mission.Process==AgvOutMissonProcessEnum.AGVATPREPLACE)
+                        if (brother_inmission == null && feeding_signal.Value == false && mission.Process == AgvOutMissonProcessEnum.AGVATPREPLACE)
                         {
                             DoWork(() => AgvOutMissionPrePlaceWait(mission).Result, () =>
                             {
@@ -633,7 +648,7 @@ namespace AgvMissionManager
                             }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.WAREHOUSEOUT);
                         }
                     }
-                    
+
                     #endregion
 
                     #region 入库完工处理
@@ -675,7 +690,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 发送任务状态
-                    foreach(var undo in undo_inmissions)
+                    foreach (var undo in undo_inmissions)
                     {
                         signalrService.Send(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo).Wait();
                     }
