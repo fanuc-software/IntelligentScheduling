@@ -14,7 +14,7 @@ namespace RightMaterialService
 
         public RightModulaWareHouseClient(string id)
         {
-            m_wareHouseSrv = new RightModulaService(id, "192.168.1.22", 103);
+            m_wareHouseSrv = new RightModulaService(id, "192.168.1.23", 103);
             m_wareHouseSrv.ServiceInfoEvent += (s) => Console.WriteLine(s);
         }
 

@@ -193,7 +193,7 @@ namespace RightMaterialService
         {
             return await Task.Factory.StartNew(() =>
             {
-                IWareHouseClient WareHouse = new RightModulaWareHouseClient("rIGHT_MATERIAL_OUT");
+                IWareHouseClient WareHouse = new RightModulaWareHouseClient("RIGHT_MATERIAL_OUT");
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);

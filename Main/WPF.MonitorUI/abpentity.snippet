@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>propm</Title>
+      <Shortcut>propfullmvvm</Shortcut>
+      <Description>MVVM 自动属性代码模板</Description>
+      <Author>Fanuc</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+        <SnippetType>SurroundsWith</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <Default>string</Default>
+          <ToolTip>类型</ToolTip>
+        </Literal>
+        <Literal>
+          <ID>name</ID>
+          <Default>Name</Default>
+          <ToolTip>表名称</ToolTip>
+        </Literal>
+        
+      </Declarations>
+
+      <Code Language="csharp">
+        <![CDATA[
+    
+          [Table("Table_Name")]
+    public class $name$ : Entity<$type$>, IHasCreationTime
+    {
+
+        public DateTime CreationTime { get; set; }
+    }
+            ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
