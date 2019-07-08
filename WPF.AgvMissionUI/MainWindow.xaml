@@ -72,20 +72,22 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Text="入库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
             <DataGrid Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding InMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
-                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="100"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="100"/>
                     <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
-                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="AGV任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="料库任务状态" Binding="{Binding CarryProcess}" Width="200"/>
                     <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
                 </DataGrid.Columns>
             </DataGrid>
             <TextBlock Grid.Row="2" Grid.Column="0" Text="出库任务" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
             <DataGrid Grid.Row="2" Grid.Column="1" Margin="5" ItemsSource="{Binding OutMissions}" CanUserAddRows="False" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="200"/>
-                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="200"/>
+                    <DataGridTextColumn Header="任务ID" Binding="{Binding Id}" Width="100"/>
+                    <DataGridTextColumn Header="单元ID" Binding="{Binding ClientId}" Width="100"/>
                     <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="200"/>
-                    <DataGridTextColumn Header="任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="AGV任务状态" Binding="{Binding Process}" Width="200"/>
+                    <DataGridTextColumn Header="料库任务状态" Binding="{Binding CarryProcess}" Width="200"/>
                     <DataGridTextColumn Header="创建时间" Binding="{Binding CreateDateTime}" Width="120"/>
                 </DataGrid.Columns>
             </DataGrid>

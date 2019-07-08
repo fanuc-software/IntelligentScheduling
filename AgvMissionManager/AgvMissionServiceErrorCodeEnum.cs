@@ -15,9 +15,11 @@ namespace AgvMissionManager
         WAREHOUSEIN=100,
         CARRYIN = 101,
         AGVIN=102,
+        AGVINPREPLACEWAIT=103,
         WAREHOUSEOUT = 150,
         CARRYOUT=151,
         AGVOUT=152,
         AGVOUTPREPLACEWAIT=153,
+        AGVOUTPREPICKWAIT = 154,
     }
 }

@@ -14,6 +14,7 @@ namespace Agv.Common
         //开始处理
         START = 1,
 
+        //小车前往料道等待点
         AGVSTART = 2,
 
         //小车在料道进入等待点等待
@@ -33,10 +34,7 @@ namespace Agv.Common
 
         //放置完成
         AGVPLACEDANDLEAVE = 8,
-
-        //通知入库动作
-        WHSTART = 9,
-
+        
         //入库结束
         FINISHED = 10,
 
@@ -50,9 +48,31 @@ namespace Agv.Common
         CLOSE = 13,
     }
 
-    [System.Runtime.Remoting.Contexts.Synchronization]
+    public enum CarryInMissonProcessEnum
+    {
+        //未处理
+        NEW = 0,
+       
+        //通知入库动作
+        WHSTART = 1,
 
-    public class AgvInMisson : System.ContextBoundObject
+        //物料入库完成
+        WHPICKED = 2,
+
+        //入库结束
+        FINISHED = 3,
+
+        //任务撤销
+        CANCEL = 4,
+
+        //任务已撤销
+        CANCELED = 5,
+
+        //任务关闭
+        CLOSE = 6,
+    }
+    
+    public class AgvInMisson
     {
         public string Id { get; set; }
 
@@ -74,8 +94,7 @@ namespace Agv.Common
 
         public DateTime CreateDateTime { get; set; }
 
-
-
+       
         private AgvInMissonProcessEnum process;
 
         public AgvInMissonProcessEnum Process
@@ -86,6 +105,22 @@ namespace Agv.Common
                 if (process != value)
                 {
                     process = value;
+                    AgvInProcessChangeEvent?.Invoke(this, false);
+                }
+
+            }
+        }
+
+        private CarryInMissonProcessEnum carryProcess;
+
+        public CarryInMissonProcessEnum CarryProcess
+        {
+            get { return carryProcess; }
+            set
+            {
+                if (carryProcess != value)
+                {
+                    carryProcess = value;
                     AgvInProcessChangeEvent?.Invoke(this, false);
                 }
 

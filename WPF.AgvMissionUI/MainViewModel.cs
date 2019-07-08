@@ -146,6 +146,20 @@ namespace WPF.AgvMissionUI
             }
         }
 
+        private CarryInMissonProcessEnum _CarryProcess;
+        public CarryInMissonProcessEnum CarryProcess
+        {
+            get { return _CarryProcess; }
+            set
+            {
+                if (_CarryProcess != value)
+                {
+                    _CarryProcess = value;
+                    RaisePropertyChanged(() => CarryProcess);
+                }
+            }
+        }
+
         private DateTime _CreateDateTime;
         public DateTime CreateDateTime
         {
@@ -216,6 +230,20 @@ namespace WPF.AgvMissionUI
                 {
                     _Process = value;
                     RaisePropertyChanged(() => Process);
+                }
+            }
+        }
+
+        private CarryOutMissonProcessEnum _CarryProcess;
+        public CarryOutMissonProcessEnum CarryProcess
+        {
+            get { return _CarryProcess; }
+            set
+            {
+                if (_CarryProcess != value)
+                {
+                    _CarryProcess = value;
+                    RaisePropertyChanged(() => CarryProcess);
                 }
             }
         }
@@ -408,6 +436,7 @@ namespace WPF.AgvMissionUI
                     ClientId = mission.ClientId,
                     Type = mission.Type,
                     Process = mission.Process,
+                    CarryProcess=mission.CarryProcess,
                     CreateDateTime = mission.CreateDateTime,
                 });
                 return;
@@ -417,6 +446,7 @@ namespace WPF.AgvMissionUI
             if (item != null)
             {
                 item.Process = mission.Process;
+                item.CarryProcess = mission.CarryProcess;
                 item.CreateDateTime = mission.CreateDateTime;
             }
         }
@@ -431,6 +461,7 @@ namespace WPF.AgvMissionUI
                     ClientId = mission.ClientId,
                     Type = mission.Type,
                     Process = mission.Process,
+                    CarryProcess = mission.CarryProcess,
                     CreateDateTime = mission.CreateDateTime,
                 });
                 return;
@@ -440,6 +471,7 @@ namespace WPF.AgvMissionUI
             if (item != null)
             {
                 item.Process = mission.Process;
+                item.CarryProcess = mission.CarryProcess;
                 item.CreateDateTime = mission.CreateDateTime;
             }
         }
