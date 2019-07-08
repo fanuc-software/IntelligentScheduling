@@ -13,5 +13,6 @@ namespace Agv.Common
         SendOutMissionFinMessage,
         SendInMissionFinMessage,
         SendFeedingSignalMessage,
+        SendWaitEndSignal,
     }
 }
