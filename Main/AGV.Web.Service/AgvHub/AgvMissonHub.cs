@@ -14,9 +14,16 @@ namespace AGV.Web.Service.AgvHub
 
         public AgvMissonHub()
         {
-          //client = new Client();
+            //client = new Client();
         }
-                
+        public string SendWaitEndSignal(string id)
+        {
+            if (StaticData.SignalDict.ContainsKey(id))
+            {
+                StaticData.SignalDict[id] = true;
+            }
+            return id + ":True";
+        }
         public void SendOutMission(AgvOutMisson message)
         {
             Clients.All.receiveOutMissionMessage(message);
