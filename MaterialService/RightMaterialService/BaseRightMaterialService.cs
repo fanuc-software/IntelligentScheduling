@@ -11,6 +11,9 @@ namespace RightMaterialService
         public bool Temp_S_House_RequestFCS_Last { get; set; }
 
         private RightMaterialServiceErrorCodeEnum cur_Display_ErrorCode;
+        private string cur_Display_Message;
+
+        public event Action<RightMaterialServiceState> SendRightMaterialServiceStateMessageEvent;
 
         CancellationTokenSource token = new CancellationTokenSource();
 
@@ -104,11 +107,12 @@ namespace RightMaterialService
         //TODO
         private void SendRightMaterialServiceStateMessage(RightMaterialServiceState state)
         {
-            if (cur_Display_ErrorCode != state.ErrorCode)
+            if (cur_Display_ErrorCode != state.ErrorCode || state.Message != cur_Display_Message)
             {
-                Console.WriteLine($"【RIGHTMATERIAL】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+                SendRightMaterialServiceStateMessageEvent?.Invoke(state);
 
                 cur_Display_ErrorCode = state.ErrorCode;
+                cur_Display_Message = state.Message;
             }
         }
 

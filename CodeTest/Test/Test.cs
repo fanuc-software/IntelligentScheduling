@@ -15,9 +15,9 @@ using System.Threading;
 namespace Test
 {
 
-    class TestLeftMaterialService : BaseLeftMaterialService
+    class TestRightMaterialService : BaseRightMaterialService
     {
-        public override LeftMaterialService.IControlDevice ControlDevice => new LeftMaterialService.AllenBradleyControlDevice();
+        public override RightMaterialService.IControlDevice ControlDevice => new RightMaterialService.AllenBradleyControlDevice();
 
     }
 
@@ -70,66 +70,66 @@ namespace Test
             //  SignalrTest.MainTest();
 
 
-                    //var modula = new RightModulaWareHouseClient("TESTR");
-                    //ret1 = modula.ResetTray();
-                    //ret1 = modula.MoveInTray(1, 1);
+            //var modula = new RightModulaWareHouseClient("TESTR");
+            //ret1 = modula.ResetTray();
+            //ret1 = modula.MoveInTray(1, 1);
 
-                    //var modula2 = new LefModulaWareHouseClient("TESTL");
-                    //ret2 = modula2.ResetTray();
-                    //ret2 = modula2.MoveInTray(1, 3);
-                    //modula2.ResetTray();
-                    //    System.Threading.Thread.Sleep(30000);
-                    //int prod = 0;
-                    //int tray = 0;
-                    //int qty = 0;
-                    //ret = modula.GetPositionInfo(1, 1, out prod, out tray,out qty);
+            //var modula2 = new LefModulaWareHouseClient("TESTL");
+            //ret2 = modula2.ResetTray();
+            //ret2 = modula2.MoveInTray(1, 3);
+            //modula2.ResetTray();
+            //    System.Threading.Thread.Sleep(30000);
+            //int prod = 0;
+            //int tray = 0;
+            //int qty = 0;
+            //ret = modula.GetPositionInfo(1, 1, out prod, out tray,out qty);
 
-                    //var device = new AllenBradleyControlDevice();
-                    //device.SetHouseProductPostion(prod);
-                    //device.SetHouseTrayPostion(tray);
-                    //device.SetHouseQuantity(qty);
+            //var device = new AllenBradleyControlDevice();
+            //device.SetHouseProductPostion(prod);
+            //device.SetHouseTrayPostion(tray);
+            //device.SetHouseQuantity(qty);
 
-                    //    System.Threading.Thread.Sleep(30000);
-                    //modula.ResetTray();
-                    //}
-
-
-                    //modula.WriteBackData(1, 1, false);
-
-                    //var ret = modula.MoveInTray(1, 2);
+            //    System.Threading.Thread.Sleep(30000);
+            //modula.ResetTray();
+            //}
 
 
-                    //int prod = 0;
-                    // int tray = 0;
-                    //ret = modula.GetPositionInfo(1, 2, out prod, out tray);
-                    //    var ret = modula.ResetTray();
-                    //   var ret = modula.MoveOutTray(1, 1);
+            //modula.WriteBackData(1, 1, false);
 
-                    //System.Threading.Thread.Sleep(2000);
+            //var ret = modula.MoveInTray(1, 2);
 
 
-                    //BaseOrderService srv = new TestOrderService(OrderServiceEnum.OrderDistribution);
-                    //srv.SendOrderServiceStateMessage += PrintErrorMessage;
-                    //srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
-                    //srv.Start();
+            //int prod = 0;
+            // int tray = 0;
+            //ret = modula.GetPositionInfo(1, 2, out prod, out tray);
+            //    var ret = modula.ResetTray();
+            //   var ret = modula.MoveOutTray(1, 1);
 
-                    // eventBus.Deregister(mytest);
-
-                    //var dev = new AllenBradleyDevice();
-                    //bool mode = false;
-                    //var ret = dev.GetOrderMode(ref mode);
-
-                    //var leftSrv = new TestLeftMaterialService();
-                    //leftSrv.SendLeftMaterialServiceStateMessageEvent += PrintLeftMaterialServiceError;
-                    //leftSrv.Start();
-
-                    //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
-                    //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
-                    //orderSrv.SendOrderServiceStateMessage += PrintErrorMessage;
-                    //orderSrv.Start();
+            //System.Threading.Thread.Sleep(2000);
 
 
-                    while (true)
+            //BaseOrderService srv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            //srv.SendOrderServiceStateMessage += PrintErrorMessage;
+            //srv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //srv.Start();
+
+            // eventBus.Deregister(mytest);
+
+            //var dev = new AllenBradleyDevice();
+            //bool mode = false;
+            //var ret = dev.GetOrderMode(ref mode);
+
+            var leftSrv = new TestRightMaterialService();
+            leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
+            leftSrv.Start();
+
+            //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
+            //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
+            //orderSrv.SendOrderServiceStateMessage += PrintErrorMessage;
+            //orderSrv.Start();
+
+
+            while (true)
             {
                 Console.ReadKey();
 
@@ -142,6 +142,11 @@ namespace Test
         }
 
         private static void PrintLeftMaterialServiceError(LeftMaterialServiceState state)
+        {
+            Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+        }
+
+        private static void PrintRightMaterialServiceError(RightMaterialServiceState state)
         {
             Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
         }
