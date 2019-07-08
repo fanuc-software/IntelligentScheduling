@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Threading;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,11 @@ namespace WPF.RightCarryUI
     {
         public MainWindow()
         {
+
+            DispatcherHelper.Initialize();
             InitializeComponent();
+
+            this.DataContext = new MainViewModel();
         }
     }
 }

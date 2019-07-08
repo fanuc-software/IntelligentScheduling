@@ -5,8 +5,74 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF.RightCarryUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="800">
+    <Window.Resources>
+        <local:BoolStringConverter x:Key="_bsc"/>
+        <local:BoolFinStringConverter x:Key="_bfsc"/>
+        <local:BoolFinColorConverter x:Key="_bfcc"/>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="发送搬运请求" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="产品种类:" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Prod_Type}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="物料种类:" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Mate_Type}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="入库/出库:" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                <Button Grid.Row="3" Grid.Column="1" Command="{Binding InOut_Command}" Content="{Binding In_Out,Converter={StaticResource _bsc}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="搬运请求:" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                <Button Grid.Row="0" Grid.Column="1" Command="{Binding Req_Command}" Content="模拟发送料库请求" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="完成情况:" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Req_Fin,Converter={StaticResource _bfsc}}" Background="{Binding Req_Fin,Converter={StaticResource _bfcc}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="5"/>
+            </Grid>
+
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="提示信息" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        <DataGrid  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Messages}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="信息类型" Binding="{Binding State}" Width="100"/>
+                <DataGridTextColumn Header="信息" Binding="{Binding Message}" Width="400"/>
+                <DataGridTextColumn Header="发生时间" Binding="{Binding CreateDateTime}" Width="400"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
