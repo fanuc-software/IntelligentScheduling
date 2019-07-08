@@ -11,11 +11,16 @@
         <local:BoolColorConverter2 x:Key="_bcc2"/>
     </Window.Resources>
         <Grid>
+            
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
@@ -34,17 +39,26 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
+            <TextBlock Grid.Row="1" Text="产品：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="2" Text="物料：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="3" Text="请求：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="4" Text="完成：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
             <TextBlock Grid.Row="0" Text="搬运入库：" Background="{Binding InOut,Converter={StaticResource _bcc}}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
-            <TextBox Grid.Row="1"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="2"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="3"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <Button Grid.Row="4"  Content="搬运入库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <Button Grid.Row="4" Grid.Column="1"  Content="搬运入库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+
+            <TextBlock Grid.Row="6" Text="产品：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="7" Text="物料：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="8" Text="请求：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
+            <TextBlock Grid.Row="9" Text="完成：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="16" Margin="10,0"/>
 
             <TextBlock Grid.Row="5" Text="搬运出库：" Background="{Binding InOut,Converter={StaticResource _bcc2}}" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="10,0"/>
-            <TextBox Grid.Row="6"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="7"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <TextBox Grid.Row="8"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
-            <Button Grid.Row="9"  Content="搬运出库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="40,5,5,5"/>
+            <TextBox Grid.Row="6" Grid.Column="1"  Text="{Binding ProdType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <TextBox Grid.Row="7" Grid.Column="1"  Text="{Binding MateType}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <TextBox Grid.Row="8" Grid.Column="1"  Text="{Binding Req}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
+            <Button Grid.Row="9" Grid.Column="1"  Content="搬运出库完成" Command="{Binding Fin_Command}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Margin="5,5,5,5"/>
         </Grid>
 
         <Grid Grid.Column="1">

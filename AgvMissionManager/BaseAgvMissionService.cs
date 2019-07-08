@@ -715,44 +715,80 @@ namespace AgvMissionManager
 
                     #endregion
 
-                    #region 入库完工处理
-                    var finished_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED).FirstOrDefault();
-                    if (finished_inmission != null)
+                    #region 搬运入库完工处理
+                    var carryfinished_inmission = InMissions.Where(x => x.CarryProcess == CarryInMissonProcessEnum.FINISHED).FirstOrDefault();
+                    if (carryfinished_inmission != null)
                     {
-                        signalrService.Send(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), finished_inmission).Wait();
-
-                        finished_inmission.Process = AgvInMissonProcessEnum.CLOSE;
+                        carryfinished_inmission.CarryProcess = CarryInMissonProcessEnum.CLOSE;
                     }
 
                     #endregion
 
-                    #region 出库完工处理
-                    var finished_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.FINISHED).FirstOrDefault();
-                    if (finished_outmission != null)
-                    {
-                        signalrService.Send(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), finished_outmission).Wait();
-
-                        finished_outmission.Process = AgvOutMissonProcessEnum.CLOSE;
+                    #region 搬运出库完工处理
+                    var carryfinished_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.FINISHED).FirstOrDefault();
+                    if (carryfinished_outmission != null)
+                    { 
+                        carryfinished_outmission.CarryProcess = CarryOutMissonProcessEnum.CLOSE;
                     }
 
                     #endregion
 
-                    #region 入库异常处理
-                    var cancel_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.CANCEL).FirstOrDefault();
-                    if (cancel_inmission != null)
+                    #region AGV入库完工处理
+                    var agvfinished_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED).FirstOrDefault();
+                    if (agvfinished_inmission != null)
                     {
-                        cancel_inmission.Process = AgvInMissonProcessEnum.CANCELED;
-                        AgvInMissionCancel(cancel_inmission);
+
+                        agvfinished_inmission.Process = AgvInMissonProcessEnum.CLOSE;
                     }
 
                     #endregion
 
-                    #region 出库异常处理
-                    var cancel_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.CANCELED).FirstOrDefault();
-                    if (cancel_outmission != null)
+                    #region AGV出库完工处理
+                    var agvfinished_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.FINISHED).FirstOrDefault();
+                    if (agvfinished_outmission != null)
                     {
-                        cancel_outmission.Process = AgvOutMissonProcessEnum.CANCELED;
-                        AgvOutMissionCancel(cancel_outmission);
+
+                        agvfinished_outmission.Process = AgvOutMissonProcessEnum.CLOSE;
+                    }
+
+                    #endregion
+
+                    #region 搬运入库异常处理
+                    var carrycancel_inmission = InMissions.Where(x => x.CarryProcess == CarryInMissonProcessEnum.CANCEL).FirstOrDefault();
+                    if (carrycancel_inmission != null)
+                    {
+                        carrycancel_inmission.CarryProcess = CarryInMissonProcessEnum.CANCELED;
+                        CarryInMissionCancel(carrycancel_inmission);
+                    }
+
+                    #endregion
+
+                    #region 搬运出库异常处理
+                    var carrycancel_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.CANCELED).FirstOrDefault();
+                    if (carrycancel_outmission != null)
+                    {
+                        carrycancel_outmission.CarryProcess = CarryOutMissonProcessEnum.CANCELED;
+                        CarryOutMissionCancel(carrycancel_outmission);
+                    }
+
+                    #endregion
+
+                    #region AGV入库异常处理
+                    var agvcancel_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.CANCEL).FirstOrDefault();
+                    if (agvcancel_inmission != null)
+                    {
+                        agvcancel_inmission.Process = AgvInMissonProcessEnum.CANCELED;
+                        AgvInMissionCancel(agvcancel_inmission);
+                    }
+
+                    #endregion
+
+                    #region AGV出库异常处理
+                    var agvcancel_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.CANCELED).FirstOrDefault();
+                    if (agvcancel_outmission != null)
+                    {
+                        agvcancel_outmission.Process = AgvOutMissonProcessEnum.CANCELED;
+                        AgvOutMissionCancel(agvcancel_outmission);
                     }
 
                     #endregion
@@ -823,8 +859,7 @@ namespace AgvMissionManager
                 }
             });
         }
-
-
+        
         //TODO:
         public void Stop()
         {
@@ -864,7 +899,7 @@ namespace AgvMissionManager
         {
             //TODO:添加异常处理
 
-            mission.Process = AgvInMissonProcessEnum.CLOSE;
+            //mission.Process = AgvInMissonProcessEnum.CLOSE;
             return true;
         }
 
@@ -873,7 +908,25 @@ namespace AgvMissionManager
         {
             //TODO:添加异常处理
 
-            mission.Process = AgvOutMissonProcessEnum.CLOSE;
+            //mission.Process = AgvOutMissonProcessEnum.CLOSE;
+            return true;
+        }
+
+        //TODO:搬运入库任务取消
+        private bool CarryInMissionCancel(AgvInMisson mission)
+        {
+            //TODO:添加异常处理
+
+            //mission.Process = AgvInMissonProcessEnum.CLOSE;
+            return true;
+        }
+
+        //TODO:搬运出库任务取消
+        private bool CarryOutMissionCancel(AgvOutMisson mission)
+        {
+            //TODO:添加异常处理
+
+            //mission.Process = AgvOutMissonProcessEnum.CLOSE;
             return true;
         }
 
