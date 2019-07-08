@@ -1060,20 +1060,20 @@ namespace AgvMissionManager
 
         private async Task<bool> AgvOutMissionPrePlaceWait(AgvOutMisson AgvOutMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendInMission.EnumToString(), AgvOutMisson.Id);
+            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
             return true;
         }
 
         private async Task<bool> AgvOutMissionPrePickWait(AgvOutMisson AgvOutMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendInMission.EnumToString(), AgvOutMisson.Id);
+            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
 
             return true;
         }
 
         private async Task<bool> AgvInMissionPrePlaceWait(AgvInMisson AgvOutMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendInMission.EnumToString(), AgvOutMisson.Id);
+            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
 
             return true;
         }
