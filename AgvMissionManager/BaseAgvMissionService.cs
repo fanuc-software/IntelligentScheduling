@@ -106,7 +106,7 @@ namespace AgvMissionManager
         #region 外部接口
         private void PushOutMission(AgvOutMisson mission)
         {
-            if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE).Count() == 0)
+            if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE && x.CarryProcess!=CarryOutMissonProcessEnum.CLOSE).Count() == 0)
             {
                 mission.AgvOutProcessChangeEvent += (obj, state) => AgvOutMissChangeEvent?.Invoke(obj, state);
                 AgvOutMissChangeEvent?.Invoke(mission, true);
@@ -117,7 +117,7 @@ namespace AgvMissionManager
 
         private void PushInMission(AgvInMisson mission)
         {
-            if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE).Count() == 0)
+            if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE && x.CarryProcess != CarryInMissonProcessEnum.CLOSE).Count() == 0)
             {
                 mission.AgvInProcessChangeEvent += (s, e) => AgvInMissChangeEvent?.Invoke(s, e);
                 AgvInMissChangeEvent?.Invoke(mission, true);
@@ -558,7 +558,7 @@ namespace AgvMissionManager
                     #region 小于两个在执行任务 添加一个入库任务
                     if ((undo_inmissions.Count() + undo_outmissions.Count()) < 2)
                     {
-                        var new_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.NEW).FirstOrDefault();
+                        var new_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.NEW && x.CarryProcess==CarryInMissonProcessEnum.NEW).FirstOrDefault();
                         if (new_inmission != null)
                         {
                             new_inmission.Process = AgvInMissonProcessEnum.START;
@@ -570,7 +570,7 @@ namespace AgvMissionManager
                     #region 小于两个在执行任务 添加一个出库任务
                     if ((undo_inmissions.Count() + undo_outmissions.Count()) < 2)
                     {
-                        var new_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.NEW).FirstOrDefault();
+                        var new_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.NEW && x.CarryProcess == CarryOutMissonProcessEnum.NEW).FirstOrDefault();
                         if (new_outmission != null)
                         {
                             //检索出库任务之前是否有前置的入库任务
@@ -578,7 +578,8 @@ namespace AgvMissionManager
                             var brother_inmission = OutMissions
                                 .Where(x => x.ClientId == new_outmission.ClientId
                                     && x.Type == brother_mission_type
-                                    && x.Process == AgvOutMissonProcessEnum.NEW)
+                                    && x.Process == AgvOutMissonProcessEnum.NEW
+                                    && x.CarryProcess==CarryOutMissonProcessEnum.NEW)
                                 .FirstOrDefault();
 
                             if (brother_inmission == null)
