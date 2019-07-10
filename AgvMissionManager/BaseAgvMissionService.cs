@@ -74,12 +74,12 @@ namespace AgvMissionManager
                 try
                 {
                     var data = s.Split('_');
-                    var obj = OutMissions.FirstOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                    var obj = OutMissions.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
                     if (obj != null)
                     {
                         obj.Process = (AgvOutMissonProcessEnum)Enum.Parse(typeof(AgvOutMissonProcessEnum), data[2]);
                     }
-                    var objIn = InMissions.FirstOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                    var objIn = InMissions.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
                     if (objIn != null)
                     {
                         objIn.Process = (AgvInMissonProcessEnum)Enum.Parse(typeof(AgvInMissonProcessEnum), data[2]);
