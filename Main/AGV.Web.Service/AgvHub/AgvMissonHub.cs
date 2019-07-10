@@ -10,7 +10,7 @@ namespace AGV.Web.Service.AgvHub
 {
     public class AgvMissonHub : Hub
     {
-       
+
         public string SendWaitEndSignal(string id)
         {
             if (StaticData.SignalDict.ContainsKey(id))
@@ -33,7 +33,7 @@ namespace AGV.Web.Service.AgvHub
 
         public void SendInMission(AgvInMisson message)
         {
-
+            
             Clients.All.receiveInMissionMessage(message);
         }
 
@@ -52,19 +52,24 @@ namespace AGV.Web.Service.AgvHub
             Clients.All.receiveFeedingSignalMessage(message);
         }
 
-        public void SendMissonInOrder(AgvInMisson message)
+        public AgvInMisson SendMissonInOrder(AgvInMisson message)
         {
             var client = new Client();
 
-            client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
-
+            client.TransportOrders2($"{message.Id}_{ message.TimeId}", message.AgvMissonToTransportOrder());
+            return message;
         }
 
-        public void SendMissonOutOrder(AgvOutMisson message)
+        public AgvOutMisson SendMissonOutOrder(AgvOutMisson message)
         {
             var client = new Client();
 
-            client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
+            client.TransportOrders2($"{message.Id}_{ message.TimeId}", message.AgvMissonToTransportOrder());
+            return message;
+        }
+
+        public void CloseAgvMission(string id)
+        {
 
         }
     }

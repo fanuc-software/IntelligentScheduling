@@ -10,7 +10,7 @@ namespace AGV.Web.Service.Models
     {
         public static TransportOrder AgvMissonToTransportOrder(this AgvInMisson agvInMisson)
         {
-            var key = agvInMisson.PickStationId.ToString();
+            var key = agvInMisson.Id.ToString();
             var listNode = new List<ConfigNode>();
             if (StaticData.ProductNodeDict.ContainsKey(key))
             {
@@ -27,24 +27,10 @@ namespace AGV.Web.Service.Models
             };
             foreach (var item in listNode)
             {
-                var node = new DestinationOrder()
-                {
-                    LocationName = item.Station,
-                    Operation = item.Operation,
-                    Properties = new List<Property>(),
 
-                };
-                if (item.ArrivalNotice)
-                {
-                    node.Properties.Add(new Property()
-                    {
-                        Key = "device:requestAtSend",
-                        Value = $"{agvInMisson.Id}:arrived"
-                    });
-                }
                 if (item.IsRequiredWait)
                 {
-                    var waitNode = item.IncludeWaits.FirstOrDefault(d => !d.IsOccupy);
+                    var waitNode = item.IncludeWaits.FirstOrDefault(d => !d.IsOccupy)??new WaitNode();
                     waitNode.IsOccupy = true;
                     waitNode.State = WaitNodeState.OccupyNotArrival;
                     waitNode.WaitKey = agvInMisson.Id;
@@ -56,7 +42,7 @@ namespace AGV.Web.Service.Models
                         Operation = "Wait",
                         Properties = new List<Property>(),
                     });
-                    transportOrder.Destinations.Add(new DestinationOrder()
+                    var temp = new DestinationOrder()
                     {
                         LocationName = waitNode.Station,
                         Operation = "Wait",
@@ -64,7 +50,16 @@ namespace AGV.Web.Service.Models
                         {
                             new Property(){ Key="device:queryAtExecuted",Value=$"{agvInMisson.Id}:wait"}
                         },
-                    });
+                    };
+                    if (item.ArrivalNotice)
+                    {
+                        temp.Properties.Add(new Property()
+                        {
+                            Key = "device:requestAtSend",
+                            Value = $"{agvInMisson.Id}_{item.Signal}:arrived"
+                        });
+                    }
+                    transportOrder.Destinations.Add(temp);
                     if (!StaticData.SignalDict.ContainsKey(agvInMisson.Id))
                     {
                         StaticData.SignalDict.TryAdd(agvInMisson.Id, false);
@@ -76,7 +71,25 @@ namespace AGV.Web.Service.Models
 
                     }
                 }
-                transportOrder.Destinations.Add(node);
+                else
+                {
+                    var node = new DestinationOrder()
+                    {
+                        LocationName = item.Station,
+                        Operation = item.Operation,
+                        Properties = new List<Property>(),
+
+                    };
+                    if (item.ArrivalNotice)
+                    {
+                        node.Properties.Add(new Property()
+                        {
+                            Key = "device:requestAtSend",
+                            Value = $"{agvInMisson.Id}_{item.Signal}:arrived"
+                        });
+                    }
+                    transportOrder.Destinations.Add(node);
+                }
 
             }
 
@@ -86,7 +99,7 @@ namespace AGV.Web.Service.Models
 
         public static TransportOrder AgvMissonToTransportOrder(this AgvOutMisson agvInMisson)
         {
-            var key = agvInMisson.PickStationId.ToString();
+            var key = agvInMisson.Id.ToString();
             var listNode = new List<ConfigNode>();
             if (StaticData.ProductNodeDict.ContainsKey(key))
             {
@@ -103,25 +116,11 @@ namespace AGV.Web.Service.Models
             };
             foreach (var item in listNode)
             {
-                var node = new DestinationOrder()
-                {
-                    LocationName = item.Station,
-                    Operation = item.Operation,
-                    Properties = new List<Property>(),
 
-                };
-                transportOrder.Destinations.Add(node);
-                if (item.ArrivalNotice)
-                {
-                    node.Properties.Add(new Property()
-                    {
-                        Key = "device:requestAtSend",
-                        Value = $"{agvInMisson.Id}:arrived"
-                    });
-                }
                 if (item.IsRequiredWait)
                 {
-                    var waitNode = item.IncludeWaits.FirstOrDefault(d => !d.IsOccupy);
+                    var waitNode = item.IncludeWaits.FirstOrDefault(d => !d.IsOccupy)??new WaitNode();
+                    
                     waitNode.IsOccupy = true;
                     waitNode.State = WaitNodeState.OccupyNotArrival;
                     waitNode.WaitKey = agvInMisson.Id;
@@ -133,7 +132,7 @@ namespace AGV.Web.Service.Models
                         Operation = "Wait",
                         Properties = new List<Property>(),
                     });
-                    transportOrder.Destinations.Add(new DestinationOrder()
+                    var temp = new DestinationOrder()
                     {
                         LocationName = waitNode.Station,
                         Operation = "Wait",
@@ -141,7 +140,16 @@ namespace AGV.Web.Service.Models
                         {
                             new Property(){ Key="device:queryAtExecuted",Value=$"{agvInMisson.Id}:wait"}
                         },
-                    });
+                    };
+                    if (item.ArrivalNotice)
+                    {
+                        temp.Properties.Add(new Property()
+                        {
+                            Key = "device:requestAtSend",
+                            Value = $"{agvInMisson.Id}_{item.Signal}:arrived"
+                        });
+                    }
+                    transportOrder.Destinations.Add(temp);
                     if (!StaticData.SignalDict.ContainsKey(agvInMisson.Id))
                     {
                         StaticData.SignalDict.TryAdd(agvInMisson.Id, false);
@@ -153,6 +161,26 @@ namespace AGV.Web.Service.Models
 
                     }
                 }
+                else
+                {
+                    var node = new DestinationOrder()
+                    {
+                        LocationName = item.Station,
+                        Operation = item.Operation,
+                        Properties = new List<Property>(),
+
+                    };
+                    if (item.ArrivalNotice)
+                    {
+                        node.Properties.Add(new Property()
+                        {
+                            Key = "device:requestAtSend",
+                            Value = $"{agvInMisson.Id}_{item.Signal}:arrived"
+                        });
+                    }
+                    transportOrder.Destinations.Add(node);
+                }
+
             }
 
             return transportOrder;

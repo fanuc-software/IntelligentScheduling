@@ -17,6 +17,8 @@ namespace AGV.Web.Service.Models
         public List<WaitNode>  IncludeWaits { get; set; }
 
         public WaitNode CurrentWait { get; set; }
+
+        public string Signal { get; set; }
     }
 
 

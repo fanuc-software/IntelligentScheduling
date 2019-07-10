@@ -3,6 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace AGV.Web.Service.Models
@@ -12,25 +13,34 @@ namespace AGV.Web.Service.Models
         public string name { get; set; }
 
         public string lastAction { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
 
-        public ActionStatus lastActionStatus { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
 
-        public Status status { get; set; }
+
+
+        public string lastActionStatus { set; get; }
+
+
+
+        public string status { set; get; }
     }
 
     public enum ActionStatus
     {
         DONE,
+
         EXECUTING,
+
         FAILED
     }
     public enum Status
     {
         IDLE,
+
+
         EXECUTING,
+
         ERROR,
+
         TIMEOUT
     }
 }

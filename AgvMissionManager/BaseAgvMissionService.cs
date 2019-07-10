@@ -68,7 +68,30 @@ namespace AgvMissionManager
             {
                 UpdataFeedingSignal(s);
             });
+            signalrService.OnMessage<string>(AgvReceiveActionEnum.agvStateChange.EnumToString(), (s) =>
+            {
 
+                try
+                {
+                    var data = s.Split('_');
+                    var obj = OutMissions.FirstOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                    if (obj != null)
+                    {
+                        obj.Process = (AgvOutMissonProcessEnum)Enum.Parse(typeof(AgvOutMissonProcessEnum), data[2]);
+                    }
+                    var objIn = InMissions.FirstOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                    if (objIn != null)
+                    {
+                        objIn.Process = (AgvInMissonProcessEnum)Enum.Parse(typeof(AgvInMissonProcessEnum), data[2]);
+                    }
+                }
+                catch (Exception)
+                {
+
+
+                }
+
+            });
             OutMissions = new BlockingCollection<AgvOutMisson>();
             InMissions = new BlockingCollection<AgvInMisson>();
 
@@ -492,36 +515,36 @@ namespace AgvMissionManager
                 {
                     #region 防冲突
 
-                    var ret = CheckMissionConflict();
-                    if (ret.Item1 == false)
-                    {
-                        while (ret.Item1 == false)
-                        {
-                            //TODO:停止所有AGV小车动作
+                    //var ret = CheckMissionConflict();
+                    //if (ret.Item1 == false)
+                    //{
+                    //    while (ret.Item1 == false)
+                    //    {
+                    //        //TODO:停止所有AGV小车动作
 
 
-                            //设定报警
-                            var ret_alarm = SetAlarm(true);
-                            //TODO:通知界面
-                            SendAgvMissionServiceStateMessage(
-                                new AgvMissionServiceState { State = AgvMissionServiceStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!", ErrorCode = ret.Item2 });
-                            Thread.Sleep(1000);
-                        }
+                    //        //设定报警
+                    //        var ret_alarm = SetAlarm(true);
+                    //        //TODO:通知界面
+                    //        SendAgvMissionServiceStateMessage(
+                    //            new AgvMissionServiceState { State = AgvMissionServiceStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!", ErrorCode = ret.Item2 });
+                    //        Thread.Sleep(1000);
+                    //    }
 
-                        bool dev_reset = false;
-                        while (dev_reset == false)
-                        {
-                            GetReset(ref dev_reset);
-                            //TODO:通知界面
-                            SendAgvMissionServiceStateMessage(
-                                new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,请复位设备!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
-                            Thread.Sleep(1000);
-                        }
+                    //    bool dev_reset = false;
+                    //    while (dev_reset == false)
+                    //    {
+                    //        GetReset(ref dev_reset);
+                    //        //TODO:通知界面
+                    //        SendAgvMissionServiceStateMessage(
+                    //            new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,请复位设备!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
+                    //        Thread.Sleep(1000);
+                    //    }
 
-                        SendAgvMissionServiceStateMessage(
-                            new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,设备已复位!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
+                    //    SendAgvMissionServiceStateMessage(
+                    //        new AgvMissionServiceState { State = AgvMissionServiceStateEnum.WARN, Message = "物料调用失败,设备已复位!", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL });
 
-                    }
+                    //}
 
                     #endregion
 
@@ -727,7 +750,7 @@ namespace AgvMissionManager
                     #region 搬运出库完工处理
                     var carryfinished_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.FINISHED).FirstOrDefault();
                     if (carryfinished_outmission != null)
-                    { 
+                    {
                         carryfinished_outmission.CarryProcess = CarryOutMissonProcessEnum.CLOSE;
                     }
 
@@ -859,7 +882,7 @@ namespace AgvMissionManager
                 }
             });
         }
-        
+
         //TODO:
         public void Stop()
         {
@@ -878,6 +901,7 @@ namespace AgvMissionManager
             if (finished_outmission != null)
             {
                 finished_outmission.Process = AgvOutMissonProcessEnum.CLOSE;
+
             }
 
             return true;
@@ -889,6 +913,7 @@ namespace AgvMissionManager
             if (finished_inmission != null)
             {
                 finished_inmission.Process = AgvInMissonProcessEnum.CLOSE;
+
             }
 
             return true;
@@ -1069,17 +1094,36 @@ namespace AgvMissionManager
         //TODO:异步小车入库搬运
         private async Task<bool> AgvInMission(AgvInMisson mission)
         {
-            await signalrService.Send(AgvSendActionEnum.SendMissonInOrder.EnumToString(), mission);
+            try
+            {
+                await signalrService.Send(AgvSendActionEnum.SendMissonInOrder.EnumToString(), mission);
+
+            }
+            catch (Exception ex)
+            {
+
+
+            }
 
             return true;
 
-       
+
         }
 
         //TODO:异步小车出库搬运
         private async Task<bool> AgvOutMission(AgvOutMisson mission)
         {
-            await signalrService.Send(AgvSendActionEnum.SendMissonOutOrder.EnumToString(), mission);
+            try
+            {
+
+                await signalrService.Send(AgvSendActionEnum.SendMissonOutOrder.EnumToString(), mission);
+
+            }
+            catch (Exception ex)
+            {
+
+
+            }
 
             return true;
         }
