@@ -1069,45 +1069,18 @@ namespace AgvMissionManager
         //TODO:异步小车入库搬运
         private async Task<bool> AgvInMission(AgvInMisson mission)
         {
+            await signalrService.Send(AgvSendActionEnum.SendMissonInOrder.EnumToString(), mission);
 
             return true;
 
-            var agv_order_id = mission.Id + "_" + mission.TimeId;
-            IClient client = new Client();
-            await client.TransportOrders2Async(agv_order_id, new TransportOrder()
-            {
-                Deadline = DateTime.Now.AddMinutes(20),
-                Destinations = new List<DestinationOrder>()
-                {
-                    //  new DestinationOrder(){ LocationName=mission.PickStationId,Operation="JackLoad"}
-                }
-            });
-
-            await Task.Factory.StartNew(async () =>
-            {
-                while (true)
-                {
-                    await Task.Delay(2000);
-
-                    var order = await client.TransportOrdersAsync(agv_order_id);
-                    if (order.State == TransportOrderStateState.FINISHED)
-                    {
-                        mission.Process = AgvInMissonProcessEnum.FINISHED;
-                        break;
-                    }
-                    else if (order.State == TransportOrderStateState.WITHDRAWN || order.State == TransportOrderStateState.FAILED)
-                    {
-                        mission.Process = AgvInMissonProcessEnum.CANCEL;
-                        break;
-                    }
-                }
-            });
-
+       
         }
 
         //TODO:异步小车出库搬运
         private async Task<bool> AgvOutMission(AgvOutMisson mission)
         {
+            await signalrService.Send(AgvSendActionEnum.SendMissonOutOrder.EnumToString(), mission);
+
             return true;
         }
 
