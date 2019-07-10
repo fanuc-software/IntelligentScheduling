@@ -65,6 +65,7 @@ namespace RightMaterialService
                     var ret_tuple = await RightMaterialFlow();
                     if (ret_tuple.Item1 == false)
                     {
+                        ret = false;
                         while (ret == false)
                         {
                             ret = ControlDevice.SetHouseFCSAlarm(true);
@@ -72,6 +73,8 @@ namespace RightMaterialService
                                 new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "右侧料库请求调用失败,请检查后复位!", ErrorCode = ret_tuple.Item2 });
                             Thread.Sleep(1000);
                         }
+
+                        
 
                         bool dev_reset = false;
                         while (dev_reset == false)
@@ -81,12 +84,16 @@ namespace RightMaterialService
                                 new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,等待设备的复位信号", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
                             Thread.Sleep(1000);
                         }
-                    }
-                    else
-                    {
+
+                        ControlDevice.SetHouseFCSAlarm(false);
                         SendRightMaterialServiceStateMessage(
-                                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库请求调用完成！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,设备复位", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
                     }
+                    //else
+                    //{
+                    //    SendRightMaterialServiceStateMessage(
+                    //            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库请求调用完成！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+                    //}
 
                 }
             }, token.Token);
@@ -146,6 +153,8 @@ namespace RightMaterialService
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_inout, RightMaterialServiceErrorCodeEnum.INOUT);
                 }
 
+               
+
                 if (S_House_InOut == true)
                 {
                     var ret_out = await RightMaterialOutFlow();
@@ -178,6 +187,7 @@ namespace RightMaterialService
         {
             bool ret = false;
 
+
             ret = ControlDevice.SetHouseFCSAlarm(false);
             if (ret != true) return ret;
 
@@ -190,6 +200,7 @@ namespace RightMaterialService
             ret = ControlDevice.SetHouseRequestInfoFCSFin(false);
             if (ret != true) return ret;
 
+
             return true;
         }
 
@@ -198,6 +209,7 @@ namespace RightMaterialService
             return await Task.Factory.StartNew(() =>
             {
                 IWareHouseClient WareHouse = new RightModulaWareHouseClient("RIGHT_MATERIAL_OUT");
+
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
@@ -356,6 +368,9 @@ namespace RightMaterialService
 
                 int S_House_ProductType = 0;
                 var ret_prod_type = ControlDevice.GetHouseProductType(ref S_House_ProductType);
+
+                //Console.WriteLine("S_House_ProductType:" + ret_prod_type);
+
                 if (ret_prod_type == false)
                 {
                     WareHouse.ReleaseWriterLock();
@@ -364,6 +379,8 @@ namespace RightMaterialService
 
                 int S_House_MaterialType = 0;
                 var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
+
+                
                 if (ret_material_type == false)
                 {
                     WareHouse.ReleaseWriterLock();

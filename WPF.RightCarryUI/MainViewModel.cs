@@ -153,33 +153,37 @@ namespace WPF.RightCarryUI
 
         private void OnReq_Command()
         {
-            if (Req_Fin == 1) return;
+            Task.Factory.StartNew(() =>
+            {
+                if (Req_Fin == 1) return;
 
-            Req_Fin = 1;
+                Req_Fin = 1;
 
-            TestRightCarryService<AllenBradleyControlDevice> carry = new TestRightCarryService<AllenBradleyControlDevice>(carryDevice);
-            carry.SendRightCarryServiceStateMessageEvent+= (s) => {
+                TestRightCarryService<AllenBradleyControlDevice> carry = new TestRightCarryService<AllenBradleyControlDevice>(carryDevice);
+                carry.SendRightCarryServiceStateMessageEvent += (s) => {
 
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        Messages.Add(new MessageItem { State = s.State, Message = s.Message, CreateDateTime = DateTime.Now });
+                    });
+
+                };
+
+                if (In_Out == false)
                 {
-                    Messages.Add(new MessageItem { State = s.State, Message = s.Message, CreateDateTime = DateTime.Now });
-                });
+                    var ret = carry.CarryIn(Prod_Type.ToString(), Mate_Type.ToString());
+                    Req_Fin = ret == true ? 2 : 3;
+                }
+                else
+                {
+                    int qty = 0;
+                    var ret = carry.CarryOut(Prod_Type.ToString(), Mate_Type.ToString(), ref qty);
+                    Req_Fin = ret == true ? 2 : 3;
+                }
 
-            };
-
-            if (In_Out==false)
-            {
-                var ret = carry.CarryIn(Prod_Type.ToString(), Mate_Type.ToString());
-                Req_Fin = ret == true ? 2 : 3;
-            }
-            else
-            {
-                int qty = 0;
-                var ret = carry.CarryOut(Prod_Type.ToString(), Mate_Type.ToString(), ref qty);
-                Req_Fin = ret == true ? 2 : 3;
-            }
-
-            carry.ReleaseLock();
+                carry.ReleaseLock();
+            });
+            
 
 
         }
