@@ -10,11 +10,11 @@ namespace AGV.Web.Service.AgvHub
 {
     public class AgvMissonHub : Hub
     {
-        //private IClient client;
+        private IClient client;
 
         public AgvMissonHub()
         {
-            //client = new Client();
+            client = new Client();
         }
         public string SendWaitEndSignal(string id)
         {
@@ -32,12 +32,14 @@ namespace AGV.Web.Service.AgvHub
         }
         public void SendOutMission(AgvOutMisson message)
         {
+            client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
+
             Clients.All.receiveOutMissionMessage(message);
         }
 
         public void SendInMission(AgvInMisson message)
         {
-            //client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
+            client.TransportOrders2(message.Id, message.AgvMissonToTransportOrder());
 
             Clients.All.receiveInMissionMessage(message);
         }

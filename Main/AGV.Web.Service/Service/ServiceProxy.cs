@@ -151,7 +151,7 @@ namespace AGV.Web.Service
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "12.2.4.0 (NJsonSchema v9.13.36.0 (Newtonsoft.Json v11.0.0.0))")]
     public partial class Client : IClient
     {
-        private string _baseUrl = "http://192.168.1.203:55200/v1";
+        private string _baseUrl = "http://192.168.4.31:55200/v1";
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
         public Client()

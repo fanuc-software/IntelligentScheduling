@@ -34,7 +34,6 @@ namespace AGV.Web.Service.Models
                     Properties = new List<Property>(),
 
                 };
-                transportOrder.Destinations.Add(node);
                 if (item.ArrivalNotice)
                 {
                     node.Properties.Add(new Property()
@@ -77,6 +76,8 @@ namespace AGV.Web.Service.Models
 
                     }
                 }
+                transportOrder.Destinations.Add(node);
+
             }
 
             return transportOrder;
