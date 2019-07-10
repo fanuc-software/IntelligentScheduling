@@ -13,5 +13,6 @@ namespace Agv.Common
         receiveOutMissionFinMessage,
         receiveInMissionFinMessage,
         receiveFeedingSignalMessage,
+        agvStateChange
     }
 }
