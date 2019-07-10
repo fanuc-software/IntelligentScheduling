@@ -29,7 +29,7 @@ namespace AgvStationClient
             StationDevice = device;
             Station_Id = id;
 
-            signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
+            signalrService = new SignalrService("http://192.168.4.85/Agv", "AgvMissonHub");
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
             {
                 OnAgvOutMissonEvent(s);

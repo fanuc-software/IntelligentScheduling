@@ -60,15 +60,17 @@ namespace WareHouseService
 
             int material_position;
             int tray_position;
-            var prod_ret = int.TryParse(toolCode, out material_position);
+            int quantity;
+            var prod_ret = int.TryParse(position, out material_position);
             var tray_ret = int.TryParse(trayCode, out tray_position);
+            var qty_ret = int.TryParse(count, out quantity);
 
-            if (prod_ret == false || tray_ret == false)
+            if (prod_ret == false || tray_ret == false || qty_ret == false)
             {
                 return new WareHouseResult() { IsSuccessed = false };
             }
 
-            return new WareHouseResult() { IsSuccessed = true, Result1 = tray_position, Result2 = material_position };
+            return new WareHouseResult() { IsSuccessed = true, Result1 = tray_position, Result2 = material_position, Result3 = quantity };
         }
 
         public WareHouseResult MoveOutTray(WareHousePara para)
