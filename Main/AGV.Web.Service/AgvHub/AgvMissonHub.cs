@@ -21,6 +21,12 @@ namespace AGV.Web.Service.AgvHub
             if (StaticData.SignalDict.ContainsKey(id))
             {
                 StaticData.SignalDict[id] = true;
+                var waitNode = StaticData.WaitNodes.FirstOrDefault(d => d.WaitKey == id);
+                if (waitNode != null)
+                {
+                    waitNode.IsOccupy = false;
+                    waitNode.State = WaitNodeState.Free;
+                }
             }
             return id + ":True";
         }
