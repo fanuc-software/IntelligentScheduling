@@ -20,7 +20,7 @@ namespace Agv.Common
         //小车在出料道进入等待位等待
         AGVATPREPICK = 3,
 
-        //小车在出料道等待
+        //小车在出料道
         AGVATPICK = 4,
 
         //小车从出料道搬离物料并离开
