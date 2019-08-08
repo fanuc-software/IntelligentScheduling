@@ -2,30 +2,212 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+<div ng-controller="mainController">
+    <div class="row" style="margin-top:10px">
+        <div class="col-md-4">
+            <select class="form-control" ng-model="main.selectedName" ng-change="main.selectChange()">
+                <option ng-repeat="x in main.MapData" value="{{x.id}}">{{x.id}}</option>
+
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" ng-click="main.sendTask()">发送订单</button>
+            <button type="button" class="btn btn-primary" ng-click="main.clearWait()">释放所有等待信号</button>
+
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+
+                        <th>站点名称</th>
+                        <th>等待点</th>
+                        <th>到达通知</th>
+
+                        <th>操作</th>
+                        <th>信号</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr ng-repeat="x in main.tableNodes">
+                        <td><span class="label label-info">{{ x.Station }}</span></td>
+                        <td>{{ x.IsRequiredWait }}</td>
+                        <td>{{ x.ArrivalNotice }}</td>
+                        <td>{{ x.Operation }}</td>
+                        <td><span class="label label-primary">{{ x.Signal }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+
+                        <th>订单名称</th>
+                        <th>类型</th>
+                        <th>订单状态</th>
+                        <th>机器人</th>
+                        <th>工作站</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr ng-repeat="x in main.orderNodes">
+                        <td><span class="label label-info">{{ x.name }}</span></td>
+                        <td>{{ x.category }}</td>
+                        <td><span class="label label-success">{{ x.state }}</span></td>
+                        <td>{{ x.processingVehicle }}</td>
+                        <td>
+                            <div ng-repeat="item in x.destinations">
+                                <p>
+                                    <span>{{item.locationName}}</span>
+                                    <span>{{item.operation}}</span>
+                                    <span class="label label-primary">{{ item.state }}</span>
+                                </p>
+                                <p ng-repeat="p in item.properties">
+                                    <span>{{p.key}}</span>
+                                    <span class="label label-info">{{ p.value }}</span>
+                                </p>
+                            </div>
+
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" ng-click="main.sendWait(x.name)">释放信号</button>
+                            <button type="button" style="margin-left:5px" class="btn btn-info" ng-click="main.refreshOrder(x.name)">刷新</button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="row" style="margin-top:10px" ng-show="main.isShowError">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong>
+            <p>{{main.errorInfo}}</p>
+            <p>{{main.errorJson}}</p>
+
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+
+
+        // chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); // Send a message to the server
+
+        angular.module('todoApp', [])
+            .controller('mainController', function ($scope) {
+                var main = this;
+                main.MapData = [];
+                main.selectedName = '';
+                main.tableNodes = [];
+                main.orderNodes = [];
+                main.errorInfo = '';
+                main.errorJson = '';
+                main.isShowError = false;
+                main.client = null;
+                main.init = function () {
+                    main.client = $.connection.noticeHub; // Get a reference to the hub
+                    $.connection.hub.start();
+                    main.client.client.getAllAgvOrder = function (message) { // Register for incoming messages
+                        console.log('received message: ' + JSON.stringify(message));
+                        for (var c in message) {
+
+                            main.MapData.push({ id: c, nodes: message[c] });
+                        }
+                        main.selectedName = main.MapData[0].id;
+                        main.tableNodes = main.MapData[0].nodes;
+                        $scope.$apply();
+                    };
+                    main.client.client.queryOrder = function (id) {
+                        main.client.server.loadOrderProxy(id);
+                    };
+                    main.client.client.pushSystemMessage = function (message, obj) {
+                        main.isShowError = true;
+                        main.errorInfo = message;
+                        main.errorJson = JSON.stringify(obj);
+                         $scope.$apply();
+
+                    };
+                    main.client.client.getCurrentOrder = function (order) {
+                        var isFind = false;
+                        angular.forEach(main.orderNodes, function (item) {
+                            if (item.name === order.name) {
+                                item.category = order.category;
+                                item.state = order.state;
+                                item.processingVehicle = order.processingVehicle;
+                                item.state = order.state;
+                                for (var c in item.destinations) {
+                                    item.destinations[c].state = order.destinations[c].state;
+
+                                }
+
+
+                                isFind = true;
+                            }
+                        });
+                        if (!isFind) {
+                            main.orderNodes.unshift(order);
+                        }
+                        $scope.$apply();
+
+                    };
+                }
+                main.selectChange = function () {
+                    angular.forEach(main.MapData, function (item) {
+                        if (item.id === main.selectedName) {
+                            main.tableNodes = item.nodes;
+
+                        }
+                    });
+
+                };
+                main.clearWait = function () {
+                    main.client.server.clearAllWaitSignal();
+
+
+                };
+                main.sendWait = function (id) {
+                    var arr = id.split('_');
+                    main.isShowError = false;
+                    main.client.server.sendWaitEndSignal(arr[0] + '_' + arr[1]);
+
+                };
+                main.refreshOrder = function (name) {
+                    main.client.server.loadOrderProxy(name);
+                    main.isShowError = false;
+
+                };
+                main.sendTask = function () {
+                    main.isShowError = false;
+                    main.client.server.sendTask(main.selectedName);
+                };
+
+                main.init();
+                $scope.main = main;
+            });
+
+    </script>
+}
