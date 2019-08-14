@@ -56,10 +56,10 @@
                 <thead>
                     <tr>
 
-                        <th>订单名称</th>
-                        <th>类型</th>
-                        <th>订单状态</th>
-                        <th>机器人</th>
+                        <th style="width:230px">订单名称</th>
+                        <th style="width:80px">类型</th>
+                        <th style="width:100px">订单状态</th>
+                        <th style="width:100px">机器人</th>
                         <th>工作站</th>
                         <th>操作</th>
                     </tr>
@@ -68,14 +68,17 @@
 
 
                     <tr ng-repeat="x in main.orderNodes">
-                        <td><span class="label label-info">{{ x.name }}</span></td>
+                        <td style="width:230px"><span class="label label-info">{{ x.name }}</span></td>
                         <td>{{ x.category }}</td>
                         <td><span class="label label-success">{{ x.state }}</span></td>
                         <td>{{ x.processingVehicle }}</td>
                         <td>
                             <div ng-repeat="item in x.destinations">
                                 <p>
-                                    <span>{{item.locationName}}</span>
+                                    <span>
+                                        <span class="label label-danger">{{ item.locationName }}</span>
+
+                                    </span>
                                     <span>{{item.operation}}</span>
                                     <span class="label label-primary">{{ item.state }}</span>
                                 </p>
@@ -130,7 +133,11 @@
                 main.client = null;
                 main.init = function () {
                     main.client = $.connection.noticeHub; // Get a reference to the hub
-                    $.connection.hub.start();
+                    $(function () {
+                        $.connection.hub.start();
+
+                    });
+
                     main.client.client.getAllAgvOrder = function (message) { // Register for incoming messages
                         console.log('received message: ' + JSON.stringify(message));
                         for (var c in message) {
@@ -148,7 +155,7 @@
                         main.isShowError = true;
                         main.errorInfo = message;
                         main.errorJson = JSON.stringify(obj);
-                         $scope.$apply();
+                        $scope.$apply();
 
                     };
                     main.client.client.getCurrentOrder = function (order) {

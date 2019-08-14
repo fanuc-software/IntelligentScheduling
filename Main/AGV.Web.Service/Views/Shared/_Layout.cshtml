@@ -40,12 +40,12 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/abp.signalr.js"></script>
+    @*<script src="~/Scripts/abp.signalr.js"></script>*@
     <script src="~/Scripts/angular.min.js"></script>
-    <script>
+    @*<script>
         abp.signalr = abp.signalr || {};
         abp.signalr.autoConnect = false;
-    </script>
+    </script>*@
     @RenderSection("scripts", required: false)
 </body>
 </html>
