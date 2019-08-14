@@ -19,6 +19,7 @@ namespace Agv.Common
             hubName = name;
             hubConnect = new HubConnection(url);
             hubProxy = hubConnect.CreateHubProxy(hubName);
+
             hubConnect.StateChanged += HubConnect_StateChanged;
         }
 

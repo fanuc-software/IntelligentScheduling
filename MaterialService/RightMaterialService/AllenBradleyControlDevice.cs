@@ -69,103 +69,103 @@ namespace RightMaterialService
             m_HouseTrayOutInpositionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Fix_Robot_OUT.Tray_Inposition" };
         }
 
-        public bool SetRHouseProductType(int prod_type)
-        {
-            var ret = m_ABDevice.Write(m_RHouseProductTypeConfig, prod_type.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseProductType(int prod_type)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseProductTypeConfig, prod_type.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool SetRHouseMaterialType(int material_type)
-        {
-            var ret = m_ABDevice.Write(m_RHouseMaterialTypeConfig, material_type.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseMaterialType(int material_type)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseMaterialTypeConfig, material_type.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool GetRHouseRequest(ref bool req)
-        {
-            var ret = m_ABDevice.Read(m_RHouseRequestConfig);
-            if (ret.IsSuccess == false) return false;
+        //public bool GetRHouseRequest(ref bool req)
+        //{
+        //    var ret = m_ABDevice.Read(m_RHouseRequestConfig);
+        //    if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+        //    bool temp = false;
+        //    var pret = bool.TryParse(ret.Content, out temp);
+        //    if (pret == false) return false;
 
-            req = temp;
-            return true;
-        }
+        //    req = temp;
+        //    return true;
+        //}
         
-        public bool SetRHouseRequest(bool req)
-        {
-            var ret = m_ABDevice.Write(m_RHouseRequestConfig, req.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseRequest(bool req)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseRequestConfig, req.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool GetRHouseFin(ref bool fin)
-        {
-            var ret = m_ABDevice.Read(m_RHouseFinConfig);
-            if (ret.IsSuccess == false) return false;
+        //public bool GetRHouseFin(ref bool fin)
+        //{
+        //    var ret = m_ABDevice.Read(m_RHouseFinConfig);
+        //    if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+        //    bool temp = false;
+        //    var pret = bool.TryParse(ret.Content, out temp);
+        //    if (pret == false) return false;
 
-            fin = temp;
-            return true;
-        }
+        //    fin = temp;
+        //    return true;
+        //}
 
-        public bool SetRHouseFin(bool fin)
-        {
-            var ret = m_ABDevice.Write(m_RHouseFinConfig, fin.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseFin(bool fin)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseFinConfig, fin.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool SetRHouseInOut(bool in_out)
-        {
-            var ret = m_ABDevice.Write(m_RHouseOutConfig, in_out == true ? "true" : "false");
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseInOut(bool in_out)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseOutConfig, in_out == true ? "true" : "false");
+        //    if (ret.IsSuccess == false) return false;
 
-            ret = m_ABDevice.Write(m_RHouseOutConfig, in_out == true ? "false" : "true");
-            if (ret.IsSuccess == false) return false;
+        //    ret = m_ABDevice.Write(m_RHouseOutConfig, in_out == true ? "false" : "true");
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool SetRHouseAlarm(bool alarm)
-        {
-            var ret = m_ABDevice.Write(m_RHouseAlarmConfig, alarm.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseAlarm(bool alarm)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseAlarmConfig, alarm.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public bool GetRHouseReset(ref bool reset)
-        {
-            var ret = m_ABDevice.Read(m_RHouseResetConfig);
-            if (ret.IsSuccess == false) return false;
+        //public bool GetRHouseReset(ref bool reset)
+        //{
+        //    var ret = m_ABDevice.Read(m_RHouseResetConfig);
+        //    if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+        //    bool temp = false;
+        //    var pret = bool.TryParse(ret.Content, out temp);
+        //    if (pret == false) return false;
 
-            reset = temp;
-            return true;
-        }
+        //    reset = temp;
+        //    return true;
+        //}
 
-        public bool SetRHouseReset(bool reset)
-        {
-            var ret = m_ABDevice.Write(m_RHouseResetConfig, reset.ToString());
-            if (ret.IsSuccess == false) return false;
+        //public bool SetRHouseReset(bool reset)
+        //{
+        //    var ret = m_ABDevice.Write(m_RHouseResetConfig, reset.ToString());
+        //    if (ret.IsSuccess == false) return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
         #region 右侧料库数据服务
         public bool Temp_S_House_RequestFCS_Last { get; set; }
