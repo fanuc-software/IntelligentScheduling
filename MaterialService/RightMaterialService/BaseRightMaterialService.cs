@@ -34,6 +34,8 @@ namespace RightMaterialService
 
                 #region 初始化
                 bool temp_S_House_RequestFCS_Last = false;
+
+
                 ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
                 if (ret == false)
                 {

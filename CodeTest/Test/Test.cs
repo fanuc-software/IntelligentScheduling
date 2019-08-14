@@ -21,6 +21,12 @@ namespace Test
 
     }
 
+    class TestLeftMaterialService : BaseLeftMaterialService
+    {
+        public override LeftMaterialService.IControlDevice ControlDevice => new LeftMaterialService.AllenBradleyControlDevice();
+
+    }
+
     class TestOrderService : BaseOrderService
     {
         public override IOrderDevice Device => new AllenBradleyDevice();
@@ -123,6 +129,12 @@ namespace Test
             leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
             leftSrv.Start();
             Console.WriteLine("服务启动中");
+
+            //var leftSrv = new TestLeftMaterialService();
+            //leftSrv.SendLeftMaterialServiceStateMessageEvent += PrintLeftMaterialServiceError;
+            //leftSrv.Start();
+            //Console.WriteLine("服务启动中");
+
             //var orderSrv = new TestOrderService(OrderServiceEnum.OrderDistribution);
             //orderSrv.GetFirstOrderEvent += Srv_GetFirstOrderEvent;
             //orderSrv.SendOrderServiceStateMessage += PrintErrorMessage;

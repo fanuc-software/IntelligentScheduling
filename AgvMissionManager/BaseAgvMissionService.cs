@@ -56,7 +56,6 @@ namespace AgvMissionManager
 
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionMessage.EnumToString(), (s) =>
             {
-
                 PushOutMission(s);
             });
             signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionMessage.EnumToString(), (s) =>

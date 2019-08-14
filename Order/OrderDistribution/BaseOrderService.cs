@@ -194,12 +194,45 @@ namespace OrderDistribution
                             return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.CHECKCONFIRM); 
                         }
 
+                        //获得数量种类、物料数量、确认数量种类、确认物料数量
+                        int cprod = first_order.Type;
+                        int cnum = first_order.Quantity;
+                        int prod = first_order.Type;
+                        int num = first_order.Quantity;
+                        while(cprod!=0 || cnum!=0 || prod!=0 || num!=0)
+                        {
+                            Device.GetCheckProductType(ref cprod);
+                            Device.GetCheckQuantity(ref cnum);
+                            Device.GetProductType(ref prod);
+                            Device.GetQuantity(ref num);
+
+                            SendOrderServiceStateMessage?.Invoke(
+                                new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "等待二次复位信号满足条件", ErrorCode = OrderServiceErrorCodeEnum.NORMAL });
+
+                            bool ret_reset = false;
+                            Device.GetOrderReset(ref ret_reset);
+                            if(ret_reset==true)
+                            {
+
+                                SendOrderServiceStateMessage?.Invoke(
+                                    new OrderServiceState { State = OrderServiceStateEnum.INFO, Message = "等待二次复位信号满足条件过程中复位", ErrorCode = OrderServiceErrorCodeEnum.NORMAL });
+                                return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.SETCONFIRRM);
+                            }
+
+                            Thread.Sleep(1000);
+                        }
+
+
+
                         //发出二次确认信号
                         ret = Device.SetOrderConfirm(true);
                         if (ret != true)
                         {
                             return new Tuple<bool, OrderServiceErrorCodeEnum>(false, OrderServiceErrorCodeEnum.SETCONFIRRM); 
                         }
+
+                        //等待PLC处理允许信号
+                        Thread.Sleep(2000);
 
                         //变更软件订单状态
                         first_order.State = OrderItemStateEnum.DOWORK;//test

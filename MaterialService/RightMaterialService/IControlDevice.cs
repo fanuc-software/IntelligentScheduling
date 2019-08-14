@@ -9,25 +9,25 @@ namespace RightMaterialService
     public interface IControlDevice
     {
 
-        bool SetRHouseProductType(int prod_type);
+        //bool SetRHouseProductType(int prod_type);
 
-        bool SetRHouseMaterialType(int material_type);
+        //bool SetRHouseMaterialType(int material_type);
 
-        bool GetRHouseRequest(ref bool req);
+        //bool GetRHouseRequest(ref bool req);
 
-        bool SetRHouseRequest(bool req);
+        //bool SetRHouseRequest(bool req);
 
-        bool GetRHouseFin(ref bool fin);
+        //bool GetRHouseFin(ref bool fin);
 
-        bool SetRHouseFin(bool fin);
+        //bool SetRHouseFin(bool fin);
 
-        bool SetRHouseInOut(bool in_out);
+        //bool SetRHouseInOut(bool in_out);
 
-        bool SetRHouseAlarm(bool alarm);
+        //bool SetRHouseAlarm(bool alarm);
 
-        bool GetRHouseReset(ref bool reset);
+        //bool GetRHouseReset(ref bool reset);
 
-        bool SetRHouseReset(bool reset);
+        //bool SetRHouseReset(bool reset);
 
         bool GetHouseRequestFCS(ref bool req);
 

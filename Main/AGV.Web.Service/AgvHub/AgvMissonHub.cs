@@ -10,7 +10,6 @@ namespace AGV.Web.Service.AgvHub
 {
     public class AgvMissonHub : Hub
     {
-
         public string SendWaitEndSignal(string id)
         {
             if (StaticData.SignalDict.ContainsKey(id))
@@ -27,7 +26,6 @@ namespace AGV.Web.Service.AgvHub
         }
         public void SendOutMission(AgvOutMisson message)
         {
-
             Clients.All.receiveOutMissionMessage(message);
         }
 
