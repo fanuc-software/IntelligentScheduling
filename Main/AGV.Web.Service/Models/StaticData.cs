@@ -17,12 +17,12 @@ namespace AGV.Web.Service.Models
 
         static StaticData()
         {
-            var waitArr = new string[] { "Wait_B1_D1", "Wait_B2_D2", "Wait_E1_F1", "Wait_E2_F2" };
+            var waitArr = new string[] { "Wait_B1_D1", "Wait_B2_D2", "Wait_E1_F1", "Wait_E2_F2" ,"Wait_A1","Wait_A2"};
             waitArr.ToList().ForEach(d =>
             {
                 WaitNodes.Add(new WaitNode() { Station = d, State = WaitNodeState.Free });
             });
-            var listNode = WaitNodes.OrderBy(d => d.Station).ToList();
+            var listNode = WaitNodes.ToList();
             //ProductNodeDict.TryAdd("RX08_RAWIN", new List<ConfigNode>()
             //{
             //  //  new ConfigNode(){ Station="A",Operation="Wait"},
@@ -69,7 +69,7 @@ namespace AGV.Web.Service.Models
                     Signal="AGVATPREPICK",
                     IncludeWaits=new List<WaitNode>(){ listNode[0],listNode[1] }
                 },
-              
+
 
             });
             ProductNodeDict.TryAdd("RX0D_Out", new List<ConfigNode>()
@@ -82,7 +82,7 @@ namespace AGV.Web.Service.Models
                     IsRequiredWait =false,
                     ArrivalNotice=false,
                     Signal="AGVATPREPICK",
-                    
+
                 },
 
 
@@ -102,7 +102,33 @@ namespace AGV.Web.Service.Models
 
 
             });
+            ProductNodeDict.TryAdd("RX0B_Out", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="B",
+                    Operation ="JackUnload",
+                    IsRequiredWait =false,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+                },
 
+
+            });
+            ProductNodeDict.TryAdd("RX0E_Out", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="E",
+                    Operation ="JackUnload",
+                    IsRequiredWait =false,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+
+                },
+            });
             ProductNodeDict.TryAdd("RX0F_Out", new List<ConfigNode>()
             {
               //  new ConfigNode(){ Station="A",Operation="Wait"},
@@ -113,6 +139,84 @@ namespace AGV.Web.Service.Models
                     IsRequiredWait =false,
                     ArrivalNotice=false,
                     Signal="AGVATPREPICK",
+
+                },
+
+
+            });
+
+            ProductNodeDict.TryAdd("RX0E_IN", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="E",
+                    Operation ="JackUnload",
+                    IsRequiredWait =true,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+                    IncludeWaits=new List<WaitNode>(){ listNode[2],listNode[3] }
+
+                },
+            });
+            ProductNodeDict.TryAdd("RX0F_IN", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="F",
+                    Operation ="JackUnload",
+                    IsRequiredWait =true,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+                    IncludeWaits=new List<WaitNode>(){ listNode[2],listNode[3] }
+
+                },
+
+
+            });
+            ProductNodeDict.TryAdd("RX0A_IN", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="A",
+                    Operation ="JackUnload",
+                    IsRequiredWait =true,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+                    IncludeWaits=new List<WaitNode>(){ listNode[4],listNode[5] }
+
+                },
+
+
+            });
+            ProductNodeDict.TryAdd("RX0A_Out", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="A",
+                    Operation ="JackUnload",
+                    IsRequiredWait =false,
+                    ArrivalNotice=true,
+                    Signal="AGVATPREPICK"
+
+                },
+
+
+            });
+
+            ProductNodeDict.TryAdd("RX0H_Out", new List<ConfigNode>()
+            {
+              //  new ConfigNode(){ Station="A",Operation="Wait"},
+                new ConfigNode()
+                {
+                    Station ="H",
+                    Operation ="JackUnload",
+                    IsRequiredWait =false,
+                    ArrivalNotice=true,
+                    Signal="AGVATPREPICK"
 
                 },
 
