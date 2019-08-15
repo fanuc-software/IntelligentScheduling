@@ -39,8 +39,15 @@
 
                     <tr ng-repeat="x in main.tableNodes">
                         <td><span class="label label-info">{{ x.Station }}</span></td>
-                        <td>{{ x.IsRequiredWait }}</td>
-                        <td>{{ x.ArrivalNotice }}</td>
+                        <td>
+                            <span class="label label-success" ng-show="x.IsRequiredWait">{{ x.IsRequiredWait }}</span>
+                            <span ng-show="!x.IsRequiredWait">{{ x.IsRequiredWait }}</span>
+                        </td>
+                        <td>
+                            <span class="label label-success" ng-show="x.ArrivalNotice">{{ x.ArrivalNotice }}</span>
+                            <span ng-show="!x.ArrivalNotice">{{ x.ArrivalNotice }}</span>
+
+                        </td>
                         <td>{{ x.Operation }}</td>
                         <td><span class="label label-primary">{{ x.Signal }}</span></td>
                     </tr>
@@ -58,10 +65,14 @@
 
                         <th style="width:230px">订单名称</th>
                         <th style="width:80px">类型</th>
+
+
                         <th style="width:100px">订单状态</th>
+                        <th>创建时间</th>
+                        <th style="width:80px">订单用时</th>
                         <th style="width:100px">机器人</th>
                         <th>工作站</th>
-                        <th>操作</th>
+                        <th >操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,8 +80,10 @@
 
                     <tr ng-repeat="x in main.orderNodes">
                         <td style="width:230px"><span class="label label-info">{{ x.name }}</span></td>
-                        <td>{{ x.category }}</td>
+                        <td><span class="label label-success">{{ x.category }}</span></td>
                         <td><span class="label label-success">{{ x.state }}</span></td>
+                        <td>{{x.time}}</td>
+                        <td>{{x.durtionTime}}(秒)</td>
                         <td>{{ x.processingVehicle }}</td>
                         <td>
                             <div ng-repeat="item in x.destinations">
@@ -158,6 +171,15 @@
                         $scope.$apply();
 
                     };
+                    main.client.client.agvOrderArrived = function (id) {
+                        angular.forEach(main.orderNodes, function (item) {
+                            if (id.toString().indexOf(item.name) != -1) {
+                                item.category = "Arrived";
+                                order.durtionTime = moment().diff(moment(order.time), 's');
+                            }
+                        });
+                        $scope.$apply();
+                    };
                     main.client.client.getCurrentOrder = function (order) {
                         var isFind = false;
                         angular.forEach(main.orderNodes, function (item) {
@@ -166,6 +188,8 @@
                                 item.state = order.state;
                                 item.processingVehicle = order.processingVehicle;
                                 item.state = order.state;
+                                item.durtionTime = moment().diff(moment(item.time), 's');
+
                                 for (var c in item.destinations) {
                                     item.destinations[c].state = order.destinations[c].state;
 
@@ -176,6 +200,8 @@
                             }
                         });
                         if (!isFind) {
+                            order.time = moment().format("YYYY-MM-DD HH:mm:ss");
+                            order.durtionTime = 0;
                             main.orderNodes.unshift(order);
                         }
                         $scope.$apply();

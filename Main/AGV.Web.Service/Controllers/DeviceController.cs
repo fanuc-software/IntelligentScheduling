@@ -30,10 +30,15 @@ namespace AGV.Web.Service.Controllers
                 var key = $"{keyArr[0]}_{keyArr[1]}";
                 if (StaticData.SignalDict.ContainsKey(key))
                 {
-                  //  StaticData.SignalDict[key] = true;
+                    //  StaticData.SignalDict[key] = true;
                     var hubContext = GlobalHost.ConnectionManager.GetHubContext<AgvMissonHub>();
                     hubContext.Clients.All.agvStateChange(id);
-
+                    if (keyArr.Length >= 3)
+                    {
+                        var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
+                        hubContext2.Clients.All.agvOrderArrived(id);
+                    }
+                   
                 }
                 return Json(new { state = true, id = id }, JsonRequestBehavior.AllowGet);
             }

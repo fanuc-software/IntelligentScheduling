@@ -29,10 +29,10 @@ namespace AGV.Web.Service.AgvHub
         public void sendTask(string id)
         {
             TransportOrder order = new TransportOrder();
-            string name = $"{id}_{ DateTime.Now.ToFileTime()}";
+            string name = $"{id}{ DateTime.Now.ToFileTime()}";
             try
             {
-                order = new AgvInMisson() { Id = id }.AgvMissonToTransportOrder();
+                order = new AgvInMisson() { Id = id }.AgvMissonToTransportOrder(name);
                 client.TransportOrders2(name, order);
                 Clients.All.queryOrder(name);
 

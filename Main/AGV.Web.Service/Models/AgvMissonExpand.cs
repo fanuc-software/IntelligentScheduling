@@ -8,19 +8,19 @@ namespace AGV.Web.Service.Models
 {
     public static class AgvMissonExpand
     {
-        public static TransportOrder AgvMissonToTransportOrder(this AgvInMisson agvInMisson)
-        {            
-            return GetOrder(agvInMisson.Id);
+        public static TransportOrder AgvMissonToTransportOrder(this AgvInMisson agvInMisson, string name = "")
+        {
+            return GetOrder(agvInMisson.Id, name);
         }
 
-        public static TransportOrder AgvMissonToTransportOrder(this AgvOutMisson agvInMisson)
+        public static TransportOrder AgvMissonToTransportOrder(this AgvOutMisson agvInMisson, string name = "")
         {
 
-            return GetOrder(agvInMisson.Id);
+            return GetOrder(agvInMisson.Id, name);
         }
 
 
-        private static TransportOrder GetOrder(string Id)
+        private static TransportOrder GetOrder(string Id, string name = "")
         {
             var key = Id.ToString();
             var listNode = new List<ConfigNode>();
@@ -68,7 +68,7 @@ namespace AGV.Web.Service.Models
                         temp.Properties.Add(new Property()
                         {
                             Key = "device:requestAtSend",
-                            Value = $"{Id}_{item.Signal}:arrived"
+                            Value = $"{Id}_{item.Signal}_{name}:arrived"
                         });
                     }
                     transportOrder.Destinations.Add(temp);
@@ -106,7 +106,7 @@ namespace AGV.Web.Service.Models
                         node.Properties.Add(new Property()
                         {
                             Key = "device:requestAtSend",
-                            Value = $"{Id}_{item.Signal}:arrived"
+                            Value = $"{Id}_{item.Signal}_{name}:arrived"
                         });
                     }
                     transportOrder.Destinations.Add(node);
