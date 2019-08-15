@@ -58,6 +58,16 @@
     </div>
 
     <div class="row" style="margin-top:10px">
+        <div class="alert alert-info alert-dismissible" role="alert">
+            
+            <span ng-repeat="x in main.signlrNodes" style="margin-right:10px;">
+                <span class="label label-success">{{ x }}</span>
+            </span>
+         
+
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px">
         <div class="col-md-12">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -142,6 +152,7 @@
                 main.orderNodes = [];
                 main.errorInfo = '';
                 main.errorJson = '';
+                main.signlrNodes = [];
                 main.isShowError = false;
                 main.client = null;
                 main.init = function () {
@@ -152,7 +163,6 @@
                     });
 
                     main.client.client.getAllAgvOrder = function (message) { // Register for incoming messages
-                        console.log('received message: ' + JSON.stringify(message));
                         for (var c in message) {
 
                             main.MapData.push({ id: c, nodes: message[c] });
@@ -180,6 +190,11 @@
                         });
                         $scope.$apply();
                     };
+                    main.client.client.agvSignalChange = function (id) {
+                        console.log(id);
+                        main.signlrNodes.push(id);
+                        $scope.$apply();
+                    };
                     main.client.client.getCurrentOrder = function (order) {
                         var isFind = false;
                         angular.forEach(main.orderNodes, function (item) {
@@ -202,6 +217,7 @@
                         if (!isFind) {
                             order.time = moment().format("YYYY-MM-DD HH:mm:ss");
                             order.durtionTime = 0;
+                           
                             main.orderNodes.unshift(order);
                         }
                         $scope.$apply();

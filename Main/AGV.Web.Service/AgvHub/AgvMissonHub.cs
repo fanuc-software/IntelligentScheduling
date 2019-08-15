@@ -31,7 +31,7 @@ namespace AGV.Web.Service.AgvHub
             {
                 return "Error";
             }
-            var nodes = StaticData.ProductNodeDict[id].FirstOrDefault(d=>d.IsRequiredWait);
+            var nodes = StaticData.ProductNodeDict[id].FirstOrDefault(d => d.IsRequiredWait);
             string key = $"{id}";
             if (nodes != null)
             {
@@ -47,7 +47,7 @@ namespace AGV.Web.Service.AgvHub
                     }
                 }
             }
-            
+
             return id + ":True";
         }
 
@@ -108,16 +108,21 @@ namespace AGV.Web.Service.AgvHub
         public AgvInMisson SendMissonInOrder(AgvInMisson message)
         {
             var client = new Client();
-
-            client.TransportOrders2($"{message.Id}_{ message.TimeId}", message.AgvMissonToTransportOrder());
+            string id = $"{message.Id}{ message.TimeId}";
+            client.TransportOrders2(id, message.AgvMissonToTransportOrder());
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
+            hubContext2.Clients.All.queryOrder(id);
             return message;
         }
 
         public AgvOutMisson SendMissonOutOrder(AgvOutMisson message)
         {
             var client = new Client();
+            string id = $"{message.Id}{ message.TimeId}";
+            client.TransportOrders2(id, message.AgvMissonToTransportOrder());
 
-            client.TransportOrders2($"{message.Id}_{ message.TimeId}", message.AgvMissonToTransportOrder());
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
+            hubContext2.Clients.All.queryOrder(id);
             return message;
         }
 

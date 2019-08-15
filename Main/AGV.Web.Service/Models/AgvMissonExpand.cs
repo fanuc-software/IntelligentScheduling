@@ -63,12 +63,12 @@ namespace AGV.Web.Service.Models
                             new Property(){ Key="device:queryAtExecuted",Value=$"{Id}{item.Station}:wait"}
                         },
                     };
-                    if (item.ArrivalNotice)
+                    if (item.WaitArrivalNotice)
                     {
                         temp.Properties.Add(new Property()
                         {
                             Key = "device:requestAtSend",
-                            Value = $"{Id}_{item.Signal}_{name}:arrived"
+                            Value = $"{Id}_{item.WaitSinal}:arrived"
                         });
                     }
                     transportOrder.Destinations.Add(temp);
@@ -79,6 +79,15 @@ namespace AGV.Web.Service.Models
                         Properties = new List<Property>(),
 
                     };
+                    if (item.ArrivalNotice)
+                    {
+                        node.Properties.Add(new Property()
+                        {
+                            Key = "device:requestAtSend",
+                            Value = $"{Id}_{item.Signal}:arrived"
+                        });
+
+                    }
                     transportOrder.Destinations.Add(node);
 
                     if (!StaticData.SignalDict.ContainsKey($"{Id}{item.Station}"))
@@ -106,7 +115,7 @@ namespace AGV.Web.Service.Models
                         node.Properties.Add(new Property()
                         {
                             Key = "device:requestAtSend",
-                            Value = $"{Id}_{item.Signal}_{name}:arrived"
+                            Value = $"{Id}_{item.Signal}:arrived"
                         });
                     }
                     transportOrder.Destinations.Add(node);

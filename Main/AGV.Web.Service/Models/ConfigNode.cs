@@ -13,11 +13,13 @@ namespace AGV.Web.Service.Models
 
         public bool ArrivalNotice  { get; set; }
 
+        public bool WaitArrivalNotice { get; set; }
         public string Operation { get; set; }
         public List<WaitNode>  IncludeWaits { get; set; }
 
         public WaitNode CurrentWait { get; set; }
 
+        public string WaitSinal { get; set; }
         public string Signal { get; set; }
     }
 
@@ -33,6 +35,7 @@ namespace AGV.Web.Service.Models
 
         public WaitNodeState State { get; set; }
 
+        public int Signal { get; set; }
         public string WaitKey { get; set; }
     }
 
