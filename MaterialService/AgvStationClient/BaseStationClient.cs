@@ -11,25 +11,31 @@ namespace AgvStationClient
     public abstract class BaseStationClient<T> where T : IStationDevice
     {
         public AgvStationEnum Station_Id { get; set; }
-        
+
         private BaseAgvMissionService materialSrv;
 
         private StationClientStateEnum lastState;
         private string lastMessage;
         private List<StationClientState> lastInfos = new List<StationClientState>();
-        
+
         public T StationDevice { get; }
         CancellationTokenSource token = new CancellationTokenSource();
         SignalrService signalrService;
         AutoResetEvent resetEvent = new AutoResetEvent(false);
         public event Action<StationClientState> SendStationClientStateMessageEvent;
+        static string signalrHost;
 
-        public BaseStationClient(AgvStationEnum id,T device)
+      
+        static BaseStationClient()
+        {
+            signalrHost = System.Configuration.ConfigurationSettings.AppSettings["SignalrHost"];
+        }
+        public BaseStationClient(AgvStationEnum id, T device)
         {
             StationDevice = device;
             Station_Id = id;
 
-            signalrService = new SignalrService("http://192.168.4.85/Agv", "AgvMissonHub");
+            signalrService = new SignalrService(signalrHost, "AgvMissonHub");
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
             {
                 OnAgvOutMissonEvent(s);
@@ -105,7 +111,7 @@ namespace AgvStationClient
         public void Start()
         {
             SendStationClientStateMessage(
-                new StationClientState { State = StationClientStateEnum.INFO, Message = "单元站点客户端开启!" ,CreateDateTime=DateTime.Now});
+                new StationClientState { State = StationClientStateEnum.INFO, Message = "单元站点客户端开启!", CreateDateTime = DateTime.Now });
 
             Task.Factory.StartNew(async () =>
             {
@@ -213,7 +219,7 @@ namespace AgvStationClient
                             PickStationId = Station_Id,
                             PlaceStationId = AgvStationEnum.WareHouse,
                             Process = AgvInMissonProcessEnum.NEW,
-                            CarryProcess =CarryInMissonProcessEnum.NEW,
+                            CarryProcess = CarryInMissonProcessEnum.NEW,
                             Quantity = 0,
                             MaterialId = material_type,
                             ProductId = prod_type,
@@ -431,10 +437,10 @@ namespace AgvStationClient
 
         private async void SendOutMission(AgvOutMisson mission)
         {
-                SendStationClientStateMessage(
-                    new StationClientState { State = StationClientStateEnum.INFO, Message = "出库请求:" + mission.Type.EnumToString(), CreateDateTime = DateTime.Now });
+            SendStationClientStateMessage(
+                new StationClientState { State = StationClientStateEnum.INFO, Message = "出库请求:" + mission.Type.EnumToString(), CreateDateTime = DateTime.Now });
 
-                await signalrService.Send(AgvSendActionEnum.SendOutMission.EnumToString(), mission);
+            await signalrService.Send(AgvSendActionEnum.SendOutMission.EnumToString(), mission);
         }
 
         private async void SendInMission(AgvInMisson mission)
@@ -449,7 +455,7 @@ namespace AgvStationClient
         {
             if (lastMessage != state.Message || lastState != state.State)
             {
-                if(state.State==StationClientStateEnum.INFO)
+                if (state.State == StationClientStateEnum.INFO)
                 {
                     var lastInfo = lastInfos.Where(x => x.State == state.State && x.Message == state.Message && x.CreateDateTime > state.CreateDateTime.AddSeconds(-2)).FirstOrDefault();
                     if (lastInfo != null) lastInfo.CreateDateTime = state.CreateDateTime;
@@ -472,7 +478,7 @@ namespace AgvStationClient
                         Message = state.Message,
                     });
                 }
-                
+
                 lastMessage = state.Message;
                 lastState = state.State;
             }

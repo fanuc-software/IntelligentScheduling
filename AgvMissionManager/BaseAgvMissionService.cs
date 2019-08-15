@@ -24,6 +24,7 @@ namespace AgvMissionManager
         private BlockingCollection<AgvFeedingSignal> feedingSignals = new BlockingCollection<AgvFeedingSignal>();
 
         Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum> brotherMissionType = new Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum>();
+        private static string signalrHost;
 
         public event Action<AgvMissionServiceState> SendAgvMissionServiceStateMessageEvent;
 
@@ -48,11 +49,18 @@ namespace AgvMissionManager
             return _instance;
         }
 
+       
+        static BaseAgvMissionService()
+        {
+            signalrHost = System.Configuration.ConfigurationSettings.AppSettings["SignalrHost"];
+
+        }
         public BaseAgvMissionService()
         {
+
             carryDevice = new TestControlDevice();
 
-            signalrService = new SignalrService("http://localhost/Agv", "AgvMissonHub");
+            signalrService = new SignalrService(signalrHost, "AgvMissonHub");
 
             signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionMessage.EnumToString(), (s) =>
             {
@@ -1130,14 +1138,14 @@ namespace AgvMissionManager
 
         private async Task<bool> AgvOutMissionPrePlaceWait(AgvOutMisson AgvOutMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
+            await signalrService.Send<string>(AgvSendActionEnum.SendLastWaitEndSignal.EnumToString(), AgvOutMisson.Id);
             return true;
         }
 
         private async Task<bool> AgvOutMissionPrePickWait(AgvOutMisson AgvOutMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
-
+            await signalrService.Send<string>(AgvSendActionEnum.SendFirstWaitEndSignal.EnumToString(), AgvOutMisson.Id);
+            
             return true;
         }
 

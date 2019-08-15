@@ -24,6 +24,61 @@ namespace AGV.Web.Service.AgvHub
             }
             return id + ":True";
         }
+
+        public string SendFirstWaitEndSignal(string id)
+        {
+            if (!StaticData.ProductNodeDict.ContainsKey(id))
+            {
+                return "Error";
+            }
+            var nodes = StaticData.ProductNodeDict[id].FirstOrDefault(d=>d.IsRequiredWait);
+            string key = $"{id}";
+            if (nodes != null)
+            {
+                key += nodes.Station;
+                if (StaticData.SignalDict.ContainsKey(key))
+                {
+                    StaticData.SignalDict[key] = true;
+                    var waitNode = StaticData.WaitNodes.FirstOrDefault(d => d.WaitKey == key);
+                    if (waitNode != null)
+                    {
+                        waitNode.IsOccupy = false;
+                        waitNode.State = WaitNodeState.Free;
+                    }
+                }
+            }
+            
+            return id + ":True";
+        }
+
+
+        public string SendLastWaitEndSignal(string id)
+        {
+            if (!StaticData.ProductNodeDict.ContainsKey(id))
+            {
+                return "Error";
+            }
+            var nodes = StaticData.ProductNodeDict[id].LastOrDefault(d => d.IsRequiredWait);
+            string key = $"{id}";
+            if (nodes != null)
+            {
+                key += nodes.Station;
+                if (StaticData.SignalDict.ContainsKey(key))
+                {
+                    StaticData.SignalDict[key] = true;
+                    var waitNode = StaticData.WaitNodes.FirstOrDefault(d => d.WaitKey == key);
+                    if (waitNode != null)
+                    {
+                        waitNode.IsOccupy = false;
+                        waitNode.State = WaitNodeState.Free;
+                    }
+                }
+            }
+
+            return id + ":True";
+        }
+
+
         public void SendOutMission(AgvOutMisson message)
         {
             Clients.All.receiveOutMissionMessage(message);
@@ -31,7 +86,7 @@ namespace AGV.Web.Service.AgvHub
 
         public void SendInMission(AgvInMisson message)
         {
-            
+
             Clients.All.receiveInMissionMessage(message);
         }
 

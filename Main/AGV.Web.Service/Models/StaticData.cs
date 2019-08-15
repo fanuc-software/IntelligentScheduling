@@ -85,16 +85,26 @@ namespace AGV.Web.Service.Models
 
             });
 
-            ProductNodeDict.TryAdd("RX0B_IN", new List<ConfigNode>()
+            ProductNodeDict.TryAdd("RX08_RAWIN", new List<ConfigNode>()
             {
                 new ConfigNode()
                 {
-                    Station ="Bool_B",
+                    Station ="Bool_E",
                     Operation ="JackUnload",
                     IsRequiredWait =false,
                     ArrivalNotice=false,
-                    Signal="AGVATPREPICK"
+                    Signal="AGVATPREPICK",
                 },
+                new ConfigNode()
+                {
+                    Station ="E",
+                    Operation ="JackLoad",
+                    IsRequiredWait =true,
+                    ArrivalNotice=false,
+                    Signal="AGVATPREPICK",
+                    IncludeWaits=new List<WaitNode>(){ listNode[2],listNode[3] }
+
+                },               
                 new ConfigNode()
                 {
                     Station ="B",
@@ -103,15 +113,8 @@ namespace AGV.Web.Service.Models
                     ArrivalNotice=false,
                     Signal="AGVATPREPICK",
                     IncludeWaits=new List<WaitNode>(){ listNode[1],listNode[0] }
-                },
-                 new ConfigNode()
-                {
-                    Station ="Bool_B",
-                    Operation ="JackUnload",
-                    IsRequiredWait =false,
-                    ArrivalNotice=true,
-                    Signal="AGVATPREPICK"
-                },
+                }
+                
 
             });
             ProductNodeDict.TryAdd("RX0B_Out", new List<ConfigNode>()

@@ -45,7 +45,7 @@ namespace AGV.Web.Service.Models
                     var waitNode = item.IncludeWaits.FirstOrDefault(d => !d.IsOccupy) ?? new WaitNode();
                     waitNode.IsOccupy = true;
                     waitNode.State = WaitNodeState.OccupyNotArrival;
-                    waitNode.WaitKey = Id;
+                    waitNode.WaitKey = $"{Id}{item.Station}";
                     item.CurrentWait = waitNode;
 
                     transportOrder.Destinations.Add(new DestinationOrder()
@@ -60,7 +60,7 @@ namespace AGV.Web.Service.Models
                         Operation = "Wait",
                         Properties = new List<Property>()
                         {
-                            new Property(){ Key="device:queryAtExecuted",Value=$"{Id}:wait"}
+                            new Property(){ Key="device:queryAtExecuted",Value=$"{Id}{item.Station}:wait"}
                         },
                     };
                     if (item.ArrivalNotice)
@@ -81,14 +81,14 @@ namespace AGV.Web.Service.Models
                     };
                     transportOrder.Destinations.Add(node);
 
-                    if (!StaticData.SignalDict.ContainsKey(Id))
+                    if (!StaticData.SignalDict.ContainsKey($"{Id}{item.Station}"))
                     {
-                        StaticData.SignalDict.TryAdd(Id, false);
+                        StaticData.SignalDict.TryAdd($"{Id}{item.Station}", false);
                     }
                     else
                     {
 
-                        StaticData.SignalDict[Id] = false;
+                        StaticData.SignalDict[$"{Id}{item.Station}"] = false;
 
                     }
                 }
