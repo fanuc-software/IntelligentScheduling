@@ -113,7 +113,7 @@ namespace AgvMissionManager
         #region 外部接口
         private void PushOutMission(AgvOutMisson mission)
         {
-            if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE && x.CarryProcess!=CarryOutMissonProcessEnum.CLOSE).Count() == 0)
+            if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE || x.CarryProcess!=CarryOutMissonProcessEnum.CLOSE).Count() == 0)
             {
                 mission.AgvOutProcessChangeEvent += (obj, state) => AgvOutMissChangeEvent?.Invoke(obj, state);
                 AgvOutMissChangeEvent?.Invoke(mission, true);
@@ -124,7 +124,7 @@ namespace AgvMissionManager
 
         private void PushInMission(AgvInMisson mission)
         {
-            if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE && x.CarryProcess != CarryInMissonProcessEnum.CLOSE).Count() == 0)
+            if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE || x.CarryProcess != CarryInMissonProcessEnum.CLOSE).Count() == 0)
             {
                 mission.AgvInProcessChangeEvent += (s, e) => AgvInMissChangeEvent?.Invoke(s, e);
                 AgvInMissChangeEvent?.Invoke(mission, true);
@@ -685,7 +685,10 @@ namespace AgvMissionManager
                                 && x.Process >= AgvOutMissonProcessEnum.NEW && x.Process < AgvOutMissonProcessEnum.AGVPICKEDANDLEAVE)
                             .FirstOrDefault();
 
-                        var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
+                        //var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
+
+                        //测试用 料道信号判断是否单元入料道是否有箱子--忽略
+                        var feeding_signal = new AgvFeedingSignal { Value = false };
 
 
                         if (brother_inmission == null && feeding_signal.Value == false && mission.Process == AgvOutMissonProcessEnum.AGVATPREPLACE)
@@ -700,9 +703,38 @@ namespace AgvMissionManager
 
                     #endregion
 
+                    #region 通知小车前往单元料道取料等待取消
+                    var agv_inmissions_atprepick = undo_inmissions.Where(x => x.Process == AgvInMissonProcessEnum.AGVATPREPICK).ToList() ?? new List<AgvInMisson>();
+                    foreach (var mission in agv_inmissions_atprepick)
+                    {
+                        //var brother_mission_type = brotherMissionType[mission.Type];
+                        //var brother_inmission = OutMissions
+                        //    .Where(x => x.ClientId == mission.ClientId
+                        //        && x.Type == brother_mission_type
+                        //        && x.Process >= AgvOutMissonProcessEnum.NEW && x.Process < AgvOutMissonProcessEnum.AGVPICKEDANDLEAVE)
+                        //    .FirstOrDefault();
+
+                        //var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
+
+                        //测试用 料道信号判断是否单元入料道是否有箱子--忽略
+                        var feeding_signal = new AgvFeedingSignal { Value = true };
+
+
+                        if (feeding_signal.Value == true && mission.Process == AgvInMissonProcessEnum.AGVATPREPICK)
+                        {
+                            DoWork(() => AgvInMissionPrePickWait(mission).Result, () =>
+                            {
+                                mission.Process = AgvInMissonProcessEnum.AGVATPICK;
+
+                            }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.AGVINPREPICKWAIT);
+                        }
+                    }
+
+                    #endregion
+
                     #region 通知小车前往料库出料道取物料等待取消
                     var agv_outmissions_atprepick = undo_outmissions.Where(x => x.Process == AgvOutMissonProcessEnum.AGVATPREPICK
-                        && x.CarryProcess == CarryOutMissonProcessEnum.FINISHED).FirstOrDefault();
+                        &&  x.CarryProcess==CarryOutMissonProcessEnum.FINISHED).FirstOrDefault();
                     if (agv_outmissions_atprepick != null)
                     {
                         agv_outmissions_atprepick.Process = AgvOutMissonProcessEnum.AGVATPICK;
@@ -747,7 +779,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 搬运入库完工处理
-                    var carryfinished_inmission = InMissions.Where(x => x.CarryProcess == CarryInMissonProcessEnum.FINISHED).FirstOrDefault();
+                    var carryfinished_inmission = InMissions.Where(x => x.CarryProcess == CarryInMissonProcessEnum.FINISHED && x.Process > AgvInMissonProcessEnum.AGVPLACEDANDLEAVE).FirstOrDefault();
                     if (carryfinished_inmission != null)
                     {
                         carryfinished_inmission.CarryProcess = CarryInMissonProcessEnum.CLOSE;
@@ -756,7 +788,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 搬运出库完工处理
-                    var carryfinished_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.FINISHED).FirstOrDefault();
+                    var carryfinished_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.FINISHED && x.Process>AgvOutMissonProcessEnum.AGVPICKEDANDLEAVE).FirstOrDefault();
                     if (carryfinished_outmission != null)
                     {
                         carryfinished_outmission.CarryProcess = CarryOutMissonProcessEnum.CLOSE;
@@ -1149,13 +1181,19 @@ namespace AgvMissionManager
             return true;
         }
 
-        private async Task<bool> AgvInMissionPrePlaceWait(AgvInMisson AgvOutMisson)
+        private async Task<bool> AgvInMissionPrePlaceWait(AgvInMisson AgvInMisson)
         {
-            await signalrService.Send<string>(AgvSendActionEnum.SendWaitEndSignal.EnumToString(), AgvOutMisson.Id);
+            await signalrService.Send<string>(AgvSendActionEnum.SendLastWaitEndSignal.EnumToString(), AgvInMisson.Id);
 
             return true;
         }
 
+        private async Task<bool> AgvInMissionPrePickWait(AgvInMisson AgvInMisson)
+        {
+            await signalrService.Send<string>(AgvSendActionEnum.SendFirstWaitEndSignal.EnumToString(), AgvInMisson.Id);
+
+            return true;
+        }
 
     }
 }
