@@ -75,14 +75,25 @@ namespace Test
             //bool ret1,ret2;
             //  SignalrTest.MainTest();
 
+            bool ret1;
+            var modula = new RightModulaWareHouseClient("TESTR");
+            ret1 = modula.ResetTray();
+            //
 
-            //var modula = new RightModulaWareHouseClient("TESTR");
-            //ret1 = modula.ResetTray();
-            //ret1 = modula.MoveInTray(1, 1);
+            //if(true){
+            //    ret1 = modula.MoveInTray(1, 7);
 
+            //    int prod = 0;
+            //    int tray = 0;
+            //    int qty = 0;
+            //    ret1 = modula.GetPositionInfo(1, 7, out prod, out tray, out qty);
+            //}
+
+
+            //bool ret2;
             //var modula2 = new LefModulaWareHouseClient("TESTL");
             //ret2 = modula2.ResetTray();
-            //ret2 = modula2.MoveInTray(1, 3);
+            //ret2 = modula2.MoveInTray(1, 1);
             //modula2.ResetTray();
             //    System.Threading.Thread.Sleep(30000);
             //int prod = 0;
@@ -125,10 +136,10 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            var leftSrv = new TestRightMaterialService();
-            leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
-            leftSrv.Start();
-            Console.WriteLine("服务启动中");
+            //var leftSrv = new TestRightMaterialService();
+            //leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
+            //leftSrv.Start();
+            //Console.WriteLine("服务启动中");
 
             //var leftSrv = new TestLeftMaterialService();
             //leftSrv.SendLeftMaterialServiceStateMessageEvent += PrintLeftMaterialServiceError;

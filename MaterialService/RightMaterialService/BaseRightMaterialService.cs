@@ -28,6 +28,9 @@ namespace RightMaterialService
             Task.Factory.StartNew(async () =>
             {
 
+                SendRightMaterialServiceStateMessage(
+                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "START！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+
                 Temp_S_House_RequestFCS_Last = false;
 
                 bool ret = false;
@@ -451,7 +454,7 @@ namespace RightMaterialService
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_warehouse_tray_position, RightMaterialServiceErrorCodeEnum.IN_SETTRAYPOS);
                 }
 
-                var ret_warehouse_quantity = ControlDevice.SetHouseTrayPostion(S_House_Quantity);
+                var ret_warehouse_quantity = ControlDevice.SetHouseQuantity(S_House_Quantity);
                 if (ret_warehouse_quantity == false)
                 {
                     WareHouse.ReleaseWriterLock();

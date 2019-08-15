@@ -52,6 +52,19 @@ namespace WareHouseService
 
             var removestartstr = ret.Item2.Replace("DPICK=", "");
 
+            //string toolCode = (removestartstr.Substring(0, 25)).Trim();//刀具编号
+            //string trayCode = (removestartstr.Substring(25, 4)).Trim();//托盘编号
+            //string count = (removestartstr.Substring(29, 4)).Trim();//数量
+            //string mode = (removestartstr.Substring(33, 1)).Trim();//模式P:拿 V：取
+            //string position = (removestartstr.Substring(34, 2)).Trim();//
+
+            //int material_position;
+            //int tray_position;
+            //int quantity;
+            //var prod_ret = int.TryParse(position, out material_position);
+            //var tray_ret = int.TryParse(trayCode, out tray_position);
+            //var qty_ret = int.TryParse(count, out quantity);
+
             string toolCode = (removestartstr.Substring(0, 25)).Trim();//刀具编号
             string trayCode = (removestartstr.Substring(25, 4)).Trim();//托盘编号
             string count = (removestartstr.Substring(29, 4)).Trim();//数量
