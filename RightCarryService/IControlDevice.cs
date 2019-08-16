@@ -18,7 +18,7 @@ namespace RightCarryService
         bool SetRHouseRequest(bool req);
 
         bool GetRHouseFin(ref bool fin);
-
+        
         bool SetRHouseFin(bool fin);
 
         bool SetRHouseInOut(bool in_out);

@@ -9,7 +9,6 @@ namespace RightCarryService
 {
     public class AllenBradleyControlDevice : IControlDevice
     {
-
         private AllenBradleyDataConfig m_RHouseProductTypeConfig;
         private AllenBradleyDataConfig m_RHouseMaterialTypeConfig;
         private AllenBradleyDataConfig m_RHouseOutConfig;
@@ -19,23 +18,6 @@ namespace RightCarryService
         private AllenBradleyDataConfig m_RHouseAlarmConfig;
         private AllenBradleyDataConfig m_RHouseResetConfig;
         private AllenBradleyDataConfig m_RHouseQuantityConfig;
-
-        //private AllenBradleyDataConfig m_HouseRequestFCSConfig;
-        //private AllenBradleyDataConfig m_HouseRequestFCSFinConfig;
-        //private AllenBradleyDataConfig m_HouseRequestInfoConfig;
-        //private AllenBradleyDataConfig m_HouseRequestInfoFCSFinConfig;
-        //private AllenBradleyDataConfig m_HouseFCSAlarmConfig;
-        //private AllenBradleyDataConfig m_HouseFCSResetConfig;
-        //private AllenBradleyDataConfig m_HouseProductTypeConfig;
-        //private AllenBradleyDataConfig m_HouseMaterialTypeConfig;
-        //private AllenBradleyDataConfig m_HouseOutConfig;
-        //private AllenBradleyDataConfig m_HouseInConfig;
-        //private AllenBradleyDataConfig m_HouseProductPostionConfig;
-        //private AllenBradleyDataConfig m_HouseTrayPostionConfig;
-        //private AllenBradleyDataConfig m_HouseQuantityConfig;
-        //private AllenBradleyDataConfig m_HouseConfirmMaterialTypeConfig;
-        //private AllenBradleyDataConfig m_HouseTrayOutInpositionConfig;
-
 
         private AllenBradley m_ABDevice;
 
@@ -52,22 +34,6 @@ namespace RightCarryService
             m_RHouseAlarmConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Alarm" };
             m_RHouseResetConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_OUT.Reset" };
             m_RHouseQuantityConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-
-            //m_HouseRequestFCSConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Act_REQ" };
-            //m_HouseRequestFCSFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Act_Req_Over" };
-            //m_HouseRequestInfoConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.DoneInf_Write_Req" };
-            //m_HouseRequestInfoFCSFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Inf_Write_Req_Over" };
-            //m_HouseFCSAlarmConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Alarm" };
-            //m_HouseFCSResetConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Reset" };
-            //m_HouseProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Product_type" };
-            //m_HouseMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Material_Type" };
-            //m_HouseOutConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Storage_Out" };
-            //m_HouseInConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Storage_In" };
-            //m_HouseProductPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Product_Pos" };
-            //m_HouseTrayPostionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Tray_Number" };
-            //m_HouseQuantityConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Current_Quantity_In_Box" };
-            //m_HouseConfirmMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.Move_Robot_IN.Material_Type" };
-            //m_HouseTrayOutInpositionConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.Move_Robot_OUT.Tray_Inposition" };
         }
 
         public bool SetRHouseProductType(int prod_type)

@@ -413,17 +413,14 @@ namespace WPF.AgvMissionUI
         private void OnFin_Command()
         {
             Task.Factory.StartNew(()=>{
+
+                //TEST:CARRY DEVICE
                 agvMissionSrv.carryDevice.Fin = true;
 
                 System.Threading.Thread.Sleep(1000);
 
                 agvMissionSrv.carryDevice.Fin = false;
             });
-
-           
-
-
-
         }
 
         private void AgvMissionSrv_AgvOutMissChangeEvent(AgvOutMisson mission, bool arg2)
@@ -487,6 +484,7 @@ namespace WPF.AgvMissionUI
             {
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
+                    //TEST:CARRY DEVICE
                     ProdType = agvMissionSrv.carryDevice.Product_Type;
                     MateType = agvMissionSrv.carryDevice.Material_Type;
                     InOut = agvMissionSrv.carryDevice.InOut;

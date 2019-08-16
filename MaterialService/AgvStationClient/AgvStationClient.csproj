@@ -56,6 +56,8 @@
     <Compile Include="IStationDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseStationClient.cs" />
+    <Compile Include="RX08FanucRobotClientDevice.cs" />
+    <Compile Include="RX09FanucRobotClientDevice.cs" />
     <Compile Include="StationClientState.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ namespace AgvStationClient
     {
         public AgvStationEnum Station_Id { get; set; }
 
-        private BaseAgvMissionService materialSrv;
+        //private BaseAgvMissionService materialSrv;
 
         private StationClientStateEnum lastState;
         private string lastMessage;
@@ -26,7 +26,12 @@ namespace AgvStationClient
         public event Action<StationClientState> SendStationClientStateMessageEvent;
         static string signalrHost;
 
-      
+        private bool last_rawin_state = false;
+        private bool last_emptyout_state = false;
+        private bool last_finout_state = false;
+        private bool last_emptyin_state = false;
+
+
         static BaseStationClient()
         {
             signalrHost = System.Configuration.ConfigurationSettings.AppSettings["SignalrHost"];
@@ -52,13 +57,24 @@ namespace AgvStationClient
             //毛坯空箱回库
             if (mission.Id.Equals(Station_Id + "_EMPTYOUT"))
             {
-                if (mission.Process == AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
+                if (mission.Process > AgvInMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvInMissonProcessEnum.CANCEL & mission.Process != AgvInMissonProcessEnum.CANCELED)
                 {
                     bool empty_out = false;
                     var ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out);
                     if (ret_empty_out == true && empty_out == true)
                     {
                         StationDevice.SetEmptyOutFin(true);
+
+                        bool empty_out_confirm = true;
+
+                        while(empty_out_confirm)
+                        {
+                            ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out_confirm);
+                            if (ret_empty_out == true && empty_out_confirm == false)
+                            {
+                                StationDevice.SetEmptyOutFin(false);
+                            }
+                        }
                     }
 
                 }
@@ -66,13 +82,24 @@ namespace AgvStationClient
             //成品回库
             if (mission.Id.Equals(Station_Id + "_FINOUT"))
             {
-                if (mission.Process == AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
+                if (mission.Process > AgvInMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvInMissonProcessEnum.CANCEL & mission.Process != AgvInMissonProcessEnum.CANCELED)
                 {
                     bool fin_out = false;
                     var ret_fin_out = StationDevice.GetFinOutState(ref fin_out);
                     if (ret_fin_out == true && fin_out == true)
                     {
                         StationDevice.SetFinOutFin(true);
+
+                        bool fin_out_confirm = true;
+
+                        while (fin_out_confirm)
+                        {
+                            ret_fin_out = StationDevice.GetFinOutState(ref fin_out_confirm);
+                            if (ret_fin_out == true && fin_out_confirm == false)
+                            {
+                                StationDevice.SetFinOutFin(false);
+                            }
+                        }
                     }
 
                 }
@@ -84,13 +111,24 @@ namespace AgvStationClient
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
             {
-                if (mission.Process == AgvOutMissonProcessEnum.FINISHED)
+                if (mission.Process > AgvOutMissonProcessEnum.AGVPLACEDANDLEAVE && mission.Process != AgvOutMissonProcessEnum.CANCEL & mission.Process != AgvOutMissonProcessEnum.CANCELED)
                 {
                     bool raw_in = false;
                     var ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in);
                     if (ret_raw_in == true && raw_in == true)
                     {
                         StationDevice.SetRawInFin(true);
+
+                        bool raw_in_confirm = true;
+
+                        while (raw_in_confirm)
+                        {
+                            ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in_confirm);
+                            if (ret_raw_in == true && raw_in_confirm == false)
+                            {
+                                StationDevice.SetRawInFin(false);
+                            }
+                        }
                     }
                 }
             }
@@ -104,6 +142,17 @@ namespace AgvStationClient
                     if (ret_empty_in == true && empty_in == true)
                     {
                         StationDevice.SetEmptyInFin(true);
+
+                        bool empty_in_confirm = true;
+
+                        while (empty_in_confirm)
+                        {
+                            ret_empty_in = StationDevice.GetEmptyInState(ref empty_in_confirm);
+                            if (ret_empty_in == true && empty_in_confirm == false)
+                            {
+                                StationDevice.SetEmptyInFin(false);
+                            }
+                        }
                     }
                 }
             }
@@ -141,6 +190,17 @@ namespace AgvStationClient
                         }
                     }
 
+                    Thread.Sleep(1000);
+                }
+            }, token.Token);
+
+
+            Task.Factory.StartNew(async () =>
+            {
+                await signalrService.Start();
+
+                while (!token.IsCancellationRequested)
+                {
                     SendFeedingSignal();
 
                     Thread.Sleep(1000);
@@ -179,6 +239,7 @@ namespace AgvStationClient
                          Value = raw_in,
                      }).Result;
             }
+
         }
 
         private bool StationClientFlow()
@@ -186,13 +247,15 @@ namespace AgvStationClient
             //毛坯输入
             var raw_in = false;
             var ret = StationDevice.GetRawInRequireState(ref raw_in);
-            if (ret = true && raw_in == true)
+            if (ret = true && raw_in == true && last_rawin_state==false)
             {
+                System.Threading.Thread.Sleep(1000);
+
                 //毛坯空箱回库
                 {
                     var empty_out = false;
                     ret = StationDevice.GetEmptyOutState(ref empty_out);
-                    if (ret = true && empty_out == true)
+                    if (ret = true && empty_out == true && last_emptyout_state==false)
                     {
                         string prod_type = "";
                         var ret_product_type = StationDevice.GetEmptyInProductType(ref prod_type);
@@ -227,6 +290,8 @@ namespace AgvStationClient
                             CreateDateTime = DateTime.Now,
                         });
                     }
+
+                    last_emptyout_state = empty_out;
                 }
 
                 //毛坯输入
@@ -267,16 +332,20 @@ namespace AgvStationClient
 
             }
 
+            last_rawin_state = raw_in;
+
             //成品空箱输入
             var empty_in = false;
             ret = StationDevice.GetEmptyInState(ref empty_in);
-            if (ret = true && empty_in == true)
+            if (ret = true && empty_in == true && last_emptyin_state==false)
             {
+                System.Threading.Thread.Sleep(1000);
+
                 //成品回库
                 {
                     var fin_out = false;
                     ret = StationDevice.GetFinOutState(ref fin_out);
-                    if (ret = true && fin_out == true)
+                    if (ret = true && fin_out == true && last_finout_state==false)
                     {
                         string prod_type = "";
                         var ret_product_type = StationDevice.GetFinOutProductType(ref prod_type);
@@ -311,6 +380,8 @@ namespace AgvStationClient
                             CreateDateTime = DateTime.Now,
                         });
                     }
+
+                    last_finout_state = fin_out;
                 }
 
                 //成品空箱输入
@@ -351,11 +422,13 @@ namespace AgvStationClient
 
             }
 
+            last_emptyin_state = empty_in;
+
             //毛坯空箱回库
             {
                 var empty_out = false;
                 ret = StationDevice.GetEmptyOutState(ref empty_out);
-                if (ret = true && empty_out == true)
+                if (ret = true && empty_out == true && last_emptyout_state==false)
                 {
                     string prod_type = "";
                     var ret_product_type = StationDevice.GetEmptyInProductType(ref prod_type);
@@ -390,13 +463,15 @@ namespace AgvStationClient
                         CreateDateTime = DateTime.Now,
                     });
                 }
+
+                last_emptyout_state = empty_out;
             }
 
             //成品回库
             {
                 var fin_out = false;
                 ret = StationDevice.GetFinOutState(ref fin_out);
-                if (ret = true && fin_out == true)
+                if (ret = true && fin_out == true && last_finout_state==false)
                 {
                     string prod_type = "";
                     var ret_product_type = StationDevice.GetFinOutProductType(ref prod_type);
@@ -431,6 +506,8 @@ namespace AgvStationClient
                         CreateDateTime = DateTime.Now,
                     });
                 }
+
+                last_finout_state = fin_out;
             }
 
             return true;

@@ -32,7 +32,6 @@ namespace AgvMissionManager
         public BlockingCollection<AgvOutMisson> OutMissions { get; set; }
         public BlockingCollection<AgvInMisson> InMissions { get; set; }
 
-
         public event Action<AgvInMisson, bool> AgvInMissChangeEvent;
         public event Action<AgvOutMisson, bool> AgvOutMissChangeEvent;
 
@@ -57,7 +56,7 @@ namespace AgvMissionManager
         }
         public BaseAgvMissionService()
         {
-
+            //实例化 RightCarryService\AllenBradleyControlDevice
             carryDevice = new TestControlDevice();
 
             signalrService = new SignalrService(signalrHost, "AgvMissonHub");
@@ -827,7 +826,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 搬运出库异常处理
-                    var carrycancel_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.CANCELED).FirstOrDefault();
+                    var carrycancel_outmission = OutMissions.Where(x => x.CarryProcess == CarryOutMissonProcessEnum.CANCEL).FirstOrDefault();
                     if (carrycancel_outmission != null)
                     {
                         carrycancel_outmission.CarryProcess = CarryOutMissonProcessEnum.CANCELED;
@@ -847,7 +846,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region AGV出库异常处理
-                    var agvcancel_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.CANCELED).FirstOrDefault();
+                    var agvcancel_outmission = OutMissions.Where(x => x.Process == AgvOutMissonProcessEnum.CANCEL).FirstOrDefault();
                     if (agvcancel_outmission != null)
                     {
                         agvcancel_outmission.Process = AgvOutMissonProcessEnum.CANCELED;
@@ -1104,7 +1103,6 @@ namespace AgvMissionManager
             }
 
             mission.CarryProcess = CarryInMissonProcessEnum.FINISHED;
-            mission.Process = AgvInMissonProcessEnum.FINISHED;
             carry.ReleaseLock();
             return true;
         }

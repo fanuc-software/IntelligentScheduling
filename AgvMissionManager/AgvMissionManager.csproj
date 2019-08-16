@@ -43,7 +43,6 @@
   <ItemGroup>
     <Compile Include="AgvMissionServiceState.cs" />
     <Compile Include="BaseAgvMissionService.cs" />
-    <Compile Include="FeedingSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AgvMissionServiceErrorCodeEnum.cs" />
   </ItemGroup>
