@@ -93,8 +93,13 @@
 
                     <tr ng-repeat="x in main.orderNodes">
                         <td style="width:230px">{{ x.name }}</td>
-                        <td><span class="label label-success">{{ x.category }}</span></td>
-                        <td><span class="label label-success">{{ x.state }}</span></td>
+                        <td>{{ x.category }}</td>
+                        <td ng-show="x.state=='FINISHED'">
+                            <span class="label label-success">{{ x.state }}</span>
+                        </td>
+                        <td ng-show="x.state!='FINISHED'">
+                            {{ x.state }}
+                        </td>
                         <td>{{x.time}}</td>
                         <td>{{x.durtionTime}}(秒)</td>
                         <td>{{ x.processingVehicle }}</td>
