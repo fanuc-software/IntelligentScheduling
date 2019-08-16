@@ -9,7 +9,7 @@ namespace AgvStationClient
 {
     public class RX09FanucRobotClientDevice : IStationDevice
     {
-        //IP地址 192.168.1.172
+        //IP地址 192.168.1.121
 
         //DO 181--上料位呼叫毛坯
         //DO 182--上料位请求拿走毛坯空箱
@@ -49,7 +49,7 @@ namespace AgvStationClient
 
         public RX09FanucRobotClientDevice()
         {
-            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.172");
+            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.121");
 
             m_RawInRequireStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "181" };
             m_EmptyOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "182" };

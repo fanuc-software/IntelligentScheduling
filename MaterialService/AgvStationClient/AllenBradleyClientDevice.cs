@@ -34,7 +34,7 @@ namespace AgvStationClient
 
         public AllenBradleyClientDevice()
         {
-            m_ABDevice = new AllenBradley("192.168.1.10", 44818);//RX07 AB  PLC的IP
+            m_ABDevice = new AllenBradley("192.168.1.81", 44818);//RX07 AB  PLC的IP
 
             m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Product_Type" };
             m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Material_Type" };
