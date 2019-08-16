@@ -289,9 +289,11 @@ namespace AgvStationClient
                             ProductId = prod_type,
                             CreateDateTime = DateTime.Now,
                         });
+
+                        last_emptyout_state = empty_out;
                     }
 
-                    last_emptyout_state = empty_out;
+                    
                 }
 
                 //毛坯输入
@@ -328,11 +330,13 @@ namespace AgvStationClient
                         ProductId = prod_type,
                         CreateDateTime = DateTime.Now,
                     });
+
+                    last_rawin_state = raw_in;
                 }
 
-            }
 
-            last_rawin_state = raw_in;
+                
+            }
 
             //成品空箱输入
             var empty_in = false;
@@ -379,9 +383,10 @@ namespace AgvStationClient
                             ProductId = prod_type,
                             CreateDateTime = DateTime.Now,
                         });
+
+                        last_finout_state = fin_out;
                     }
 
-                    last_finout_state = fin_out;
                 }
 
                 //成品空箱输入
@@ -418,11 +423,10 @@ namespace AgvStationClient
                         CreateDateTime = DateTime.Now,
                     });
 
+                    last_emptyin_state = empty_in;
                 }
 
             }
-
-            last_emptyin_state = empty_in;
 
             //毛坯空箱回库
             {
@@ -431,10 +435,10 @@ namespace AgvStationClient
                 if (ret = true && empty_out == true && last_emptyout_state==false)
                 {
                     string prod_type = "";
-                    var ret_product_type = StationDevice.GetEmptyInProductType(ref prod_type);
+                    var ret_product_type = StationDevice.GetEmptyOutProductType(ref prod_type);
 
                     string material_type = "";
-                    var ret_material_type = StationDevice.GetEmptyInMaterialType(ref material_type);
+                    var ret_material_type = StationDevice.GetEmptyOutMaterialType(ref material_type);
 
                     if (ret_product_type == false || ret_material_type == false)
                     {
@@ -462,9 +466,11 @@ namespace AgvStationClient
                         ProductId = prod_type,
                         CreateDateTime = DateTime.Now,
                     });
+
+                    last_emptyout_state = empty_out;
                 }
 
-                last_emptyout_state = empty_out;
+                
             }
 
             //成品回库
@@ -505,9 +511,11 @@ namespace AgvStationClient
                         ProductId = prod_type,
                         CreateDateTime = DateTime.Now,
                     });
+
+                    last_finout_state = fin_out;
                 }
 
-                last_finout_state = fin_out;
+                
             }
 
             return true;
