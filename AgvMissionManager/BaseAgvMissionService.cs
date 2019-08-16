@@ -678,10 +678,10 @@ namespace AgvMissionManager
                     foreach (var mission in agv_outmissions_atpreplace)
                     {
                         var brother_mission_type = brotherMissionType[mission.Type];
-                        var brother_inmission = OutMissions
+                        var brother_inmission = InMissions
                             .Where(x => x.ClientId == mission.ClientId
                                 && x.Type == brother_mission_type
-                                && x.Process >= AgvOutMissonProcessEnum.NEW && x.Process < AgvOutMissonProcessEnum.AGVPICKEDANDLEAVE)
+                                && x.Process >= AgvInMissonProcessEnum.NEW && x.Process < AgvInMissonProcessEnum.AGVPICKEDANDLEAVE)
                             .FirstOrDefault();
 
                         //var feeding_signal = feedingSignals.Where(x => x.ClientId == mission.ClientId && x.Type == mission.Type).FirstOrDefault() ?? new AgvFeedingSignal { Value = true };
