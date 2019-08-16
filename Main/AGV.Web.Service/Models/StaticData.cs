@@ -188,7 +188,7 @@ namespace AGV.Web.Service.Models
                 },
 
             });
-            ProductNodeDict.TryAdd("RX09_PRODUCTOUT", new List<ConfigNode>()
+            ProductNodeDict.TryAdd("RX09_FINOUT", new List<ConfigNode>()
             {
                  new ConfigNode()
                 {
@@ -506,7 +506,7 @@ namespace AGV.Web.Service.Models
 
 
             });
-            ProductNodeDict.TryAdd("RX08_PRODUCTOUT", new List<ConfigNode>()
+            ProductNodeDict.TryAdd("RX08_FINOUT", new List<ConfigNode>()
             {
                  new ConfigNode()
                 {

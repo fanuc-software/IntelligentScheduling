@@ -26,7 +26,8 @@ namespace AGV.Web.Service.AgvHub
                 Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
             }
         }
-        public void queryWaitSignal() {
+        public void queryWaitSignal()
+        {
 
             Clients.All.loadWaitSignal(StaticData.SignalDict);
         }
@@ -83,6 +84,19 @@ namespace AGV.Web.Service.AgvHub
             Clients.All.getCurrentOrder(obj);
 
 
+        }
+        public void loadAllOrder()
+        {
+            //var list = client.TransportOrdersAll();
+            //int index = 1;
+            //foreach (var item in list)
+            //{
+            //    if (index++ <= 10)
+            //    {
+            //        Clients.All.getCurrentOrder(item.Name);
+            //    }
+
+            //}
         }
         public override Task OnConnected()
         {

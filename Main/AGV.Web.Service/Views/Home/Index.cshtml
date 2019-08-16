@@ -5,19 +5,20 @@
 
 <div ng-controller="mainController">
     <div class="row" style="margin-top:10px">
-        <div class="col-md-7">
+        <div class="col-md-12">
             <button type="button" style="margin-right:10px;margin-top:5px" ng-repeat="x in main.MapData" ng-class="x.active" class="btn btn-default" ng-click="main.mapClick(x)">{{x.id}}</button>
 
         </div>
-        <div class="col-md-offset-2 col-md-3" style="float:right">
+
+    </div>
+    <div class="row" style="margin-top:30px;text-align:center">
+        <div class="col-md-12">
             <button type="button" class="btn btn-primary" ng-click="main.sendTask()">发送订单</button>
             <button type="button" class="btn btn-primary" ng-click="main.clearWait()">释放所有等待信号</button>
             <button type="button" class="btn btn-primary" ng-click="main.queryWait()">查询所有等待信号</button>
 
-
         </div>
     </div>
-
 
 
     <div class="row" style="margin-top:10px">
@@ -62,8 +63,10 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <strong>Wait!</strong>
             <span ng-repeat="x in main.waitNodes" style="margin-right:10px;">
-                【 <span class="label label-info">{{ x.name }}-</span>
-                <span class="label label-primary">{{ x.value }}</span>】
+                【 <span class="label label-info">{{ x.name }}</span>
+                <span class="label label-primary" ng-show="x.value">{{ x.value }}</span>
+                <span class="label label-danger" ng-show="!x.value">{{ x.value }}</span>
+                】
             </span>
 
         </div>
@@ -89,7 +92,7 @@
 
 
                     <tr ng-repeat="x in main.orderNodes">
-                        <td style="width:230px"><span class="label label-info">{{ x.name }}</span></td>
+                        <td style="width:230px">{{ x.name }}</td>
                         <td><span class="label label-success">{{ x.category }}</span></td>
                         <td><span class="label label-success">{{ x.state }}</span></td>
                         <td>{{x.time}}</td>
@@ -122,9 +125,14 @@
 
 
                     <tr ng-repeat="x in main.destinations">
-                        <td><span class="label label-primary">{{ x.locationName }}</span></td>
+                        <td>{{ x.locationName }}</td>
                         <td><span class="label label-info">{{ x.operation }}</span></td>
-                        <td><span class="label label-success">{{ x.state }}</span></td>
+                        <td ng-show="x.state=='FINISHED'">
+                            <span class="label label-success">{{ x.state }}</span>
+                        </td>
+                        <td ng-show="x.state!='FINISHED'">
+                            {{ x.state }}
+                        </td>
                         <td>
                             <p ng-repeat="p in x.properties">
                                 <span>{{p.key}}</span>
@@ -132,7 +140,7 @@
                             </p>
                         </td>
                         <td>
-                            <button type="button" ng-show="x.properties.length>0&&x.properties[0].key=='device:queryAtExecuted'" class="btn btn-primary" ng-click="main.sendWait(x.locationName)">释放信号</button>
+                            <button type="button" ng-show="x.properties.length>0&&x.properties[0].key=='device:queryAtExecuted'" class="btn btn-primary" ng-click="main.sendWait($index)">释放信号</button>
                         </td>
                     </tr>
                 </tbody>
@@ -153,7 +161,7 @@
     <div class="row" style="margin-top:10px" ng-show="main.signlrNodes.length>0">
         <div class="alert alert-info alert-dismissible" role="alert">
 
-            <span ng-repeat="x in main.signlrNodes" style="margin-right:10px;">
+            <span ng-repeat="x in main.signlrNodes" style="margin-right:10px;margin-top:5px">
                 <span class="label label-success">{{ x }}</span>
             </span>
 
@@ -195,20 +203,25 @@
                     });
 
                     main.client.client.getAllAgvOrder = function (message) { // Register for incoming messages
+                        main.MapData = [];
                         for (var c in message) {
 
                             main.MapData.push({ id: c, nodes: message[c], active: ' btn-default' });
                         }
                         main.MapData.sort(function (a, b) {
-                            if (a.id.indexOf("IN")!=-1) {
-                                return -1;
-                            };
-                            return 1;
+                            var arr = ["RAWIN", "EMPTYIN", "EMPTYOUT", "FINOUT"];
+                            var aTag = a.id.split('_');
+                            var bTag = b.id.split('_');
+                            var aIndex = parseInt(aTag[0].replace("RX", ""), 10) * 10 + arr.indexOf(aTag[1]);
+                            var bIndex = parseInt(bTag[0].replace("RX", ""), 10) * 10 + arr.indexOf(bTag[1]);
+
+                            return aIndex - bIndex;
                         });
                         main.MapData[0].active = 'btn-primary';
                         main.selectedName = main.MapData[0].id;
                         main.tableNodes = main.MapData[0].nodes;
                         $scope.$apply();
+                        main.client.server.loadAllOrder();
                     };
                     main.client.client.queryOrder = function (id) {
                         main.client.server.loadOrderProxy(id);
@@ -296,7 +309,8 @@
 
 
                 };
-                main.sendWait = function (station) {
+                main.sendWait = function (index) {
+                    var station = main.destinations[index + 1].locationName;
                     var id = main.currentOrder.name;
 
                     var arr = id.split('_');
