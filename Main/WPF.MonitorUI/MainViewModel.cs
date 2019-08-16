@@ -471,6 +471,8 @@ namespace WPF.MonitorUI
             Stations.Add(new StationIdItem { Station_Id = AgvStationEnum.RX08, Station_Name = "汽车刹车盘单元" });
             Stations.Add(new StationIdItem { Station_Id = AgvStationEnum.RX09, Station_Name = "3C加工单元单元" });
 
+
+            //TestStationDevice 替换成 AgvStationClient\AllenBradleyClientDevice(RX07) 或者AgvStationClient\FanucRobotClientDevice（RX08/RX09）
             _Client = new TestStationCient<TestStationDevice>(AgvStationEnum.RX08,new TestStationDevice());
             _Client.SendStationClientStateMessageEvent += (s) => {
 

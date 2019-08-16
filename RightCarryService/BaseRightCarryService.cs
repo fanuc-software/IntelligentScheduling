@@ -162,6 +162,18 @@ namespace RightCarryService
                     return ret;
                 }
 
+                ret = ControlDevice.SetRHouseRequest(false);
+                if (ret == false)
+                {
+                    SendRightCarryServiceStateMessageEvent?.Invoke(new RightCarryServiceState
+                    {
+                        State = RightCarryServiceStateEnum.ERROR,
+                        ErrorCode = RightCarryServiceErrorCodeEnum.CARRYIN_REFIN,
+                        Message = "右侧机械手搬运出错,复位请求信号错误",
+                    });
+                    return ret;
+                }
+
                 SendRightCarryServiceStateMessageEvent?.Invoke(new RightCarryServiceState
                 {
                     State = RightCarryServiceStateEnum.WARN,

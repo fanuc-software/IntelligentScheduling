@@ -7,55 +7,61 @@ using System.Threading.Tasks;
 
 namespace AgvStationClient
 {
-    public class AllenBradleyClientDevice: IStationDevice
+    public class RX08FanucRobotClientDevice : IStationDevice
     {
-        private AllenBradleyDataConfig m_RawInRequireStateConfig;
-        private AllenBradleyDataConfig m_EmptyOutStateConfig;
-        private AllenBradleyDataConfig m_EmptyInStateConfig;
-        private AllenBradleyDataConfig m_FinOutStateConfig;
-        private AllenBradleyDataConfig m_RawInFinConfig;
-        private AllenBradleyDataConfig m_EmptyOutFinConfig;
-        private AllenBradleyDataConfig m_EmptyInFinConfig;
-        private AllenBradleyDataConfig m_FinOutFinConfig;
-        private AllenBradleyDataConfig m_AlarmConfig;
-        private AllenBradleyDataConfig m_ResetConfig;
-        private AllenBradleyDataConfig m_RawInRequireAllowConfig;
-        private AllenBradleyDataConfig m_EmptyInAllowConfig;
-        private AllenBradleyDataConfig m_RawInProductTypeConfig;
-        private AllenBradleyDataConfig m_RawInMaterialTypeConfig;
-        private AllenBradleyDataConfig m_EmptyInProductTypeConfig;
-        private AllenBradleyDataConfig m_EmptyInMaterialTypeConfig;
-        private AllenBradleyDataConfig m_EmptyOutProductTypeConfig;
-        private AllenBradleyDataConfig m_EmptyOutMaterialTypeConfig;
-        private AllenBradleyDataConfig m_FinOutProductTypeConfig;
-        private AllenBradleyDataConfig m_FinOutMaterialTypeConfig;
+        //IP地址 192.168.1.172
 
-        private AllenBradley m_ABDevice;
+        //DO 133--上料位呼叫毛坯
+        //DO 134--上料位请求拿走毛坯空箱
+        //D0 136--下料请求成品回库
+        //D0 135--下料位成品空箱请求
 
-        public AllenBradleyClientDevice()
+        //DI 133--上料位呼叫毛坯完成
+        //DI 134--上料位请求拿走毛坯空箱完成
+        //DI 136--下料请求成品回库完成
+        //DI 135--下料位成品空箱请求完成
+
+        //DI 139--下料位检测
+        //DI 138--上料位检测
+
+        private FanucRobotDataConfig m_RawInRequireStateConfig;
+        private FanucRobotDataConfig m_EmptyOutStateConfig;
+        private FanucRobotDataConfig m_EmptyInStateConfig;
+        private FanucRobotDataConfig m_FinOutStateConfig;
+        private FanucRobotDataConfig m_RawInFinConfig;
+        private FanucRobotDataConfig m_EmptyOutFinConfig;
+        private FanucRobotDataConfig m_EmptyInFinConfig;
+        private FanucRobotDataConfig m_FinOutFinConfig;
+        private FanucRobotDataConfig m_AlarmConfig;
+        private FanucRobotDataConfig m_ResetConfig;
+        private FanucRobotDataConfig m_RawInRequireAllowConfig;
+        private FanucRobotDataConfig m_EmptyInAllowConfig;
+        private FanucRobotDataConfig m_RawInProductTypeConfig;
+        private FanucRobotDataConfig m_RawInMaterialTypeConfig;
+        private FanucRobotDataConfig m_EmptyInProductTypeConfig;
+        private FanucRobotDataConfig m_EmptyInMaterialTypeConfig;
+        private FanucRobotDataConfig m_EmptyOutProductTypeConfig;
+        private FanucRobotDataConfig m_EmptyOutMaterialTypeConfig;
+        private FanucRobotDataConfig m_FinOutProductTypeConfig;
+        private FanucRobotDataConfig m_FinOutMaterialTypeConfig;
+
+        private FanucRobotModbus m_FanucRobotDevice;
+
+        public RX08FanucRobotClientDevice()
         {
-            m_ABDevice = new AllenBradley("192.168.1.10", 44818);//RX07 AB  PLC的IP
+            m_FanucRobotDevice = new FanucRobotModbus("192.168.1.172");
 
-            m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Product_Type" };
-            m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Material_Type" };
-            m_EmptyInStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Storage_Out" };
-            m_FinOutStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Storage_In" };
-            m_RawInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Act_Req" };
-            m_EmptyOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_OUT.Act_Finish" };
-            m_EmptyInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Alarm" };
-            m_FinOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_OUT.Reset" };
+            m_RawInRequireStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "133" };
+            m_EmptyOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "134" };
+            m_EmptyInStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "135" };
+            m_FinOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "136" };
+            m_RawInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "133" };
+            m_EmptyOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "134" };
+            m_EmptyInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "135" };
+            m_FinOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "136" };
 
-            m_RawInRequireAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            m_EmptyInAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-
-            //m_RawInProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_RawInMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyInProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyInMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyOutProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyOutMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_FinOutProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_FinOutMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
+            m_RawInRequireAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "139" };
+            m_EmptyInAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "138" };
         }
 
         /// <summary>
@@ -65,7 +71,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetRawInRequireState(ref bool raw_in)
         {
-            var ret = m_ABDevice.Read(m_RawInRequireStateConfig);
+            var ret = m_FanucRobotDevice.Read(m_RawInRequireStateConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -83,7 +89,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetEmptyOutState(ref bool empty_out)
         {
-            var ret = m_ABDevice.Read(m_EmptyOutStateConfig);
+            var ret = m_FanucRobotDevice.Read(m_EmptyOutStateConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -101,7 +107,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetEmptyInState(ref bool empty_in)
         {
-            var ret = m_ABDevice.Read(m_EmptyInStateConfig);
+            var ret = m_FanucRobotDevice.Read(m_EmptyInStateConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -119,7 +125,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetFinOutState(ref bool fin_out)
         {
-            var ret = m_ABDevice.Read(m_FinOutStateConfig);
+            var ret = m_FanucRobotDevice.Read(m_FinOutStateConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -137,7 +143,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetRawInFin(bool raw_in_fin)
         {
-            var ret = m_ABDevice.Write(m_RawInFinConfig, raw_in_fin.ToString());
+            var ret = m_FanucRobotDevice.Write(m_RawInFinConfig, raw_in_fin.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -150,7 +156,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetEmptyOutFin(bool empty_out_fin)
         {
-            var ret = m_ABDevice.Write(m_EmptyOutFinConfig, empty_out_fin.ToString());
+            var ret = m_FanucRobotDevice.Write(m_EmptyOutFinConfig, empty_out_fin.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -163,7 +169,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetEmptyInFin(bool empty_in_fin)
         {
-            var ret = m_ABDevice.Write(m_EmptyInFinConfig, empty_in_fin.ToString());
+            var ret = m_FanucRobotDevice.Write(m_EmptyInFinConfig, empty_in_fin.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -176,7 +182,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetFinOutFin(bool fin_out_fin)
         {
-            var ret = m_ABDevice.Write(m_FinOutFinConfig, fin_out_fin.ToString());
+            var ret = m_FanucRobotDevice.Write(m_FinOutFinConfig, fin_out_fin.ToString());
             if (ret.IsSuccess == false) return false;
 
             return true;
@@ -189,7 +195,10 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetAlarm(bool alarm)
         {
-            //DEBUG:界面
+            //var ret = m_FanucRobotDevice.Write(m_AlarmConfig, alarm.ToString());
+            //if (ret.IsSuccess == false) return false;
+
+            //DEBUG:输出至界面
 
             return true;
         }
@@ -201,7 +210,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetReset(ref bool reset)
         {
-            //DEBUG:界面
+            //DEBUG:从界面获取
 
             return true;
         }
@@ -213,7 +222,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetReset(bool reset)
         {
-            //DEBUG:界面
+            //DEBUG:输出至界面
 
             return true;
         }
@@ -225,7 +234,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetRawInFeedingSignal(ref bool raw_in)
         {
-            var ret = m_ABDevice.Read(m_RawInRequireAllowConfig);
+            var ret = m_FanucRobotDevice.Read(m_RawInRequireAllowConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -243,7 +252,7 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetEmptyInFeedingSignal(ref bool empty_in)
         {
-            var ret = m_ABDevice.Read(m_EmptyInAllowConfig);
+            var ret = m_FanucRobotDevice.Read(m_EmptyInAllowConfig);
             if (ret.IsSuccess == false) return false;
 
             bool temp = false;
@@ -349,5 +358,6 @@ namespace AgvStationClient
 
             return true;
         }
+
     }
 }
