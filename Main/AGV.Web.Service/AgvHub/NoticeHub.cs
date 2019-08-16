@@ -26,10 +26,14 @@ namespace AGV.Web.Service.AgvHub
                 Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
             }
         }
+        public void queryWaitSignal() {
+
+            Clients.All.loadWaitSignal(StaticData.SignalDict);
+        }
         public void sendTask(string id)
         {
             TransportOrder order = new TransportOrder();
-            string name = $"{id}{ DateTime.Now.ToFileTime()}";
+            string name = $"{id}_{ DateTime.Now.ToFileTime()}";
             try
             {
                 order = new AgvInMisson() { Id = id }.AgvMissonToTransportOrder(name);

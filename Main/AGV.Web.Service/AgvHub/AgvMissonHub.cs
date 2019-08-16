@@ -108,7 +108,7 @@ namespace AGV.Web.Service.AgvHub
         public AgvInMisson SendMissonInOrder(AgvInMisson message)
         {
             var client = new Client();
-            string id = $"{message.Id}{ message.TimeId}";
+            string id = $"{message.Id}_{ message.TimeId}";
             client.TransportOrders2(id, message.AgvMissonToTransportOrder());
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
             hubContext2.Clients.All.queryOrder(id);
@@ -118,7 +118,7 @@ namespace AGV.Web.Service.AgvHub
         public AgvOutMisson SendMissonOutOrder(AgvOutMisson message)
         {
             var client = new Client();
-            string id = $"{message.Id}{ message.TimeId}";
+            string id = $"{message.Id}_{ message.TimeId}";
             client.TransportOrders2(id, message.AgvMissonToTransportOrder());
 
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
