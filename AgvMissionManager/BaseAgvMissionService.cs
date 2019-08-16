@@ -600,7 +600,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region 通知料库入库动作
-                    var warehouse_inmission = undo_inmissions.Where(x => x.Process == AgvInMissonProcessEnum.AGVPLACEDANDLEAVE
+                    var warehouse_inmission = undo_inmissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED
                         && x.CarryProcess == CarryInMissonProcessEnum.NEW).FirstOrDefault();
                     if (warehouse_inmission != null)
                     {
@@ -797,7 +797,7 @@ namespace AgvMissionManager
                     #endregion
 
                     #region AGV入库完工处理
-                    var agvfinished_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED).FirstOrDefault();
+                    var agvfinished_inmission = InMissions.Where(x => x.Process == AgvInMissonProcessEnum.FINISHED && x.CarryProcess>CarryInMissonProcessEnum.NEW).FirstOrDefault();
                     if (agvfinished_inmission != null)
                     {
 
