@@ -283,6 +283,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
+            type = "18";
 
             return true;
         }
