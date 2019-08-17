@@ -415,11 +415,11 @@ namespace WPF.AgvMissionUI
             Task.Factory.StartNew(()=>{
 
                 //TEST:CARRY DEVICE
-                agvMissionSrv.carryDevice.Fin = true;
+                //agvMissionSrv.carryDevice.Fin = true;
 
-                System.Threading.Thread.Sleep(1000);
+                //System.Threading.Thread.Sleep(1000);
 
-                agvMissionSrv.carryDevice.Fin = false;
+                //agvMissionSrv.carryDevice.Fin = false;
             });
         }
 
@@ -485,10 +485,10 @@ namespace WPF.AgvMissionUI
                 DispatcherHelper.CheckBeginInvokeOnUI(() =>
                 {
                     //TEST:CARRY DEVICE
-                    ProdType = agvMissionSrv.carryDevice.Product_Type;
-                    MateType = agvMissionSrv.carryDevice.Material_Type;
-                    InOut = agvMissionSrv.carryDevice.InOut;
-                    Req = agvMissionSrv.carryDevice.Req;
+                    //ProdType = agvMissionSrv.carryDevice.Product_Type;
+                    //MateType = agvMissionSrv.carryDevice.Material_Type;
+                    //InOut = agvMissionSrv.carryDevice.InOut;
+                    //Req = agvMissionSrv.carryDevice.Req;
                 });
 
                 System.Threading.Thread.Sleep(1000);

@@ -16,7 +16,7 @@ namespace AgvMissionManager
         private AgvMissionServiceErrorCodeEnum cur_Display_ErrorCode;
         private string cur_Display_Message;
 
-        public TestControlDevice carryDevice;
+        public IControlDevice carryDevice;
 
         SignalrService signalrService;
         private static BaseAgvMissionService _instance = null;
@@ -56,8 +56,11 @@ namespace AgvMissionManager
         }
         public BaseAgvMissionService()
         {
+
+            //测试用
             //实例化 RightCarryService\AllenBradleyControlDevice
-            carryDevice = new TestControlDevice();
+            //carryDevice = new TestControlDevice();
+            carryDevice = new AllenBradleyControlDevice();
 
             signalrService = new SignalrService(signalrHost, "AgvMissonHub");
 
@@ -112,7 +115,7 @@ namespace AgvMissionManager
         #region 外部接口
         private void PushOutMission(AgvOutMisson mission)
         {
-            if (OutMissions.Where(x => x.Id == mission.Id && x.Process != AgvOutMissonProcessEnum.CLOSE || x.CarryProcess!=CarryOutMissonProcessEnum.CLOSE).Count() == 0)
+            if (OutMissions.Where(x => x.Id == mission.Id && (x.Process != AgvOutMissonProcessEnum.CLOSE || x.CarryProcess!=CarryOutMissonProcessEnum.CLOSE)).Count() == 0)
             {
                 mission.AgvOutProcessChangeEvent += (obj, state) => AgvOutMissChangeEvent?.Invoke(obj, state);
                 AgvOutMissChangeEvent?.Invoke(mission, true);
@@ -123,7 +126,7 @@ namespace AgvMissionManager
 
         private void PushInMission(AgvInMisson mission)
         {
-            if (InMissions.Where(x => x.Id == mission.Id && x.Process != AgvInMissonProcessEnum.CLOSE || x.CarryProcess != CarryInMissonProcessEnum.CLOSE).Count() == 0)
+            if (InMissions.Where(x => x.Id == mission.Id && (x.Process != AgvInMissonProcessEnum.CLOSE || x.CarryProcess != CarryInMissonProcessEnum.CLOSE)).Count() == 0)
             {
                 mission.AgvInProcessChangeEvent += (s, e) => AgvInMissChangeEvent?.Invoke(s, e);
                 AgvInMissChangeEvent?.Invoke(mission, true);
@@ -873,7 +876,6 @@ namespace AgvMissionManager
             }, token.Token);
         }
 
-
         private void DoWork(Func<bool> ret_action, Action processAction, string message, AgvMissionServiceErrorCodeEnum codeEnum)
         {
             Task.Factory.StartNew(() =>
@@ -1090,7 +1092,7 @@ namespace AgvMissionManager
         //料库执行入库
         private bool WareHouseInMission(AgvInMisson mission)
         {
-            TestRightCarryService<TestControlDevice> carry = new TestRightCarryService<TestControlDevice>(carryDevice);
+            TestRightCarryService<IControlDevice> carry = new TestRightCarryService<IControlDevice>(carryDevice);
 
             var ret = carry.CarryIn(mission.ProductId, mission.MaterialId);
 
@@ -1111,7 +1113,7 @@ namespace AgvMissionManager
         private bool WareHouseOutMission(AgvOutMisson mission)
         {
 
-            TestRightCarryService<TestControlDevice> carry = new TestRightCarryService<TestControlDevice>(carryDevice);
+            TestRightCarryService<IControlDevice> carry = new TestRightCarryService<IControlDevice>(carryDevice);
 
             int quantity = 0;
             var ret = carry.CarryOut(mission.ProductId, mission.MaterialId, ref quantity);
@@ -1134,6 +1136,7 @@ namespace AgvMissionManager
         {
             try
             {
+                //Console.WriteLine(mission);
                 await signalrService.Send(AgvSendActionEnum.SendMissonInOrder.EnumToString(), mission);
 
             }
@@ -1154,6 +1157,7 @@ namespace AgvMissionManager
             try
             {
 
+                //Console.WriteLine(mission);
                 await signalrService.Send(AgvSendActionEnum.SendMissonOutOrder.EnumToString(), mission);
 
             }
