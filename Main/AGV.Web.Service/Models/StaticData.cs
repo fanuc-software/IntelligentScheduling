@@ -9,7 +9,7 @@ namespace AGV.Web.Service.Models
     {
         public static BlockingCollection<WaitNode> WaitNodes = new BlockingCollection<WaitNode>();
 
-
+        public static BlockingCollection<string> OrderName = new BlockingCollection<string>();
         public static ConcurrentDictionary<string, bool> SignalDict = new ConcurrentDictionary<string, bool>();
 
 
