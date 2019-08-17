@@ -107,23 +107,45 @@ namespace AGV.Web.Service.AgvHub
 
         public AgvInMisson SendMissonInOrder(AgvInMisson message)
         {
-            var client = new Client();
-            string id = $"{message.Id}_{ message.TimeId}";
-            client.TransportOrders2(id, message.AgvMissonToTransportOrder());
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
-            hubContext2.Clients.All.queryOrder(id);
-            return message;
+
+            try
+            {
+                var client = new Client();
+                string id = $"{message.Id}_{ message.TimeId}";
+                client.TransportOrders2(id, message.AgvMissonToTransportOrder());
+                hubContext2.Clients.All.queryOrder(id);
+                return message;
+            }
+            catch (Exception ex)
+            {
+                hubContext2.Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+
+                return message;
+            }
+
         }
 
         public AgvOutMisson SendMissonOutOrder(AgvOutMisson message)
         {
-            var client = new Client();
-            string id = $"{message.Id}_{ message.TimeId}";
-            client.TransportOrders2(id, message.AgvMissonToTransportOrder());
-
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
-            hubContext2.Clients.All.queryOrder(id);
-            return message;
+            try
+            {
+                var client = new Client();
+                string id = $"{message.Id}_{ message.TimeId}";
+                client.TransportOrders2(id, message.AgvMissonToTransportOrder());
+
+
+                hubContext2.Clients.All.queryOrder(id);
+                return message;
+            }
+            catch (Exception ex)
+            {
+                hubContext2.Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+
+                return message;
+            }
+
         }
 
         public void CloseAgvMission(string id)

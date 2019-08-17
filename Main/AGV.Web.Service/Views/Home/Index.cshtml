@@ -165,11 +165,13 @@
 
     <div class="row" style="margin-top:10px" ng-show="main.signlrNodes.length>0">
         <div class="alert alert-info alert-dismissible" role="alert">
+            <div style="float:left;margin-right:10px;margin-top:10px" ng-repeat="x in main.signlrNodes">
+                <span class="label label-success" >
 
-            <span ng-repeat="x in main.signlrNodes" style="margin-right:10px;margin-top:5px">
-                <span class="label label-success">{{ x }}</span>
-            </span>
+                </span>
 
+            </div>
+       
 
         </div>
     </div>
@@ -335,7 +337,6 @@
                 main.orderView = function (order) {
                     main.destinations = order.destinations;
                     main.currentOrder = order;
-                    $scope.$apply();
                 };
                 main.queryWait = function () {
                     main.isShowWaitInfo = true;
