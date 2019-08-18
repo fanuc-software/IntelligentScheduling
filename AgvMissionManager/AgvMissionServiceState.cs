@@ -23,5 +23,10 @@ namespace AgvMissionManager
         public string Message { get; set; }
 
         public AgvMissionServiceErrorCodeEnum ErrorCode { get; set; }
+
+        public override string ToString()
+        {
+            return $"【ErrorCode={ErrorCode},Message={Message},State={State},Time={DateTime.Now}】";
+        }
     }
 }

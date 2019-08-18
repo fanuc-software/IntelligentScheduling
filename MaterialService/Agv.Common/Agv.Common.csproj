@@ -51,6 +51,7 @@
     <Compile Include="EnumExtension.cs" />
     <Compile Include="Model\AgvInMisson.cs" />
     <Compile Include="Model\AgvMissionTypeEnum.cs" />
+    <Compile Include="Model\AgvMissonModel.cs" />
     <Compile Include="Model\AgvOutMisson.cs" />
     <Compile Include="Model\AgvReceiveActionEnum.cs" />
     <Compile Include="Model\AgvSendActionEnum.cs" />

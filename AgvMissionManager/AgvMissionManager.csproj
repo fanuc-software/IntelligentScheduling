@@ -41,8 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgvMissionManagerClient.cs" />
     <Compile Include="AgvMissionServiceState.cs" />
     <Compile Include="BaseAgvMissionService.cs" />
+    <Compile Include="MissionState\AgvInOutMissonTask.cs" />
+    <Compile Include="MissionState\AgvWaitCancelMissonTask.cs" />
+    <Compile Include="MissionState\CarryInOutMissonTask.cs" />
+    <Compile Include="MissionState\InOutMissonTask.cs" />
+    <Compile Include="MissionState\AgvMissonError.cs" />
+    <Compile Include="MissionState\AgvMissonFinished.cs" />
+    <Compile Include="MissionState\IMissionState.cs" />
+    <Compile Include="MissionState\MissionContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AgvMissionServiceErrorCodeEnum.cs" />
   </ItemGroup>
