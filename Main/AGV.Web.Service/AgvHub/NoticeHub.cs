@@ -23,13 +23,13 @@ namespace AGV.Web.Service.AgvHub
             catch (Exception ex)
             {
 
-                Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+                Clients.Client(Context.ConnectionId).pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
             }
         }
         public void queryWaitSignal()
         {
 
-            Clients.All.loadWaitSignal(StaticData.SignalDict);
+            Clients.Client(Context.ConnectionId).loadWaitSignal(StaticData.SignalDict);
         }
         public void sendTask(string id)
         {
@@ -46,7 +46,7 @@ namespace AGV.Web.Service.AgvHub
             catch (Exception ex)
             {
 
-                Clients.All.pushSystemMessage($"发送订单失败,异常信息:{ex.Message}", new { state = false });
+                Clients.Client(Context.ConnectionId).pushSystemMessage($"发送订单失败,异常信息:{ex.Message}", new { state = false });
             }
 
         }
@@ -81,7 +81,7 @@ namespace AGV.Web.Service.AgvHub
         public void loadOrderProxy(string name)
         {
             var obj = client.TransportOrders(name);
-            Clients.All.getCurrentOrder(obj);
+            Clients.Client(Context.ConnectionId).getCurrentOrder(obj);
 
 
         }
@@ -100,8 +100,7 @@ namespace AGV.Web.Service.AgvHub
         }
         public override Task OnConnected()
         {
-
-            Clients.All.getAllAgvOrder(StaticData.ProductNodeDict);
+            Clients.Client(Context.ConnectionId).getAllAgvOrder(StaticData.ProductNodeDict);         
             return base.OnConnected();
         }
     }

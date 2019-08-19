@@ -55,6 +55,7 @@ namespace AgvMissionManager
                  while (!token.IsCancellationRequested)
                  {
                      missionContext.Init();
+                   
                      foreach (var item in missionStates)
                      {
                          if (item.CanRequest())

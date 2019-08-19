@@ -1,10 +1,29 @@
 {
-  "ServiceUrl": "",
-  "version": "2.0",
-  "Nodes": [
+  "Environment": "Development",
+  "StationNodes": [
     {
-
-
+      "Name": "工业实训单元",
+      "StationId": "RX07",
+      "ProdeuctType": 2,
+      "MaterielType": 12,
+      "DevelopmentService": "TestStationDevice",
+      "ProductionService": "AllenBradleyClientDevice"
+    },
+    {
+      "Name": "汽车刹车盘单元",
+      "StationId": "RX08",
+      "ProdeuctType": 3,
+      "MaterielType": 23,
+      "DevelopmentService": "TestStationDevice",
+      "ProductionService": "FanucRobotClientDevice"
+    },
+    {
+      "Name": "3C加工单元单元",
+      "StationId": "RX09",
+      "ProdeuctType": 1,
+      "MaterielType": 18,
+      "DevelopmentService": "TestStationDevice",
+      "ProductionService": "FanucRobotClientDevice"
     }
   ]
 

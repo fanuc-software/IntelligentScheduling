@@ -81,28 +81,28 @@ namespace AGV.Web.Service.AgvHub
 
         public void SendOutMission(AgvOutMisson message)
         {
-            Clients.All.receiveOutMissionMessage(message);
+            Clients.Client(Context.ConnectionId).receiveOutMissionMessage(message);
         }
 
         public void SendInMission(AgvInMisson message)
         {
 
-            Clients.All.receiveInMissionMessage(message);
+            Clients.Client(Context.ConnectionId).receiveInMissionMessage(message);
         }
 
         public void SendOutMissionFinMessage(AgvOutMisson message)
         {
-            Clients.All.receiveOutMissionFinMessage(message);
+            Clients.Client(Context.ConnectionId).receiveOutMissionFinMessage(message);
         }
 
         public void SendInMissionFinMessage(AgvInMisson message)
         {
-            Clients.All.receiveInMissionFinMessage(message);
+            Clients.Client(Context.ConnectionId).receiveInMissionFinMessage(message);
         }
 
         public void SendFeedingSignalMessage(AgvFeedingSignal message)
         {
-            Clients.All.receiveFeedingSignalMessage(message);
+            Clients.Client(Context.ConnectionId).receiveFeedingSignalMessage(message);
         }
 
         public AgvInMisson SendMissonInOrder(AgvInMisson message)

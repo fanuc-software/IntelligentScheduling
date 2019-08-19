@@ -1,7 +1,72 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "单元订单监控";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<div ng-controller="mainController">
+    <div class="row" style="margin-top:10px">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+
+                        <th>单元名称</th>
+                        <th>ID</th>
+                        <th>产品</th>
+                        <th>物料</th>
+                        <th>操作</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr ng-repeat="x in main.tableNodes">
+                        <td>{{x.Name}}</td>
+                        <td> <span class="label label-primary">{{ x.StationId }}</span></td>
+                        <td> <span class="label label-info">{{ x.ProdeuctType }}</span></td>
+                        <td> <span class="label label-info">{{ x.MaterielType }}</span></td>
+                        <td>
+                            <button type="button" class="btn btn-primary" style="margin-right:5px;">毛坯出库→单元</button>
+                            <button type="button" class="btn btn-primary" style="margin-right:5px;">空箱回库→料库</button>
+                            <button type="button" class="btn btn-primary" style="margin-right:5px;">空箱出库→单元</button>
+                            <button type="button" class="btn btn-primary" style="margin-right:5px;">成品回库→料库</button>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        angular.module('todoApp', [])
+            .controller('mainController', function ($scope) {
+                var main = this;        
+                main.tableNodes = [];         
+                main.init = function () {
+                    main.client = $.connection.stationHub; 
+                    $(function () {
+                        $.connection.hub.start();
+
+                    });
+
+                    main.client.client.getAllStationInfo = function (message) { 
+                        main.tableNodes = [];
+                        for (var c in message) {
+                            main.tableNodes.push( message[c]);
+                        }                   
+                        $scope.$apply();
+                    };
+                 
+                }
+              
+                main.init();
+                $scope.main = main;
+            });
+
+    </script>
+}

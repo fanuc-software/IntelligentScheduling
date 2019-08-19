@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
+
 namespace AGV.Web.Service.Models
 {
     public class StaticData
@@ -12,23 +14,24 @@ namespace AGV.Web.Service.Models
         public static BlockingCollection<string> OrderName = new BlockingCollection<string>();
         public static ConcurrentDictionary<string, bool> SignalDict = new ConcurrentDictionary<string, bool>();
 
+        public static AppHostConfig AppHostConfig = new AppHostConfig();
 
         public static ConcurrentDictionary<string, List<ConfigNode>> ProductNodeDict = new ConcurrentDictionary<string, List<ConfigNode>>();
 
         static StaticData()
         {
-
-            var waitArr = new string[] { "Wait_B1_D1", "Wait_B2_D2", "Wait_E1_F1", "Wait_E2_F2", "Wait_A1", "Wait_A2" , "Wait_H2", "Wait_G2", "Wait_G1_H1" };
+            InitStationConfig();
+            var waitArr = new string[] { "Wait_B1_D1", "Wait_B2_D2", "Wait_E1_F1", "Wait_E2_F2", "Wait_A1", "Wait_A2", "Wait_H2", "Wait_G2", "Wait_G1_H1" };
             waitArr.ToList().ForEach(d =>
             {
                 WaitNodes.Add(new WaitNode() { Station = d, State = WaitNodeState.Free });
             });
             var listNode = WaitNodes.ToList();
-       
+
             // 3C单元 RX09
             ProductNodeDict.TryAdd("RX09_RAWIN", new List<ConfigNode>()
             {
-               
+
                  new ConfigNode()
                 {
                     Station ="Bool_E",
@@ -45,7 +48,7 @@ namespace AGV.Web.Service.Models
                 {
                     Station ="E",
                     Operation ="JackLoad",
-                    IsRequiredWait =false,                  
+                    IsRequiredWait =false,
                     ArrivalNotice=true,
                     Signal="AGVATPICK"
 
@@ -79,7 +82,7 @@ namespace AGV.Web.Service.Models
                 },
 
 
-            });           
+            });
             ProductNodeDict.TryAdd("RX09_EMPTYOUT", new List<ConfigNode>()
             {
 
@@ -560,5 +563,11 @@ namespace AGV.Web.Service.Models
             });
         }
 
+        static void InitStationConfig()
+        {
+            string jsonfile = HttpContext.Current.Server.MapPath($"~/jsconfig.json");
+            string info = System.IO.File.ReadAllText(jsonfile);
+            AppHostConfig = JsonConvert.DeserializeObject<AppHostConfig>(info);
+        }
     }
 }
