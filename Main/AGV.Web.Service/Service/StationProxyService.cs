@@ -1,58 +1,78 @@
 ﻿using Agv.Common;
-using AgvMissionManager;
+using AgvStationClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Configuration;
+using System.Web;
 
-namespace AgvStationClient
+namespace AGV.Web.Service.Service
 {
-    public abstract class BaseStationClient<T> where T : IStationDevice
+    public class StationProxyService : IDisposable
     {
-        public AgvStationEnum Station_Id { get; set; }
-
-        //private BaseAgvMissionService materialSrv;
-
-        private StationClientStateEnum lastState;
-        private string lastMessage;
-        private List<StationClientState> lastInfos = new List<StationClientState>();
-
-        public T StationDevice { get; }
-        CancellationTokenSource token = new CancellationTokenSource();
-        SignalrService signalrService;
-        AutoResetEvent resetEvent = new AutoResetEvent(false);
-        public event Action<StationClientState> SendStationClientStateMessageEvent;
-        static string signalrHost;
-
+        public AgvStationEnum Station_Id { private set; get; }
+        public IStationDevice StationDevice { private set; get; }
         private bool last_rawin_state = false;
         private bool last_emptyout_state = false;
         private bool last_finout_state = false;
         private bool last_emptyin_state = false;
+        public event Action<string, object> SendSingnalrEvent;
 
-        [Obsolete]
-        static BaseStationClient()
+        public event Action<string> SendLogEvent;
+
+        CancellationTokenSource token = new CancellationTokenSource();
+
+        public StationProxyService(AgvStationEnum id, IStationDevice stationDevice)
         {
-            signalrHost = System.Configuration.ConfigurationSettings.AppSettings["SignalrHost"];
-        }
-        public BaseStationClient(AgvStationEnum id, T device)
-        {
-            StationDevice = device;
             Station_Id = id;
-
-            signalrService = new SignalrService(signalrHost, "AgvMissonHub");
-            signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
-            {
-                OnAgvOutMissonEvent(s);
-            });
-            signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionFinMessage.EnumToString(), (s) =>
-            {
-                OnAgvInMissonEvent(s);
-            });
+            this.StationDevice = stationDevice;
         }
 
-        private void OnAgvInMissonEvent(AgvInMisson mission)
+        public void StartStationClentFlow()
+        {
+            while (!token.IsCancellationRequested)
+            {
+               
+                var ret = StationClientFlow();
+                if (ret == false)
+                {
+                    while (ret == false)
+                    {
+                        ret = StationDevice.SetAlarm(true);
+                        SendLogEvent?.Invoke(
+                            new StationClientState { State = StationClientStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!" }.ToString());
+                        Thread.Sleep(1000);
+                    }
+
+                    bool dev_reset = false;
+                    while (dev_reset == false)
+                    {
+                        StationDevice.GetReset(ref dev_reset);
+                        SendLogEvent?.Invoke(
+                            new StationClientState { State = StationClientStateEnum.INFO, Message = "物料调用失败,等待设备的复位信号" }.ToString());
+                        Thread.Sleep(1000);
+                    }
+                }
+
+                Thread.Sleep(1000);
+            }
+
+
+        }
+
+        public void FeedingSignalStart()
+        {
+            while (!token.IsCancellationRequested)
+            {
+                SendFeedingSignal();
+                Thread.Sleep(1000);
+
+            }
+
+
+        }
+
+        public void OnAgvInMissonEvent(AgvInMisson mission)
         {
             //毛坯空箱回库
             if (mission.Id.Equals(Station_Id + "_EMPTYOUT"))
@@ -67,7 +87,7 @@ namespace AgvStationClient
 
                         bool empty_out_confirm = true;
 
-                        while(empty_out_confirm)
+                        while (empty_out_confirm)
                         {
                             ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out_confirm);
                             if (ret_empty_out == true && empty_out_confirm == false)
@@ -106,7 +126,7 @@ namespace AgvStationClient
             }
         }
 
-        private void OnAgvOutMissonEvent(AgvOutMisson mission)
+        public void OnAgvOutMissonEvent(AgvOutMisson mission)
         {
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
@@ -158,86 +178,34 @@ namespace AgvStationClient
             }
         }
 
-        public void Start()
-        {
-            SendStationClientStateMessage(
-                new StationClientState { State = StationClientStateEnum.INFO, Message = "单元站点客户端开启!", CreateDateTime = DateTime.Now });
-
-            Task.Factory.StartNew(async () =>
-            {
-                await signalrService.Start();
-
-                while (!token.IsCancellationRequested)
-                {
-                    var ret = StationClientFlow();
-                    if (ret == false)
-                    {
-                        while (ret == false)
-                        {
-                            ret = StationDevice.SetAlarm(true);
-                            SendStationClientStateMessage(
-                                new StationClientState { State = StationClientStateEnum.ERROR, Message = "物料调用失败,发送错误信息至设备!", CreateDateTime = DateTime.Now });
-                            Thread.Sleep(1000);
-                        }
-
-                        bool dev_reset = false;
-                        while (dev_reset == false)
-                        {
-                            StationDevice.GetReset(ref dev_reset);
-                            SendStationClientStateMessage(
-                                new StationClientState { State = StationClientStateEnum.INFO, Message = "物料调用失败,等待设备的复位信号", CreateDateTime = DateTime.Now });
-                            Thread.Sleep(1000);
-                        }
-                    }
-
-                    Thread.Sleep(1000);
-                }
-            }, token.Token);
-
-
-            Task.Factory.StartNew(async () =>
-            {
-                await signalrService.Start();
-
-                while (!token.IsCancellationRequested)
-                {
-                    SendFeedingSignal();
-
-                    Thread.Sleep(1000);
-                }
-            }, token.Token);
-
-
-        }
 
         private void SendFeedingSignal()
         {
             var empty_in = false;
             var ret_empty_in = StationDevice.GetEmptyInFeedingSignal(ref empty_in);
-            if (ret_empty_in == true)
+            if (ret_empty_in)
             {
-                var dd = signalrService.Send(AgvSendActionEnum.SendFeedingSignalMessage.EnumToString(),
-                      new AgvFeedingSignal
-                      {
-                          Id = Station_Id + "_EMPTYIN",
-                          ClientId = Station_Id,
-                          Type = AgvMissionTypeEnum.EMPTY_IN,
-                          Value = empty_in,
-                      }).Result;
+                SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendFeedingSignalMessage.EnumToString(), new AgvFeedingSignal
+                {
+                    Id = Station_Id + "_EMPTYIN",
+                    ClientId = Station_Id,
+                    Type = AgvMissionTypeEnum.EMPTY_IN,
+                    Value = empty_in,
+                });
+
             }
 
             var raw_in = false;
             var ret_raw_in = StationDevice.GetRawInFeedingSignal(ref raw_in);
             if (ret_raw_in == true)
             {
-                var ff = signalrService.Send(AgvSendActionEnum.SendFeedingSignalMessage.EnumToString(),
-                     new AgvFeedingSignal
-                     {
-                         Id = Station_Id + "_RAWIN",
-                         ClientId = Station_Id,
-                         Type = AgvMissionTypeEnum.RAW_IN,
-                         Value = raw_in,
-                     }).Result;
+                SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendFeedingSignalMessage.EnumToString(), new AgvFeedingSignal
+                {
+                    Id = Station_Id + "_RAWIN",
+                    ClientId = Station_Id,
+                    Type = AgvMissionTypeEnum.RAW_IN,
+                    Value = raw_in,
+                });
             }
 
         }
@@ -247,7 +215,7 @@ namespace AgvStationClient
             //毛坯输入
             var raw_in = false;
             var ret = StationDevice.GetRawInRequireState(ref raw_in);
-            if (ret = true && raw_in == true && last_rawin_state==false)
+            if (ret = true && raw_in == true && last_rawin_state == false)
             {
                 System.Threading.Thread.Sleep(1000);
 
@@ -255,7 +223,7 @@ namespace AgvStationClient
                 {
                     var empty_out = false;
                     ret = StationDevice.GetEmptyOutState(ref empty_out);
-                    if (ret = true && empty_out == true && last_emptyout_state==false)
+                    if (ret = true && empty_out == true && last_emptyout_state == false)
                     {
                         string prod_type = "";
                         var ret_product_type = StationDevice.GetEmptyInProductType(ref prod_type);
@@ -293,7 +261,7 @@ namespace AgvStationClient
                         last_emptyout_state = empty_out;
                     }
 
-                    
+
                 }
 
                 //毛坯输入
@@ -335,13 +303,13 @@ namespace AgvStationClient
                 }
 
 
-                
+
             }
 
             //成品空箱输入
             var empty_in = false;
             ret = StationDevice.GetEmptyInState(ref empty_in);
-            if (ret = true && empty_in == true && last_emptyin_state==false)
+            if (ret = true && empty_in == true && last_emptyin_state == false)
             {
                 System.Threading.Thread.Sleep(1000);
 
@@ -349,7 +317,7 @@ namespace AgvStationClient
                 {
                     var fin_out = false;
                     ret = StationDevice.GetFinOutState(ref fin_out);
-                    if (ret = true && fin_out == true && last_finout_state==false)
+                    if (ret = true && fin_out == true && last_finout_state == false)
                     {
                         string prod_type = "";
                         var ret_product_type = StationDevice.GetFinOutProductType(ref prod_type);
@@ -432,7 +400,7 @@ namespace AgvStationClient
             {
                 var empty_out = false;
                 ret = StationDevice.GetEmptyOutState(ref empty_out);
-                if (ret = true && empty_out == true && last_emptyout_state==false)
+                if (ret = true && empty_out == true && last_emptyout_state == false)
                 {
                     string prod_type = "";
                     var ret_product_type = StationDevice.GetEmptyOutProductType(ref prod_type);
@@ -470,14 +438,14 @@ namespace AgvStationClient
                     last_emptyout_state = empty_out;
                 }
 
-                
+
             }
 
             //成品回库
             {
                 var fin_out = false;
                 ret = StationDevice.GetFinOutState(ref fin_out);
-                if (ret = true && fin_out == true && last_finout_state==false)
+                if (ret = true && fin_out == true && last_finout_state == false)
                 {
                     string prod_type = "";
                     var ret_product_type = StationDevice.GetFinOutProductType(ref prod_type);
@@ -515,58 +483,30 @@ namespace AgvStationClient
                     last_finout_state = fin_out;
                 }
 
-                
+
             }
 
             return true;
         }
 
-        private async void SendOutMission(AgvOutMisson mission)
+        private void SendOutMission(AgvOutMisson mission)
         {
-            SendStationClientStateMessage(
-                new StationClientState { State = StationClientStateEnum.INFO, Message = "出库请求:" + mission.Type.EnumToString(), CreateDateTime = DateTime.Now });
-
-            await signalrService.Send(AgvSendActionEnum.SendOutMission.EnumToString(), mission);
+            SendLogEvent?.Invoke(new StationClientState { State = StationClientStateEnum.INFO, Message = "出库请求:" + mission.Type.EnumToString() }.ToString());
+            SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendOutMission.EnumToString(), mission);
         }
 
-        private async void SendInMission(AgvInMisson mission)
+        private void SendInMission(AgvInMisson mission)
         {
-            SendStationClientStateMessage(
-                new StationClientState { State = StationClientStateEnum.INFO, Message = "入库请求:" + mission.Type.EnumToString(), CreateDateTime = DateTime.Now });
+            SendLogEvent?.Invoke(new StationClientState { State = StationClientStateEnum.INFO, Message = "入库请求:" + mission.Type.EnumToString() }.ToString());
+            SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendInMission.EnumToString(), mission);
 
-            await signalrService.Send(AgvSendActionEnum.SendInMission.EnumToString(), mission);
         }
 
-        private void SendStationClientStateMessage(StationClientState state)
+        public void Dispose()
         {
-            if (lastMessage != state.Message || lastState != state.State)
+            if (token != null)
             {
-                if (state.State == StationClientStateEnum.INFO)
-                {
-                    var lastInfo = lastInfos.Where(x => x.State == state.State && x.Message == state.Message && x.CreateDateTime > state.CreateDateTime.AddSeconds(-2)).FirstOrDefault();
-                    if (lastInfo != null) lastInfo.CreateDateTime = state.CreateDateTime;
-                    else
-                    {
-                        lastInfos.Add(state);
-
-                        SendStationClientStateMessageEvent?.Invoke(new StationClientState
-                        {
-                            State = state.State,
-                            Message = state.Message,
-                        });
-                    }
-                }
-                else
-                {
-                    SendStationClientStateMessageEvent?.Invoke(new StationClientState
-                    {
-                        State = state.State,
-                        Message = state.Message,
-                    });
-                }
-
-                lastMessage = state.Message;
-                lastState = state.State;
+                token.Cancel();
             }
         }
     }

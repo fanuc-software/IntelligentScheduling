@@ -11,6 +11,7 @@ using Hangfire.MySql.Core;
 using Owin;
 using System.Linq;
 using System.Web;
+using AGV.Web.Service.Service;
 
 [assembly: OwinStartup(typeof(AGV.Web.Service.Startup))]
 
@@ -18,6 +19,7 @@ namespace AGV.Web.Service
 {
     public class Startup
     {
+        public static List<string> ListJob = new List<string>();
         [Obsolete]
         public void Configuration(IAppBuilder app)
         {
@@ -49,7 +51,7 @@ namespace AGV.Web.Service
                   // Users
                   Users = new[]
                   {
-                        
+
                         new BasicAuthAuthorizationUser
                         {
                             Login = "admin",//用户名
@@ -67,6 +69,16 @@ namespace AGV.Web.Service
             app.UseHangfireDashboard("/hangfire", options);
             app.UseHangfireServer();
 
+            InitBackgroundJob();
         }
+        void InitBackgroundJob()
+        {
+            WebStationClient webClient = new WebStationClient();
+
+            var job1 = BackgroundJob.Enqueue(() => webClient.Start());
+           
+            ListJob.Add(job1);
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 {
+  "AppUrl": "http://localhost/agv",
   "Environment": "Development",
   "StationNodes": [
     {
@@ -6,24 +7,24 @@
       "StationId": "RX07",
       "ProdeuctType": 2,
       "MaterielType": 12,
-      "DevelopmentService": "TestStationDevice",
-      "ProductionService": "AllenBradleyClientDevice"
+      "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
+      "ProductionService": "AgvStationClient.AllenBradleyClientDevice"
     },
     {
       "Name": "汽车刹车盘单元",
       "StationId": "RX08",
       "ProdeuctType": 3,
       "MaterielType": 23,
-      "DevelopmentService": "TestStationDevice",
-      "ProductionService": "FanucRobotClientDevice"
+      "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
+      "ProductionService": "AgvStationClient.RX08FanucRobotClientDevice"
     },
     {
       "Name": "3C加工单元单元",
       "StationId": "RX09",
       "ProdeuctType": 1,
       "MaterielType": 18,
-      "DevelopmentService": "TestStationDevice",
-      "ProductionService": "FanucRobotClientDevice"
+      "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
+      "ProductionService": "AgvStationClient.RX09FanucRobotClientDevice"
     }
   ]
 

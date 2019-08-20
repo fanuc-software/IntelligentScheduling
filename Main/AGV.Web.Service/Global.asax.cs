@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AGV.Web.Service.Service;
+using Hangfire;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,12 +12,25 @@ namespace AGV.Web.Service
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+           
+
         }
+        public void Application_End(object sender, EventArgs e)
+        {
+            foreach (var item in Startup.ListJob)
+            {
+             
+                BackgroundJob.Delete(item);
+            }
+        }
+
+     
     }
 }

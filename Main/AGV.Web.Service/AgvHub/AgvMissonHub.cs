@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Agv.Common;
 using AGV.Web.Service.Models;
@@ -151,6 +152,11 @@ namespace AGV.Web.Service.AgvHub
         public void CloseAgvMission(string id)
         {
 
+        }
+
+        public override Task OnConnected()
+        {
+            return base.OnConnected();
         }
     }
 }

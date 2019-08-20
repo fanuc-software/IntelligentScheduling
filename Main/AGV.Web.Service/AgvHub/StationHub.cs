@@ -10,6 +10,12 @@ namespace AGV.Web.Service.AgvHub
     public class StationHub : Hub
     {
 
+        public void sendOrder(StationNodeConfig id, string propName)
+        {
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<AgvMissonHub>();
+            hubContext2.Clients.All.getClientOrder($"{id.StationId}|{id.ProdeuctType}|{id.MaterielType}|{propName}");
+
+        }
 
         public override Task OnConnected()
         {

@@ -205,6 +205,9 @@
     <Compile Include="Models\StationNodeConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\ServiceProxy.cs" />
+    <Compile Include="Service\StationProxyService.cs" />
+    <Compile Include="Service\TestStationDevice.cs" />
+    <Compile Include="Service\WebStationClient.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +277,10 @@
     <ProjectReference Include="..\..\MaterialService\Agv.Common\Agv.Common.csproj">
       <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
       <Name>Agv.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaterialService\AgvStationClient\AgvStationClient.csproj">
+      <Project>{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}</Project>
+      <Name>AgvStationClient</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
