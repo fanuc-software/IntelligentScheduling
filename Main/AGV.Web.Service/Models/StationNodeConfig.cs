@@ -9,6 +9,7 @@ namespace AGV.Web.Service.Models
     {
         public string Environment { get; set; }
 
+        public string AgvServiceUrl { get; set; }
         public string AppUrl { get; set; }
         public List<StationNodeConfig> StationNodes { get; set; }
     }

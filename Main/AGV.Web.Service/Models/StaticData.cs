@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
+using Agv.Common.Model;
 
 namespace AGV.Web.Service.Models
 {
@@ -12,6 +13,8 @@ namespace AGV.Web.Service.Models
         public static BlockingCollection<WaitNode> WaitNodes = new BlockingCollection<WaitNode>();
 
         public static BlockingCollection<string> OrderName = new BlockingCollection<string>();
+        public static BlockingCollection<AgvMissonModel> CurrentMissionOrder = new BlockingCollection<AgvMissonModel>();
+
         public static ConcurrentDictionary<string, bool> SignalDict = new ConcurrentDictionary<string, bool>();
 
         public static AppHostConfig AppHostConfig = new AppHostConfig();

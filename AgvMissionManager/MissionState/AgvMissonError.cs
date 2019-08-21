@@ -35,6 +35,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             carrycancel_inmission.CarryProcess = CarryMissonProcessEnum.CANCELED;
+            missionContext.SendAgvMisson(carrycancel_inmission);
+
             //TODO:添加异常处理
 
         }
@@ -66,6 +68,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             carrycancel_outmission.CarryProcess = CarryMissonProcessEnum.CANCELED;
+            missionContext.SendAgvMisson(carrycancel_outmission);
+
             // 添加异常处理
         }
     }
@@ -98,6 +102,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agvcancel_inmission.Process = AgvMissonProcessEnum.CANCELED;
+            missionContext.SendAgvMisson(agvcancel_inmission);
+
             // 添加异常处理
         }
     }
@@ -129,6 +135,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agvcancel_outmission.Process = AgvMissonProcessEnum.CANCELED;
+            missionContext.SendAgvMisson(agvcancel_outmission);
+
             // 添加异常处理
         }
     }

@@ -34,6 +34,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             currentMisson.CarryProcess = CarryMissonProcessEnum.CLOSE;
+            missionContext.SendAgvMisson(currentMisson);
+
         }
     }
 
@@ -65,6 +67,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             currentMisson.CarryProcess = CarryMissonProcessEnum.CLOSE;
+            missionContext.SendAgvMisson(currentMisson);
+
         }
     }
 
@@ -95,6 +99,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agvfinished_inmission.Process = AgvMissonProcessEnum.CLOSE;
+            missionContext.SendAgvMisson(agvfinished_inmission);
+
         }
     }
     /// <summary>
@@ -124,6 +130,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agvfinished_outmission.Process = AgvMissonProcessEnum.CLOSE;
+            missionContext.SendAgvMisson(agvfinished_outmission);
+
         }
     }
 

@@ -1,6 +1,9 @@
 ﻿using Agv.Common;
+using AGV.Web.Service.AgvHub;
 using AGV.Web.Service.Models;
 using AgvStationClient;
+using EventBus;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,32 +15,46 @@ namespace AGV.Web.Service.Service
 {
     public class WebStationClient : IDisposable
     {
-
-        SignalrService signalrService;
-
         AutoResetEvent resetEvent = new AutoResetEvent(false);
         public List<StationProxyService> stationProxyServices { set; get; } = new List<StationProxyService>();
-
+        SimpleEventBus eventBus;
         public WebStationClient()
         {
+            eventBus = SimpleEventBus.GetDefaultEventBus();
+            eventBus.Register(this);
             foreach (var item in StaticData.AppHostConfig.StationNodes)
             {
                 string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
                 IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
                 var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
-                proxy.SendSingnalrEvent += (s, e) => signalrService.Send(s, e).Wait();
+                proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
+                proxy.SendLogEvent += Proxy_SendLogEvent;
                 stationProxyServices.Add(proxy);
 
             }
 
         }
 
+        private void Proxy_SendLogEvent(string obj)
+        {
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<StationHub>();
+            if (hubContext2 != null)
+            {
+                hubContext2.Clients.All.getUnitLog(obj);
+
+            }
+        }
+
+        private void Proxy_SendSingnalrEvent(string arg1, object arg2)
+        {
+            var obj = Type.GetType($"AGV.Web.Service.Models.{arg1}");
+            var instance = Activator.CreateInstance(obj, new object[] { arg2 });
+
+            eventBus.Post(instance, TimeSpan.FromSeconds(1));
+        }
+
         public void Start()
         {
-            signalrService = new SignalrService(StaticData.AppHostConfig.AppUrl, "AgvMissonHub");
-            InitSignalarEvent();
-
-            signalrService.Start().Wait();
 
             Parallel.ForEach(stationProxyServices, item =>
             {
@@ -48,50 +65,52 @@ namespace AGV.Web.Service.Service
             resetEvent.WaitOne();
         }
 
-        private void InitSignalarEvent()
+        [EventSubscriber]
+        public void receiveOutMissionFinMessage(SendOutMissionFinMessage s)
         {
-            signalrService.OnMessage<AgvOutMisson>(AgvReceiveActionEnum.receiveOutMissionFinMessage.EnumToString(), (s) =>
-            {
-                stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s));
-            });
-            signalrService.OnMessage<AgvInMisson>(AgvReceiveActionEnum.receiveInMissionFinMessage.EnumToString(), (s) =>
-            {
-                stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s));
-            });
-            signalrService.OnMessage<string>("getClientOrder", (node) =>
-            {
-                string id = node.Split('|')[0];
-                string name = node.Split('|')[3];
-                string productType = node.Split('|')[1];
-                string materielType = node.Split('|')[2];
+            stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s.Model));
 
-                stationProxyServices.ForEach(d =>
-                {
-                    if (d.Station_Id.EnumToString() == id)
-                    {
-                        var obj = (d.StationDevice as TestStationDevice);
-                        if (obj != null)
-                        {
-                            // RawIn_Prod RawIn_Mate
-                            string preName = name.Split('_')[0];
-                            obj.GetType().GetProperty($"{preName}_Prod").SetValue(obj, productType);
-                            obj.GetType().GetProperty($"{preName}_Mate").SetValue(obj, materielType);
-                            obj.GetType().GetProperty(name).SetValue(obj, true);
+        }
+        [EventSubscriber]
+        public void receiveInMissionFinMessage(SendInMissionFinMessage s)
+        {
 
-                        }
-                    }
+            stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s.Model));
 
-                });
-
-            });
         }
 
+        [EventSubscriber]
+        public void getClientOrder(getClientOrder s)
+        {
+            var node = s.Model;
+            string id = node.Split('|')[0];
+            string name = node.Split('|')[3];
+            string productType = node.Split('|')[1];
+            string materielType = node.Split('|')[2];
 
+            stationProxyServices.ForEach(d =>
+            {
+                if (d.Station_Id.EnumToString() == id)
+                {
+                    var obj = (d.StationDevice as TestStationDevice);
+                    if (obj != null)
+                    {
+                        // RawIn_Prod RawIn_Mate
+                        string preName = name.Split('_')[0];
+                        obj.GetType().GetProperty($"{preName}_Prod").SetValue(obj, productType);
+                        obj.GetType().GetProperty($"{preName}_Mate").SetValue(obj, materielType);
+                        obj.GetType().GetProperty(name).SetValue(obj, true);
+
+                    }
+                }
+
+            });
+
+        }
         public void Dispose()
         {
-
-
             resetEvent.Reset();
+            eventBus.Deregister(this);
 
         }
     }

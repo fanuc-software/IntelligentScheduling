@@ -49,6 +49,9 @@
     <Reference Include="Dapper, Version=1.60.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dapper.1.60.6\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="EventBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=e3081d91662be497, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EventBus.1.1.2\lib\net461\EventBus.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentAssertions.4.1.0\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
@@ -200,6 +203,7 @@
     </Compile>
     <Compile Include="Models\AgvMissonExpand.cs" />
     <Compile Include="Models\ConfigNode.cs" />
+    <Compile Include="Models\event\eventbusModel.cs" />
     <Compile Include="Models\LocationNode.cs" />
     <Compile Include="Models\StaticData.cs" />
     <Compile Include="Models\StationNodeConfig.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="Service\ServiceProxy.cs" />
     <Compile Include="Service\StationProxyService.cs" />
     <Compile Include="Service\TestStationDevice.cs" />
+    <Compile Include="Service\WebAgvMissionManager.cs" />
     <Compile Include="Service\WebStationClient.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -221,6 +226,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\abp.signalr-client.js" />
     <Content Include="Scripts\abp.signalr.js" />
+    <Content Include="Scripts\angular-moment.min.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -274,6 +280,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AgvMissionManager\AgvMissionManager.csproj">
+      <Project>{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}</Project>
+      <Name>AgvMissionManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MaterialService\Agv.Common\Agv.Common.csproj">
       <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
       <Name>Agv.Common</Name>

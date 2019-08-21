@@ -24,6 +24,8 @@ namespace AgvMissionManager.MissionState
         public BlockingCollection<AgvInMissonModel> MissionInNodes { get; set; }
         public BlockingCollection<AgvOutMissonModel> MissionOutNodes { get; set; }
         public IControlDevice carryDevice;
+        public event Action<AgvMissonModel> SendAgvMissonEvent;
+
 
         public MissionContext()
         {
@@ -39,6 +41,15 @@ namespace AgvMissionManager.MissionState
             carryDevice = new AllenBradleyControlDevice();
         }
 
+        public void ClearNodes()
+        {
+            MissionInNodes = new BlockingCollection<AgvInMissonModel>();
+            MissionOutNodes = new BlockingCollection<AgvOutMissonModel>();
+        }
+        public void SendAgvMisson(AgvMissonModel obj)
+        {
+            SendAgvMissonEvent?.Invoke(obj);
+        }
         public void Init()
         {
             undo_inmissions = MissionInNodes
@@ -69,8 +80,8 @@ namespace AgvMissionManager.MissionState
                 if (ret_whoutmission == false)
                 {
                     processAction();
-
-                    while (ret_whoutmission == false)
+                    int maxCount = 10;
+                    while (ret_whoutmission == false && maxCount-- > 0)
                     {
                         ret_whoutmission = SetAlarm(true);
                         SendAgvMissionServiceStateMessage(
@@ -84,7 +95,8 @@ namespace AgvMissionManager.MissionState
                     }
 
                     bool dev_reset = false;
-                    while (dev_reset == false)
+                    maxCount = 10;
+                    while (dev_reset == false && maxCount-- > 0)
                     {
                         GetReset(ref dev_reset);
                         SendAgvMissionServiceStateMessage(

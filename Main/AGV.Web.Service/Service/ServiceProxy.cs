@@ -154,8 +154,9 @@ namespace AGV.Web.Service
         private string _baseUrl = "http://192.168.1.203:55200/v1";
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
 
-        public Client()
+        public Client(string url)
         {
+            _baseUrl = url;
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(() =>
             {
                 var settings = new Newtonsoft.Json.JsonSerializerSettings() { Converters = new List<Newtonsoft.Json.JsonConverter>() { new IsoDateTimeConverter() } };

@@ -74,10 +74,13 @@ namespace AGV.Web.Service
         void InitBackgroundJob()
         {
             WebStationClient webClient = new WebStationClient();
-
+            WebAgvMissionManager webAgvMission = new WebAgvMissionManager();
             var job1 = BackgroundJob.Enqueue(() => webClient.Start());
-           
+            var job2 = BackgroundJob.Enqueue(() => webAgvMission.Start());
+
             ListJob.Add(job1);
+            ListJob.Add(job2);
+
         }
 
     }

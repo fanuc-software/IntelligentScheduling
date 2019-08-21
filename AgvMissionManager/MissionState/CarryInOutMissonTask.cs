@@ -35,6 +35,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             warehouse_inmission.CarryProcess = CarryMissonProcessEnum.WHSTART;
+            missionContext.SendAgvMisson(warehouse_inmission);
+
             missionContext.DoWork(() => WareHouseInMission(warehouse_inmission), () =>
             {
                 //TODO:添加料库入库错误后的动作
@@ -95,6 +97,7 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             warehouse_outmission.CarryProcess = CarryMissonProcessEnum.WHSTART;
+            missionContext.SendAgvMisson(warehouse_outmission);
 
             missionContext.DoWork(() => WareHouseOutMission(warehouse_outmission), () =>
             {

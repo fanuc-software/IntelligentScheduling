@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Agv.Common;
+using Agv.Common.Model;
 using AGV.Web.Service.Models;
 using Microsoft.AspNet.SignalR;
 
@@ -82,28 +83,28 @@ namespace AGV.Web.Service.AgvHub
 
         public void SendOutMission(AgvOutMisson message)
         {
-            Clients.Client(Context.ConnectionId).receiveOutMissionMessage(message);
+            Clients.All.receiveOutMissionMessage(message);
         }
 
         public void SendInMission(AgvInMisson message)
         {
 
-            Clients.Client(Context.ConnectionId).receiveInMissionMessage(message);
+            Clients.All.receiveInMissionMessage(message);
         }
 
         public void SendOutMissionFinMessage(AgvOutMisson message)
         {
-            Clients.Client(Context.ConnectionId).receiveOutMissionFinMessage(message);
+            Clients.All.receiveOutMissionFinMessage(message);
         }
 
         public void SendInMissionFinMessage(AgvInMisson message)
         {
-            Clients.Client(Context.ConnectionId).receiveInMissionFinMessage(message);
+            Clients.All.receiveInMissionFinMessage(message);
         }
 
         public void SendFeedingSignalMessage(AgvFeedingSignal message)
         {
-            Clients.Client(Context.ConnectionId).receiveFeedingSignalMessage(message);
+            Clients.All.receiveFeedingSignalMessage(message);
         }
 
         public AgvInMisson SendMissonInOrder(AgvInMisson message)
@@ -112,8 +113,9 @@ namespace AGV.Web.Service.AgvHub
 
             try
             {
-                var client = new Client();
+                var client = new Client(StaticData.AppHostConfig.AgvServiceUrl);
                 string id = $"{message.Id}_{ message.TimeId}";
+                StaticData.OrderName.Add(id);
                 client.TransportOrders2(id, message.AgvMissonToTransportOrder());
                 hubContext2.Clients.All.queryOrder(id);
                 return message;
@@ -132,8 +134,10 @@ namespace AGV.Web.Service.AgvHub
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
             try
             {
-                var client = new Client();
+                var client = new Client(StaticData.AppHostConfig.AgvServiceUrl);
                 string id = $"{message.Id}_{ message.TimeId}";
+                StaticData.OrderName.Add(id);
+
                 client.TransportOrders2(id, message.AgvMissonToTransportOrder());
 
 
@@ -154,9 +158,15 @@ namespace AGV.Web.Service.AgvHub
 
         }
 
-        public override Task OnConnected()
+        public void SendAgvLog(string info)
         {
-            return base.OnConnected();
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<StationHub>();           
+            hubContext2.Clients.All.getAgvLog(info);
+        }
+        public void SendAgvStateLog(AgvMissonModel model)
+        {
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<StationHub>();
+            hubContext2.Clients.All.getAgvStateLog(model);
         }
     }
 }

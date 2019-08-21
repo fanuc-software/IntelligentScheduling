@@ -8,10 +8,19 @@ namespace Agv.Common
 {
     public enum AgvStationEnum
     {
-        WareHouse=1,
-        RX07=2,
-        RX08=3,
-        RX09=4,
-        RX10=5,
+        [System.Runtime.Serialization.EnumMember(Value = @"WareHouse")]
+        WareHouse = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RX07")]
+        RX07 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RX08")]
+        RX08 = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RX09")]
+        RX09 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"RX10")]
+        RX10 = 5,
     }
 }

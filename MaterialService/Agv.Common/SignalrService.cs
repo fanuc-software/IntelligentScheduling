@@ -13,6 +13,8 @@ namespace Agv.Common
         private HubConnection hubConnect;
         private IHubProxy hubProxy;
 
+        public event Action SinglarConnectedEvent;
+
         public SignalrService(string url, string name)
         {
             this.url = url;
@@ -28,12 +30,15 @@ namespace Agv.Common
             try
             {
                 await hubConnect.Start();
+
             }
             catch (Exception ex)
             {
 
-
+                throw;
             }
+
+
 
         }
         public void OnMessage<T>(string actionName, Action<T> doAction)
@@ -45,17 +50,18 @@ namespace Agv.Common
             if (hubConnect != null && hubConnect.State == ConnectionState.Connected)
             {
 
-              return  await hubProxy.Invoke<T>(actionName, obj);
+                return await hubProxy.Invoke<T>(actionName, obj);
 
             }
             return default(T);
         }
 
-        private async void HubConnect_StateChanged(StateChange obj)
+        private void HubConnect_StateChanged(StateChange obj)
         {
-            if (obj.NewState == ConnectionState.Disconnected)
+            if (obj.NewState == ConnectionState.Connected)
             {
-                await Start();
+                SinglarConnectedEvent?.Invoke();
+                //  await Start();
             }
         }
     }

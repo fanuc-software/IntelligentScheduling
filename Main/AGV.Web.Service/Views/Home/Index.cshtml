@@ -14,8 +14,9 @@
     <div class="row" style="margin-top:30px;text-align:center">
         <div class="col-md-12">
             <button type="button" class="btn btn-primary" ng-click="main.sendTask()">发送订单</button>
-            <button type="button" class="btn btn-primary" ng-click="main.clearWait()">释放所有等待信号</button>
-            <button type="button" class="btn btn-primary" ng-click="main.queryWait()">查询所有等待信号</button>
+            <button type="button" class="btn btn-info" ng-click="main.queryWait()">查询所有等待信号</button>
+            <button type="button" class="btn btn-danger" ng-click="main.clearWait()">释放所有等待信号</button>
+            <button type="button" class="btn btn-danger" ng-click="main.clearAgvOrder()">清除AGV订单</button>
 
         </div>
     </div>
@@ -166,12 +167,12 @@
     <div class="row" style="margin-top:10px" ng-show="main.signlrNodes.length>0">
         <div class="alert alert-info alert-dismissible" role="alert">
             <div style="float:left;margin-right:10px;margin-top:10px" ng-repeat="x in main.signlrNodes">
-                <span class="label label-success" >
+                <span class="label label-success">
 
                 </span>
 
             </div>
-       
+
 
         </div>
     </div>
@@ -342,6 +343,10 @@
                     main.isShowWaitInfo = true;
                     main.client.server.queryWaitSignal();
 
+                };
+                main.clearAgvOrder = function () {
+                    main.client.server.clearAgvOrder();
+                    main.orderNodes = [];
                 };
                 main.init();
                 $scope.main = main;

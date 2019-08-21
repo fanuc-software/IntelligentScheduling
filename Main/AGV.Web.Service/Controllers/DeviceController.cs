@@ -1,5 +1,6 @@
 ﻿using AGV.Web.Service.AgvHub;
 using AGV.Web.Service.Models;
+using EventBus;
 using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,10 @@ namespace AGV.Web.Service.Controllers
     public class DeviceController : Controller
     {
 
+        public DeviceController()
+        {
 
+        }
 
         public JsonResult Init()
         {
@@ -30,14 +34,18 @@ namespace AGV.Web.Service.Controllers
                 var key = $"{keyArr[0]}_{keyArr[1]}";
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<AgvMissonHub>();
                 hubContext.Clients.All.agvStateChange(id);
+
+                var eventBus = SimpleEventBus.GetDefaultEventBus();
+                eventBus.Post(new agvStateChange(id), TimeSpan.FromSeconds(1));
+
                 var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
                 hubContext2.Clients.All.agvSignalChange(id);
                 if (keyArr.Length >= 3)
                 {
-                  
+
                     hubContext2.Clients.All.agvOrderArrived(id);
                 }
-            
+
                 return Json(new { state = true, id = id }, JsonRequestBehavior.AllowGet);
             }
             bool isArrived = false;

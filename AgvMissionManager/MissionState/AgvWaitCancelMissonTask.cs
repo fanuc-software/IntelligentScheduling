@@ -61,6 +61,7 @@ namespace AgvMissionManager.MissionState
                 missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendLastWaitEndSignal.EnumToString(), mission.Id), () =>
               {
                   mission.Process = AgvMissonProcessEnum.AGVATPLACE;
+                  missionContext.SendAgvMisson(mission);
 
               }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.AGVOUTPREPLACEWAIT);
             }
@@ -122,6 +123,7 @@ namespace AgvMissionManager.MissionState
                 missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendFirstWaitEndSignal.EnumToString(), mission.Id), () =>
                  {
                      mission.Process = AgvMissonProcessEnum.AGVATPICK;
+                     missionContext.SendAgvMisson(mission);
 
                  }, "通知小车等待结束失败", AgvMissionServiceErrorCodeEnum.AGVINPREPICKWAIT);
             }
@@ -161,6 +163,7 @@ namespace AgvMissionManager.MissionState
             agv_outmissions_atprepick.CarryProcess = CarryMissonProcessEnum.CLOSE;
 
             //TODO：添加出料道传感器信号
+            missionContext.SendAgvMisson(agv_outmissions_atprepick);
 
 
             missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendFirstWaitEndSignal.EnumToString(), agv_outmissions_atprepick.Id), () =>
@@ -205,6 +208,7 @@ namespace AgvMissionManager.MissionState
             agv_inmissions_atpreplace.Process = AgvMissonProcessEnum.AGVATPLACE;
 
             //TODO：添加出料道传感器信号
+            missionContext.SendAgvMisson(agv_inmissions_atpreplace);
 
 
             missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendLastWaitEndSignal.EnumToString(), agv_inmissions_atpreplace.Id), () =>

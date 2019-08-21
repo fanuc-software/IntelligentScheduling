@@ -1,4 +1,5 @@
 ﻿using Agv.Common;
+using Agv.Common.Model;
 using AgvStationClient;
 using System;
 using System.Collections.Generic;
@@ -72,12 +73,12 @@ namespace AGV.Web.Service.Service
 
         }
 
-        public void OnAgvInMissonEvent(AgvInMisson mission)
+        public void OnAgvInMissonEvent(AgvInMissonModel mission)
         {
             //毛坯空箱回库
             if (mission.Id.Equals(Station_Id + "_EMPTYOUT"))
             {
-                if (mission.Process > AgvInMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvInMissonProcessEnum.CANCEL & mission.Process != AgvInMissonProcessEnum.CANCELED)
+                if (mission.Process > AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool empty_out = false;
                     var ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out);
@@ -102,7 +103,7 @@ namespace AGV.Web.Service.Service
             //成品回库
             if (mission.Id.Equals(Station_Id + "_FINOUT"))
             {
-                if (mission.Process > AgvInMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvInMissonProcessEnum.CANCEL & mission.Process != AgvInMissonProcessEnum.CANCELED)
+                if (mission.Process > AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool fin_out = false;
                     var ret_fin_out = StationDevice.GetFinOutState(ref fin_out);
@@ -126,12 +127,12 @@ namespace AGV.Web.Service.Service
             }
         }
 
-        public void OnAgvOutMissonEvent(AgvOutMisson mission)
+        public void OnAgvOutMissonEvent(AgvOutMissonModel mission)
         {
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
             {
-                if (mission.Process > AgvOutMissonProcessEnum.AGVPLACEDANDLEAVE && mission.Process != AgvOutMissonProcessEnum.CANCEL & mission.Process != AgvOutMissonProcessEnum.CANCELED)
+                if (mission.Process > AgvMissonProcessEnum.AGVPLACEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool raw_in = false;
                     var ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in);
@@ -155,7 +156,7 @@ namespace AGV.Web.Service.Service
             //成品空箱输入
             if (mission.Id.Equals(Station_Id + "_EMPTYIN"))
             {
-                if (mission.Process == AgvOutMissonProcessEnum.FINISHED)
+                if (mission.Process == AgvMissonProcessEnum.FINISHED)
                 {
                     bool empty_in = false;
                     var ret_empty_in = StationDevice.GetEmptyInState(ref empty_in);
@@ -242,7 +243,7 @@ namespace AGV.Web.Service.Service
                             return false;
                         }
 
-                        SendInMission(new AgvInMisson
+                        SendInMission(new AgvInMissonModel
                         {
                             Id = Station_Id + "_EMPTYOUT",
                             TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -250,8 +251,8 @@ namespace AGV.Web.Service.Service
                             Type = AgvMissionTypeEnum.EMPTY_OUT,
                             PickStationId = Station_Id,
                             PlaceStationId = AgvStationEnum.WareHouse,
-                            Process = AgvInMissonProcessEnum.NEW,
-                            CarryProcess = CarryInMissonProcessEnum.NEW,
+                            Process = AgvMissonProcessEnum.NEW,
+                            CarryProcess = CarryMissonProcessEnum.NEW,
                             Quantity = 0,
                             MaterialId = material_type,
                             ProductId = prod_type,
@@ -283,7 +284,7 @@ namespace AGV.Web.Service.Service
                         return false;
                     }
 
-                    SendOutMission(new AgvOutMisson
+                    SendOutMission(new AgvOutMissonModel
                     {
                         Id = Station_Id + "_RAWIN",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -291,8 +292,8 @@ namespace AGV.Web.Service.Service
                         Type = AgvMissionTypeEnum.RAW_IN,
                         PickStationId = AgvStationEnum.WareHouse,
                         PlaceStationId = Station_Id,
-                        Process = AgvOutMissonProcessEnum.NEW,
-                        CarryProcess = CarryOutMissonProcessEnum.NEW,
+                        Process = AgvMissonProcessEnum.NEW,
+                        CarryProcess = CarryMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -336,7 +337,7 @@ namespace AGV.Web.Service.Service
                             return false;
                         }
 
-                        SendInMission(new AgvInMisson
+                        SendInMission(new AgvInMissonModel
                         {
                             Id = Station_Id + "_FINOUT",
                             TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -344,8 +345,8 @@ namespace AGV.Web.Service.Service
                             Type = AgvMissionTypeEnum.FIN_OUT,
                             PickStationId = Station_Id,
                             PlaceStationId = AgvStationEnum.WareHouse,
-                            Process = AgvInMissonProcessEnum.NEW,
-                            CarryProcess = CarryInMissonProcessEnum.NEW,
+                            Process = AgvMissonProcessEnum.NEW,
+                            CarryProcess = CarryMissonProcessEnum.NEW,
                             Quantity = 0,
                             MaterialId = material_type,
                             ProductId = prod_type,
@@ -375,7 +376,7 @@ namespace AGV.Web.Service.Service
                         return false;
                     }
 
-                    SendOutMission(new AgvOutMisson
+                    SendOutMission(new AgvOutMissonModel
                     {
                         Id = Station_Id + "_EMPTYIN",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -383,8 +384,8 @@ namespace AGV.Web.Service.Service
                         Type = AgvMissionTypeEnum.EMPTY_IN,
                         PickStationId = AgvStationEnum.WareHouse,
                         PlaceStationId = Station_Id,
-                        Process = AgvOutMissonProcessEnum.NEW,
-                        CarryProcess = CarryOutMissonProcessEnum.NEW,
+                        Process = AgvMissonProcessEnum.NEW,
+                        CarryProcess = CarryMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -419,7 +420,7 @@ namespace AGV.Web.Service.Service
                         return false;
                     }
 
-                    SendInMission(new AgvInMisson
+                    SendInMission(new AgvInMissonModel
                     {
                         Id = Station_Id + "_EMPTYOUT",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -427,8 +428,8 @@ namespace AGV.Web.Service.Service
                         Type = AgvMissionTypeEnum.EMPTY_OUT,
                         PickStationId = Station_Id,
                         PlaceStationId = AgvStationEnum.WareHouse,
-                        Process = AgvInMissonProcessEnum.NEW,
-                        CarryProcess = CarryInMissonProcessEnum.NEW,
+                        Process = AgvMissonProcessEnum.NEW,
+                        CarryProcess = CarryMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -464,7 +465,7 @@ namespace AGV.Web.Service.Service
                         return false;
                     }
 
-                    SendInMission(new AgvInMisson
+                    SendInMission(new AgvInMissonModel
                     {
                         Id = Station_Id + "_FINOUT",
                         TimeId = DateTime.Now.ToString("yyMMddmmssff"),
@@ -472,8 +473,8 @@ namespace AGV.Web.Service.Service
                         Type = AgvMissionTypeEnum.FIN_OUT,
                         PickStationId = Station_Id,
                         PlaceStationId = AgvStationEnum.WareHouse,
-                        Process = AgvInMissonProcessEnum.NEW,
-                        CarryProcess = CarryInMissonProcessEnum.NEW,
+                        Process = AgvMissonProcessEnum.NEW,
+                        CarryProcess = CarryMissonProcessEnum.NEW,
                         Quantity = 0,
                         MaterialId = material_type,
                         ProductId = prod_type,
@@ -489,13 +490,13 @@ namespace AGV.Web.Service.Service
             return true;
         }
 
-        private void SendOutMission(AgvOutMisson mission)
+        private void SendOutMission(AgvOutMissonModel mission)
         {
             SendLogEvent?.Invoke(new StationClientState { State = StationClientStateEnum.INFO, Message = "出库请求:" + mission.Type.EnumToString() }.ToString());
             SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendOutMission.EnumToString(), mission);
         }
 
-        private void SendInMission(AgvInMisson mission)
+        private void SendInMission(AgvInMissonModel mission)
         {
             SendLogEvent?.Invoke(new StationClientState { State = StationClientStateEnum.INFO, Message = "入库请求:" + mission.Type.EnumToString() }.ToString());
             SendSingnalrEvent?.Invoke(AgvSendActionEnum.SendInMission.EnumToString(), mission);

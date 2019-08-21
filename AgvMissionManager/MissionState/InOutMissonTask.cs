@@ -39,6 +39,7 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             new_inmission.Process = AgvMissonProcessEnum.START;
+            missionContext.SendAgvMisson(new_inmission);
         }
     }
 
@@ -83,6 +84,8 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             new_outmission.Process = AgvMissonProcessEnum.START;
+            missionContext.SendAgvMisson(new_outmission);
+
         }
     }
 }

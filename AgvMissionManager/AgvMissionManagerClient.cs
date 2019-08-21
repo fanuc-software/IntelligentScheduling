@@ -13,34 +13,33 @@ namespace AgvMissionManager
 {
     public class AgvMissionManagerClient
     {
-        private SignalrService signalrService;
 
-        private static string signalrHost;
         private MissionContext missionContext;
         private BlockingCollection<AgvFeedingSignal> feedingSignals = new BlockingCollection<AgvFeedingSignal>();
 
         public event Action<AgvMissonModel, bool> AgvMissonChangeEvent;
         private List<IMissionState> missionStates;
         public event Action<string> ShowLogEvent;
+        public event Action<string, object> SendSignalrEvent;
+        public event Action<AgvMissonModel> SendAgvMissonEvent;
         private CancellationTokenSource token;
 
-        [Obsolete]
-        static AgvMissionManagerClient()
-        {
-            signalrHost = System.Configuration.ConfigurationSettings.AppSettings["SignalrHost"];
-
-        }
 
         public AgvMissionManagerClient()
         {
             missionContext = new MissionContext();
             missionContext.SendAgvMissionServiceStateMessageEvent += (obj) => ShowLogEvent?.Invoke(obj);
-            missionContext.SendSignalrEvent += (action, obj) => signalrService.Send(action, obj.ToString()).Wait();
-            InitMissionState();
-            InitSignlar();
-        }
+            missionContext.SendSignalrEvent += (action, obj) => SendSignalrEvent?.Invoke(action, obj);
+            missionContext.SendAgvMissonEvent += (s) => SendAgvMissonEvent?.Invoke(s);
 
-        public async Task Start()
+            InitMissionState();
+
+        }
+        public void Clear()
+        {
+            missionContext.ClearNodes();
+        }
+        public void Start()
         {
             if (token != null && !token.IsCancellationRequested)
             {
@@ -50,31 +49,33 @@ namespace AgvMissionManager
             var startState = new AgvMissionServiceState { State = AgvMissionServiceStateEnum.INFO, Message = "小车管理服务启动", ErrorCode = AgvMissionServiceErrorCodeEnum.NORMAL };
             ShowLogEvent?.Invoke(startState.ToString());
 
-            await Task.Factory.StartNew(async d =>
-             {
-                 while (!token.IsCancellationRequested)
-                 {
-                     missionContext.Init();
-                   
-                     foreach (var item in missionStates)
-                     {
-                         if (item.CanRequest())
-                         {
-                             ShowLogEvent?.Invoke($"【Time:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}】{item.Condition()}");
-                             item.Handle();
-                         }
+            while (!token.IsCancellationRequested)
+            {
+                missionContext.Init();
 
-                     }
+                foreach (var item in missionStates)
+                {
+                    if (item.CanRequest())
+                    {
+                        ShowLogEvent?.Invoke($"【Time:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}】{item.Condition()}");
+                        item.Handle();
+                    }
 
-                     missionContext.PushTask();
-                     await Task.Delay(1000);
-                 }
+                }
 
-
-             }, token.Token);
+                missionContext.PushTask();
+                Thread.Sleep(1000);
+            }
 
         }
+        public void Cancel()
+        {
+            if (token != null)
+            {
+                token.Cancel();
 
+            }
+        }
 
         private void InitMissionState()
         {
@@ -82,92 +83,71 @@ namespace AgvMissionManager
             {
                 new InMissonTask(missionContext), new OutMissonTask(missionContext),
                 new CarryInMissonTask(missionContext), new CarryOutMissonTask(missionContext),
+                new AgvInMissonTask(missionContext),new AgvOutMissonTask(missionContext),
                 new AgvFromCarryToUnitWaitCancelTask(missionContext),new AgvToCarryMaterialWaitCancelTask(missionContext),
                 new AgvToCarryTakeMaterialWaitCancelTask(missionContext),new AgvToCarrySetMaterialWaitCancelTask(missionContext),
                 new CarryMissonInFinished(missionContext),new CarryMissonOutFinished(missionContext),
                 new AgvMissonInFinished(missionContext),new AgvMissonOutFinished(missionContext),
-                new AgvInMissonTask(missionContext),new AgvOutMissonTask(missionContext),
                 new CarryMissonInCancel(missionContext),new CarryMissonOutCancel(missionContext),
                 new AgvMissonInCancel(missionContext),new AgvMissonOutCancel(missionContext)
             };
         }
-        private async void InitSignlar()
+
+        #region 外部接口
+
+        public void AgvStateChange(string s)
         {
-            signalrService = new SignalrService(signalrHost, "AgvMissonHub");
             try
             {
-                await signalrService.Start();
+                var data = s.Split('_');
+                var obj = missionContext.MissionOutNodes.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                if (obj != null)
+                {
+                    obj.Process = (AgvMissonProcessEnum)Enum.Parse(typeof(AgvMissonProcessEnum), data[2]);
+                    SendAgvMissonEvent?.Invoke(obj);
 
+                }
+                var objIn = missionContext.MissionInNodes.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
+                if (objIn != null)
+                {
+                    objIn.Process = (AgvMissonProcessEnum)Enum.Parse(typeof(AgvMissonProcessEnum), data[2]);
+                    SendAgvMissonEvent?.Invoke(obj);
+
+                }
             }
             catch (Exception ex)
             {
-                ShowLogEvent?.Invoke("Signlar Error:" + ex.Message);
-
+                ShowLogEvent?.Invoke("AgvStateChange Error:" + ex.Message);
 
             }
-            signalrService.OnMessage<AgvOutMissonModel>(AgvReceiveActionEnum.receiveOutMissionMessage.EnumToString(), (s) =>
-            {
-                PushOutMission(s);
-            });
-            signalrService.OnMessage<AgvInMissonModel>(AgvReceiveActionEnum.receiveInMissionMessage.EnumToString(), (s) =>
-            {
-                PushInMission(s);
-            });
-
-            signalrService.OnMessage<AgvFeedingSignal>(AgvReceiveActionEnum.receiveFeedingSignalMessage.EnumToString(), (s) =>
-            {
-                UpdataFeedingSignal(s);
-            });
-            signalrService.OnMessage<string>(AgvReceiveActionEnum.agvStateChange.EnumToString(), (s) =>
-            {
-
-                try
-                {
-                    var data = s.Split('_');
-                    var obj = missionContext.MissionOutNodes.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
-                    if (obj != null)
-                    {
-                        obj.Process = (AgvMissonProcessEnum)Enum.Parse(typeof(AgvMissonProcessEnum), data[2]);
-                    }
-                    var objIn = missionContext.MissionInNodes.LastOrDefault(d => d.Id == $"{data[0]}_{data[1]}");
-                    if (objIn != null)
-                    {
-                        objIn.Process = (AgvMissonProcessEnum)Enum.Parse(typeof(AgvMissonProcessEnum), data[2]);
-                    }
-                }
-                catch (Exception)
-                {
-
-
-                }
-
-            });
         }
 
-        #region 外部接口
-        private void PushOutMission(AgvOutMissonModel mission)
+        public void PushOutMission(AgvOutMissonModel mission)
         {
             if (missionContext.MissionOutNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count() == 0)
             {
                 mission.AgvProcessChangeEvent += (obj, state) => AgvMissonChangeEvent?.Invoke(obj, state);
                 AgvMissonChangeEvent?.Invoke(mission, true);
                 missionContext.MissionOutNodes.Add(mission);
+                SendAgvMissonEvent?.Invoke(mission);
             }
         }
 
-        private void PushInMission(AgvInMissonModel mission)
+        public void PushInMission(AgvInMissonModel mission)
         {
             if (missionContext.MissionInNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count() == 0)
             {
                 mission.AgvProcessChangeEvent += (s, e) => AgvMissonChangeEvent?.Invoke(s, e);
                 AgvMissonChangeEvent?.Invoke(mission, true);
                 missionContext.MissionInNodes.Add(mission);
+                SendAgvMissonEvent?.Invoke(mission);
+
             }
         }
 
 
 
-        private void UpdataFeedingSignal(AgvFeedingSignal signal)
+        public void UpdataFeedingSignal(AgvFeedingSignal signal)
         {
             var sig = feedingSignals.Where(x => x.Id == signal.Id).FirstOrDefault();
             if (sig == null)

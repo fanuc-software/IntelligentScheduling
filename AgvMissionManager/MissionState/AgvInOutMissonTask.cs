@@ -35,12 +35,16 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agv_inmission.Process = AgvMissonProcessEnum.AGVSTART;
+            missionContext.SendAgvMisson(agv_inmission);
 
             missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendMissonInOrder.EnumToString(), agv_inmission), () =>
             {
                 agv_inmission.Process = AgvMissonProcessEnum.CANCEL;
+                missionContext.SendAgvMisson(agv_inmission);
+
 
             }, "小车搬运入库任务失败", AgvMissionServiceErrorCodeEnum.AGVIN);
+
         }
     }
 
@@ -58,7 +62,7 @@ namespace AgvMissionManager.MissionState
         }
         public bool CanRequest()
         {
-            agv_outmission = missionContext. undo_outmissions.Where(x => x.Process == AgvMissonProcessEnum.START).FirstOrDefault();
+            agv_outmission = missionContext.undo_outmissions.Where(x => x.Process == AgvMissonProcessEnum.START).FirstOrDefault();
             return agv_outmission != null;
 
         }
@@ -71,10 +75,12 @@ namespace AgvMissionManager.MissionState
         public void Handle()
         {
             agv_outmission.Process = AgvMissonProcessEnum.AGVSTART;
+            missionContext.SendAgvMisson(agv_outmission);
 
             missionContext.DoWork(() => missionContext.AgvPushMission(AgvSendActionEnum.SendMissonOutOrder.EnumToString(), agv_outmission), () =>
             {
                 agv_outmission.Process = AgvMissonProcessEnum.CANCEL;
+                missionContext.SendAgvMisson(agv_outmission);
 
             }, "小车搬运出库任务失败", AgvMissionServiceErrorCodeEnum.AGVOUT);
         }

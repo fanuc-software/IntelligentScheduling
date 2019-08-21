@@ -17,7 +17,7 @@ namespace AGV.Web.Service.AgvHub
         {
             try
             {
-                client = new Client();
+                client = new Client(StaticData.AppHostConfig.AgvServiceUrl);
 
             }
             catch (Exception ex)
@@ -39,6 +39,7 @@ namespace AGV.Web.Service.AgvHub
             {
                 order = new AgvInMisson() { Id = id }.AgvMissonToTransportOrder(name);
                 client.TransportOrders2(name, order);
+                StaticData.OrderName.Add(name);
                 Clients.All.queryOrder(name);
 
 
@@ -85,22 +86,26 @@ namespace AGV.Web.Service.AgvHub
 
 
         }
+
+        public void clearAgvOrder()
+        {
+            StaticData.OrderName = new System.Collections.Concurrent.BlockingCollection<string>();
+        }
         public void loadAllOrder()
         {
-            //var list = client.TransportOrdersAll();
-            //int index = 1;
-            //foreach (var item in list)
-            //{
-            //    if (index++ <= 10)
-            //    {
-            //        Clients.All.getCurrentOrder(item.Name);
-            //    }
+            int index = 1;
+            foreach (var item in StaticData.OrderName)
+            {
+                if (index++ <= 10)
+                {
+                    Clients.All.getCurrentOrder(item);
+                }
 
-            //}
+            }
         }
         public override Task OnConnected()
         {
-            Clients.Client(Context.ConnectionId).getAllAgvOrder(StaticData.ProductNodeDict);         
+            Clients.Client(Context.ConnectionId).getAllAgvOrder(StaticData.ProductNodeDict);
             return base.OnConnected();
         }
     }
