@@ -89,7 +89,20 @@ namespace AGV.Web.Service.AgvHub
 
         public void clearAgvOrder()
         {
+            foreach (var item in StaticData.OrderName)
+            {
+                try
+                {
+                    client.Withdrawal2(item);
+                }
+                catch (Exception )
+                {
+
+                    
+                }
+            }
             StaticData.OrderName = new System.Collections.Concurrent.BlockingCollection<string>();
+            
         }
         public void loadAllOrder()
         {
