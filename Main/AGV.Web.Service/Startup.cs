@@ -5,9 +5,8 @@ using System.Data;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Dashboard;
-using Hangfire.Storage;
 using Microsoft.Owin;
-using Hangfire.MySql.Core;
+using Hangfire.MemoryStorage;
 using Owin;
 using System.Linq;
 using System.Web;
@@ -26,18 +25,8 @@ namespace AGV.Web.Service
 
             // 有关如何配置应用程序的详细信息，请访问 https://go.microsoft.com/fwlink/?LinkID=316888
             app.MapSignalR();
-
-            GlobalConfiguration.Configuration
-                .UseStorage(new MySqlStorage(ConfigurationManager.ConnectionStrings["DB_Service"].ConnectionString, new MySqlStorageOptions
-                {
-                    QueuePollInterval = TimeSpan.FromSeconds(15),
-                    JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                    CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                    PrepareSchemaIfNecessary = true,
-                    DashboardJobListLimit = 50000,
-                    TransactionTimeout = TimeSpan.FromMinutes(1),
-                    TablePrefix = "Hangfire"
-                }));
+          
+            GlobalConfiguration.Configuration .UseStorage(new MemoryStorage());
 
 
             var filter = new BasicAuthAuthorizationFilter(
@@ -66,6 +55,7 @@ namespace AGV.Web.Service
                 AuthorizationFilters = new IAuthorizationFilter[] { filter }
 
             };
+            
             app.UseHangfireDashboard("/hangfire", options);
             app.UseHangfireServer();
 
