@@ -111,7 +111,7 @@ namespace AGV.Web.Service.AgvHub
             {
                 if (index++ <= 10)
                 {
-                    Clients.All.getCurrentOrder(item);
+                    Clients.All.queryOrder(item);
                 }
 
             }

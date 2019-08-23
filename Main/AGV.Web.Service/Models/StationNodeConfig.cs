@@ -11,6 +11,10 @@ namespace AGV.Web.Service.Models
 
         public string AgvServiceUrl { get; set; }
         public string AppUrl { get; set; }
+
+        public string DevelopmentCarryDevice { get; set; }
+
+        public string ProductionCarryDevice { get; set; }
         public List<StationNodeConfig> StationNodes { get; set; }
     }
 

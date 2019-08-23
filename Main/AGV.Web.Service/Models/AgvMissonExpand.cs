@@ -1,4 +1,5 @@
 ﻿using Agv.Common;
+using Agv.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,12 @@ namespace AGV.Web.Service.Models
 {
     public static class AgvMissonExpand
     {
+        public static TransportOrder AgvMissonToTransportOrder(this AgvMissonModel agvInMisson, string name = "")
+        {
+            return GetOrder(agvInMisson.Id, name);
+        }
+
+  
         public static TransportOrder AgvMissonToTransportOrder(this AgvInMisson agvInMisson, string name = "")
         {
             return GetOrder(agvInMisson.Id, name);

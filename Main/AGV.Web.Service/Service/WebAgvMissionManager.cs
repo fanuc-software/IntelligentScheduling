@@ -22,7 +22,13 @@ namespace AGV.Web.Service.Service
         {
             eventBus = SimpleEventBus.GetDefaultEventBus();
             eventBus.Register(this);
-            agvMissionManagerClient = new AgvMissionManagerClient();
+
+            var className = StaticData.AppHostConfig.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}CarryDevice").GetValue(StaticData.AppHostConfig).ToString();
+            //   RightCarryService.IControlDevice dObj = Activator.CreateInstance(Type.GetType(className)) as RightCarryService.IControlDevice;
+
+
+
+            agvMissionManagerClient = new AgvMissionManagerClient(new TestStationDevice() as RightCarryService.IControlDevice);
             agvMissionManagerClient.SendAgvMissonEvent += AgvMissionManagerClient_SendAgvMissonEvent;
             agvMissionManagerClient.SendSignalrEvent += AgvMissionManagerClient_SendSignalrEvent;
             agvMissionManagerClient.ShowLogEvent += AgvMissionManagerClient_ShowLogEvent;
@@ -30,12 +36,48 @@ namespace AGV.Web.Service.Service
 
         private void AgvMissionManagerClient_SendSignalrEvent(string arg1, object arg2)
         {
-
+            if (arg1 == "SendMissonInOrder" || arg1 == "SendMissonOutOrder")
+            {
+                SendMissonOrder(arg2 as AgvMissonModel);
+                return;
+            }
+            if (arg1 == "SendFirstWaitEndSignal")
+            {
+                new AgvMissonHub().SendFirstWaitEndSignal(arg2.ToString());
+                return;
+            }
+            if (arg1 == "SendLastWaitEndSignal")
+            {
+                new AgvMissonHub().SendLastWaitEndSignal(arg2.ToString());
+                return;
+            }
             var obj = Type.GetType($"AGV.Web.Service.Models.{arg1}");
             var instance = Activator.CreateInstance(obj, new object[] { arg2 });
             eventBus.Post(instance, TimeSpan.FromSeconds(1));
+           
         }
+        private void SendMissonOrder(AgvMissonModel message)
+        {
+            var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
+            try
+            {
+                var client = new Client(StaticData.AppHostConfig.AgvServiceUrl);
+                string id = $"{message.Id}_{ message.TimeId}";
+                StaticData.OrderName.Add(id);
+                var order = new AgvInMissonModel() { Id = message.Id }.AgvMissonToTransportOrder();
 
+                client.TransportOrders2(id, order);
+
+
+                hubContext2.Clients.All.queryOrder(id);
+            }
+            catch (Exception ex)
+            {
+                hubContext2.Clients.All.pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+
+            }
+
+        }
         public void Start()
         {
 
@@ -62,6 +104,12 @@ namespace AGV.Web.Service.Service
             }
 
         }
+        [EventSubscriber]
+        public void carryJobFinish(CarryJobFinish carryJobFinish)
+        {
+            agvMissionManagerClient.CarryJobFinish();
+        }
+
         [EventSubscriber]
         public void Clear(ClearMissionNode clear)
         {

@@ -38,6 +38,13 @@ namespace AGV.Web.Service.AgvHub
             }
 
         }
+
+        public void carryJobFinish()
+        {
+            eventBus.Post(new CarryJobFinish(), TimeSpan.FromSeconds(1));
+
+        }
+
         public void sendOrder(StationNodeConfig id, string propName)
         {
             var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<AgvMissonHub>();

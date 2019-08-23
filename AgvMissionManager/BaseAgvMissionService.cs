@@ -59,7 +59,7 @@ namespace AgvMissionManager
 
             //测试用
             //实例化 RightCarryService\AllenBradleyControlDevice
-            //carryDevice = new TestControlDevice();
+         //   carryDevice = new TestControlDevice();
             carryDevice = new AllenBradleyControlDevice();
 
             signalrService = new SignalrService(signalrHost, "AgvMissonHub");

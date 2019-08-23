@@ -18,6 +18,10 @@ namespace RightCarryService
         public bool Reset { get; set; }
         public int Qty { get; set; }
 
+        public TestControlDevice()
+        {
+
+        }
         public bool SetRHouseProductType(int prod_type)
         {
             Product_Type = prod_type;

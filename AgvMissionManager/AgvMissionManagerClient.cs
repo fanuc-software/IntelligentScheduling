@@ -1,6 +1,7 @@
 ﻿using Agv.Common;
 using Agv.Common.Model;
 using AgvMissionManager.MissionState;
+using RightCarryService;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -25,15 +26,20 @@ namespace AgvMissionManager
         private CancellationTokenSource token;
 
 
-        public AgvMissionManagerClient()
+        public AgvMissionManagerClient(IControlDevice _carryDevice)
         {
-            missionContext = new MissionContext();
+            missionContext = new MissionContext(_carryDevice);
             missionContext.SendAgvMissionServiceStateMessageEvent += (obj) => ShowLogEvent?.Invoke(obj);
             missionContext.SendSignalrEvent += (action, obj) => SendSignalrEvent?.Invoke(action, obj);
             missionContext.SendAgvMissonEvent += (s) => SendAgvMissonEvent?.Invoke(s);
 
             InitMissionState();
 
+        }
+
+        public void CarryJobFinish()
+        {
+            missionContext.FinishCarryJob();
         }
         public void Clear()
         {

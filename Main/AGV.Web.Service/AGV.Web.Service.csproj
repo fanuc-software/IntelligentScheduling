@@ -283,6 +283,10 @@
       <Project>{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}</Project>
       <Name>AgvStationClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RightCarryService\RightCarryService.csproj">
+      <Project>{2130dca2-bcdb-4117-aee7-16abe1f8d503}</Project>
+      <Name>RightCarryService</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

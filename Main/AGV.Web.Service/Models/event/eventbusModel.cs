@@ -7,7 +7,10 @@ using System.Web;
 
 namespace AGV.Web.Service.Models
 {
-
+    public class CarryJobFinish
+    { 
+    
+    }
     public class agvStateChange
     {
         public string Model { private set; get; }

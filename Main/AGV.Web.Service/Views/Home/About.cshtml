@@ -44,7 +44,11 @@
     <div class="row" style="margin-top:10px">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">订单列表 <button type="button" class="btn btn-danger" ng-click="main.clearOrder()">清除订单</button></div>
+                <div class="panel-heading">
+                    订单列表
+                    <button type="button" class="btn btn-danger" ng-click="main.clearOrder()">清除订单</button>
+                    <button type="button" class="btn btn-success" ng-click="main.carryJobFinish()">搬运完成</button>
+                </div>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -147,6 +151,9 @@
                         $scope.$apply();
                     };
                     main.client.client.getAgvStateLog = function (node) {
+                        if (node == null) {
+                            return;
+                        }
                         console.log(node);
                         var isFind = false;
                         angular.forEach(main.orderNodes, function (item) {
@@ -167,6 +174,9 @@
                 main.clearLog = function () {
                     main.logNodes = [];
 
+                };
+                main.carryJobFinish = function () {
+                    main.client.server.carryJobFinish();
                 };
                 main.pushOrder = function (node, propName) {
                     main.client.server.sendOrder(node, propName);

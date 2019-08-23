@@ -2,6 +2,8 @@
   "AppUrl": "http://localhost:55562/",
   "AgvServiceUrl": "http://192.168.1.203:55200/v1",
   "Environment": "Development",
+  "DevelopmentCarryDevice": "RightCarryService.TestControlDevice",
+  "ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
   "StationNodes": [
     {
       "Name": "工业实训单元",

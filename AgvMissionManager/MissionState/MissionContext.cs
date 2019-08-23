@@ -27,8 +27,10 @@ namespace AgvMissionManager.MissionState
         public event Action<AgvMissonModel> SendAgvMissonEvent;
 
 
-        public MissionContext()
+        public MissionContext(IControlDevice _carryDevice)
         {
+            carryDevice = _carryDevice;
+
             brotherMissionType = new Dictionary<AgvMissionTypeEnum, AgvMissionTypeEnum>();
             MissionInNodes = new BlockingCollection<AgvInMissonModel>();
             MissionOutNodes = new BlockingCollection<AgvOutMissonModel>();
@@ -37,8 +39,22 @@ namespace AgvMissionManager.MissionState
 
             //测试用
             //实例化 RightCarryService\AllenBradleyControlDevice
-            //carryDevice = new TestControlDevice();
-            carryDevice = new AllenBradleyControlDevice();
+           
+
+           // carryDevice = new TestControlDevice();
+          //  carryDevice = new AllenBradleyControlDevice();
+        }
+
+        public void FinishCarryJob()
+        {
+            if ((carryDevice as TestControlDevice) != null)
+            {
+                (carryDevice as TestControlDevice).Fin = true;
+                Thread.Sleep(1000);
+                (carryDevice as TestControlDevice).Fin = false;
+
+            }
+
         }
 
         public void ClearNodes()
@@ -61,16 +77,16 @@ namespace AgvMissionManager.MissionState
         }
         public void PushTask()
         {
-            foreach (var undo in undo_inmissions)
-            {
-                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
-            }
+            //foreach (var undo in undo_inmissions)
+            //{
+            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
+            //}
 
-            foreach (var undo in undo_outmissions)
-            {
-                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
+            //foreach (var undo in undo_outmissions)
+            //{
+            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
 
-            }
+            //}
         }
         public void DoWork(Func<bool> ret_action, Action processAction, string message, AgvMissionServiceErrorCodeEnum codeEnum)
         {
