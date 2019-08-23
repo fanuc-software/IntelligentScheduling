@@ -23,11 +23,10 @@ namespace AGV.Web.Service.Service
             eventBus = SimpleEventBus.GetDefaultEventBus();
             eventBus.Register(this);
 
-            var className = StaticData.AppHostConfig.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}CarryDevice").GetValue(StaticData.AppHostConfig).ToString();
-            //   RightCarryService.IControlDevice dObj = Activator.CreateInstance(Type.GetType(className)) as RightCarryService.IControlDevice;
+            string className = StaticData.AppHostConfig.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}CarryDevice").GetValue(StaticData.AppHostConfig).ToString();
 
-
-
+            //RightCarryService.IControlDevice dObj = Activator.CreateInstance(Type.GetType(className)) as RightCarryService.IControlDevice;
+            
             agvMissionManagerClient = new AgvMissionManagerClient(new TestStationDevice() as RightCarryService.IControlDevice);
             agvMissionManagerClient.SendAgvMissonEvent += AgvMissionManagerClient_SendAgvMissonEvent;
             agvMissionManagerClient.SendSignalrEvent += AgvMissionManagerClient_SendSignalrEvent;
