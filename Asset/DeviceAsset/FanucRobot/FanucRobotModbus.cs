@@ -25,6 +25,8 @@ namespace DeviceAsset
         
         public OperateResult Write(FanucRobotDataConfig dataConfig, string dataValue)
         {
+
+
             try
             {
                 var ret = false;
@@ -125,6 +127,9 @@ namespace DeviceAsset
 
         private bool ReadDI(string adr, ref bool data)
         {
+            var clinet = new ModbusMachine(ModbusType.Tcp, IP, null, false, 2, 0);
+            clinet.Connect();
+
             int iAdr;
             var ret = int.TryParse(adr, out iAdr);
             if (ret != true) return ret;
@@ -144,16 +149,18 @@ namespace DeviceAsset
 
             for (int j = 0; j < MaxRecon; j++)
             {
-                _clinet.GetAddresses = addresses;
-                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+                clinet.GetAddresses = addresses;
+                var ans = clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
                 if (ans != null)
                 {
                     data = ans["DI" + adr].PlcValue > 0 ? true : false;
+                    clinet.Disconnect();
                     return true;
                 }
             }
-            
+
+            clinet.Disconnect();
             return false;
 
 
@@ -161,6 +168,9 @@ namespace DeviceAsset
 
         private bool ReadDO(string adr, ref bool data)
         {
+            var clinet = new ModbusMachine(ModbusType.Tcp, IP, null, false, 2, 0);
+            clinet.Connect();
+
             int iAdr;
             var ret = int.TryParse(adr, out iAdr);
             if (ret != true) return ret;
@@ -180,21 +190,26 @@ namespace DeviceAsset
 
             for (int j = 0; j < MaxRecon; j++)
             {
-                _clinet.GetAddresses = addresses;
-                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+                clinet.GetAddresses = addresses;
+                var ans = clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
                 if (ans != null)
                 {
                     data = ans["DO" + adr].PlcValue > 0 ? true : false;
+                    clinet.Disconnect();
                     return true;
                 }
             }
 
+            clinet.Disconnect();
             return false;
         }
 
         private bool WriteDI(string adr, bool data)
         {
+            var clinet = new ModbusMachine(ModbusType.Tcp, IP, null, false, 2, 0);
+            clinet.Connect();
+
             int iAdr;
             var ret = int.TryParse(adr, out iAdr);
             if (ret != true) return ret;
@@ -213,16 +228,20 @@ namespace DeviceAsset
             for (int j = 0; j < MaxRecon; j++)
             {
                 ret = AsyncHelper.RunSync(() =>
-                    _clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
+                    clinet.BaseUtility.GetUtilityMethods<IUtilityMethodWriteSingle>().SetSingleDataAsync(div_adr, dic[div_adr] >= 1));
 
                 if (ret == true) break;
             }
 
+            clinet.Disconnect();
             return ret;
         }
 
         private bool ReadGO(string adr, ref ushort data)
         {
+            var clinet = new ModbusMachine(ModbusType.Tcp, IP, null, false, 2, 0);
+            clinet.Connect();
+
             int iAdr;
             var ret = int.TryParse(adr, out iAdr);
             if (ret != true) return ret;
@@ -251,8 +270,8 @@ namespace DeviceAsset
 
             for (int j = 0; j < MaxRecon; j++)
             {
-                _clinet.GetAddresses = addresses;
-                var ans = _clinet.GetDatas(MachineGetDataType.CommunicationTag);
+                clinet.GetAddresses = addresses;
+                var ans = clinet.GetDatas(MachineGetDataType.CommunicationTag);
 
                 if (ans != null)
                 {
@@ -261,6 +280,7 @@ namespace DeviceAsset
                 }
             }
 
+            clinet.Disconnect();
             return false;
         }
 

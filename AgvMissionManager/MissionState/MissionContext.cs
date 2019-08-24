@@ -65,6 +65,11 @@ namespace AgvMissionManager.MissionState
         public void SendAgvMisson(AgvMissonModel obj)
         {
             SendAgvMissonEvent?.Invoke(obj);
+            //if (obj != null)
+            //{
+            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(),  obj as AgvInMissonModel);
+            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), obj as AgvOutMissonModel);
+            //}
         }
         public void Init()
         {
@@ -77,16 +82,16 @@ namespace AgvMissionManager.MissionState
         }
         public void PushTask()
         {
-            //foreach (var undo in undo_inmissions)
-            //{
-            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
-            //}
+            foreach (var undo in undo_inmissions)
+            {
+                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
+            }
 
-            //foreach (var undo in undo_outmissions)
-            //{
-            //    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
+            foreach (var undo in undo_outmissions)
+            {
+                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
 
-            //}
+            }
         }
         public void DoWork(Func<bool> ret_action, Action processAction, string message, AgvMissionServiceErrorCodeEnum codeEnum)
         {

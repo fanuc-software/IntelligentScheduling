@@ -92,12 +92,12 @@ namespace AGV.Web.Service.AgvHub
             Clients.All.receiveInMissionMessage(message);
         }
 
-        public void SendOutMissionFinMessage(AgvOutMisson message)
+        public void SendOutMissionFinMessage(AgvOutMissonModel message)
         {
             Clients.All.receiveOutMissionFinMessage(message);
         }
 
-        public void SendInMissionFinMessage(AgvInMisson message)
+        public void SendInMissionFinMessage(AgvInMissonModel message)
         {
             Clients.All.receiveInMissionFinMessage(message);
         }

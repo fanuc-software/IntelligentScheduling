@@ -1,4 +1,5 @@
 ﻿using Agv.Common;
+using Agv.Common.Model;
 using AGV.Web.Service.AgvHub;
 using AGV.Web.Service.Models;
 using AgvStationClient;
@@ -24,12 +25,31 @@ namespace AGV.Web.Service.Service
             eventBus.Register(this);
             foreach (var item in StaticData.AppHostConfig.StationNodes)
             {
-                string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
-                IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
-                var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
-                proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
-                proxy.SendLogEvent += Proxy_SendLogEvent;
-                stationProxyServices.Add(proxy);
+                //string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
+                //IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
+                //var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
+                //proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
+                //proxy.SendLogEvent += Proxy_SendLogEvent;
+                //stationProxyServices.Add(proxy);
+
+                switch(item.StationId)
+                {
+                    case "RX08":
+                        IStationDevice dObj1 = new RX08FanucRobotClientDevice();
+                        var proxy1 = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj1);
+                        proxy1.SendSingnalrEvent += Proxy_SendSingnalrEvent;
+                        proxy1.SendLogEvent += Proxy_SendLogEvent;
+                        stationProxyServices.Add(proxy1);
+                        break;
+                    default:
+                        string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
+                        IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
+                        var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
+                        proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
+                        proxy.SendLogEvent += Proxy_SendLogEvent;
+                        stationProxyServices.Add(proxy);
+                        break;
+                }
 
             }
 
@@ -66,16 +86,16 @@ namespace AGV.Web.Service.Service
         }
 
         [EventSubscriber]
-        public void receiveOutMissionFinMessage(SendOutMissionFinMessage s)
+        public void receiveOutMissionFinMessage(AgvOutMissonModel s)
         {
-            stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s.Model));
+            stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s));
 
         }
         [EventSubscriber]
-        public void receiveInMissionFinMessage(SendInMissionFinMessage s)
+        public void receiveInMissionFinMessage(AgvInMissonModel s)
         {
 
-            stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s.Model));
+            stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s));
 
         }
 

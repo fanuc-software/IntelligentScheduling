@@ -78,7 +78,7 @@ namespace AGV.Web.Service.Service
             //毛坯空箱回库
             if (mission.Id.Equals(Station_Id + "_EMPTYOUT"))
             {
-                if (mission.Process > AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
+                if (mission.Process == AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool empty_out = false;
                     var ret_empty_out = StationDevice.GetEmptyOutState(ref empty_out);
@@ -103,7 +103,7 @@ namespace AGV.Web.Service.Service
             //成品回库
             if (mission.Id.Equals(Station_Id + "_FINOUT"))
             {
-                if (mission.Process > AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
+                if (mission.Process == AgvMissonProcessEnum.AGVPICKEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool fin_out = false;
                     var ret_fin_out = StationDevice.GetFinOutState(ref fin_out);
@@ -132,12 +132,14 @@ namespace AGV.Web.Service.Service
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
             {
-                if (mission.Process > AgvMissonProcessEnum.AGVPLACEDANDLEAVE && mission.Process != AgvMissonProcessEnum.CANCEL & mission.Process != AgvMissonProcessEnum.CANCELED)
+                if (mission.Process == AgvMissonProcessEnum.FINISHED && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool raw_in = false;
                     var ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in);
                     if (ret_raw_in == true && raw_in == true)
                     {
+                        Console.WriteLine("RAWIN_" + DateTime.Now);
+
                         StationDevice.SetRawInFin(true);
 
                         bool raw_in_confirm = true;
@@ -156,7 +158,7 @@ namespace AGV.Web.Service.Service
             //成品空箱输入
             if (mission.Id.Equals(Station_Id + "_EMPTYIN"))
             {
-                if (mission.Process == AgvMissonProcessEnum.FINISHED)
+                if (mission.Process == AgvMissonProcessEnum.FINISHED && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool empty_in = false;
                     var ret_empty_in = StationDevice.GetEmptyInState(ref empty_in);

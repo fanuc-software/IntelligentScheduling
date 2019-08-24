@@ -5,6 +5,7 @@ using AGV.Web.Service.Models;
 using AgvMissionManager;
 using EventBus;
 using Microsoft.AspNet.SignalR;
+using RightCarryService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace AGV.Web.Service.Service
 
             //RightCarryService.IControlDevice dObj = Activator.CreateInstance(Type.GetType(className)) as RightCarryService.IControlDevice;
             
-            agvMissionManagerClient = new AgvMissionManagerClient(new TestStationDevice() as RightCarryService.IControlDevice);
+            agvMissionManagerClient = new AgvMissionManagerClient(new TestControlDevice() as RightCarryService.IControlDevice);
             agvMissionManagerClient.SendAgvMissonEvent += AgvMissionManagerClient_SendAgvMissonEvent;
             agvMissionManagerClient.SendSignalrEvent += AgvMissionManagerClient_SendSignalrEvent;
             agvMissionManagerClient.ShowLogEvent += AgvMissionManagerClient_ShowLogEvent;
@@ -38,6 +39,16 @@ namespace AGV.Web.Service.Service
             if (arg1 == "SendMissonInOrder" || arg1 == "SendMissonOutOrder")
             {
                 SendMissonOrder(arg2 as AgvMissonModel);
+                return;
+            }
+            if (arg1 == "SendInMissionFinMessage")
+            {
+                new AgvMissonHub().SendInMissionFinMessage(arg2 as AgvInMissonModel);
+                return;
+            }
+            if (arg1 == "SendOutMissionFinMessage")
+            {
+                new AgvMissonHub().SendOutMissionFinMessage(arg2 as AgvOutMissonModel);
                 return;
             }
             if (arg1 == "SendFirstWaitEndSignal")
