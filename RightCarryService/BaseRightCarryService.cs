@@ -31,6 +31,8 @@ namespace RightCarryService
 
         public bool CarryIn(string product, string material)
         {
+            product = "1";
+
             lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
@@ -187,6 +189,8 @@ namespace RightCarryService
 
         public bool CarryOut(string product, string material, ref int quantity)
         {
+            product = "1";
+
             lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
