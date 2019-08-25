@@ -69,6 +69,10 @@
       <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>
       <Name>Agv.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\MaterialService\AgvStationClient\AgvStationClient.csproj">
+      <Project>{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}</Project>
+      <Name>AgvStationClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MaterialService\RightMaterialService\RightMaterialService.csproj">
       <Project>{943BEBC8-E05E-417F-9273-FFD1F2E10D31}</Project>
       <Name>RightMaterialService</Name>

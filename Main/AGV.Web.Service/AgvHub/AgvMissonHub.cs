@@ -92,14 +92,14 @@ namespace AGV.Web.Service.AgvHub
             Clients.All.receiveInMissionMessage(message);
         }
 
-        public void SendOutMissionFinMessage(AgvOutMissonModel message)
-        {
-            Clients.All.receiveOutMissionFinMessage(message);
-        }
-
         public void SendInMissionFinMessage(AgvInMissonModel message)
         {
             Clients.All.receiveInMissionFinMessage(message);
+        }
+
+        public void SendOutMissionFinMessage(AgvOutMissonModel message)
+        {
+            Clients.All.receiveOutMissionFinMessage(message);
         }
 
         public void SendFeedingSignalMessage(AgvFeedingSignal message)

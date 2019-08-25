@@ -41,16 +41,6 @@ namespace AGV.Web.Service.Service
                 SendMissonOrder(arg2 as AgvMissonModel);
                 return;
             }
-            if (arg1 == "SendInMissionFinMessage")
-            {
-                new AgvMissonHub().SendInMissionFinMessage(arg2 as AgvInMissonModel);
-                return;
-            }
-            if (arg1 == "SendOutMissionFinMessage")
-            {
-                new AgvMissonHub().SendOutMissionFinMessage(arg2 as AgvOutMissonModel);
-                return;
-            }
             if (arg1 == "SendFirstWaitEndSignal")
             {
                 new AgvMissonHub().SendFirstWaitEndSignal(arg2.ToString());

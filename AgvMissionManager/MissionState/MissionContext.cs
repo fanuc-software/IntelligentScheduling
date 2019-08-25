@@ -84,12 +84,14 @@ namespace AgvMissionManager.MissionState
         {
             foreach (var undo in undo_inmissions)
             {
-                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
+                //if(undo.Process==AgvMissonProcessEnum.AGVPICKEDANDLEAVE)
+                    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendInMissionFinMessage.EnumToString(), undo);
             }
 
             foreach (var undo in undo_outmissions)
             {
-                SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
+                //if (undo.Process == AgvMissonProcessEnum.FINISHED)
+                    SendSignalrEvent?.Invoke(AgvSendActionEnum.SendOutMissionFinMessage.EnumToString(), undo);
 
             }
         }

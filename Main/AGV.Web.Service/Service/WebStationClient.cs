@@ -86,16 +86,16 @@ namespace AGV.Web.Service.Service
         }
 
         [EventSubscriber]
-        public void receiveOutMissionFinMessage(AgvOutMissonModel s)
+        public void receiveOutMissionFinMessage(SendOutMissionFinMessage s)
         {
-            stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s));
+            stationProxyServices.ForEach(d => d.OnAgvOutMissonEvent(s.Model));
 
         }
         [EventSubscriber]
-        public void receiveInMissionFinMessage(AgvInMissonModel s)
+        public void receiveInMissionFinMessage(SendInMissionFinMessage s)
         {
 
-            stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s));
+            stationProxyServices.ForEach(d => d.OnAgvInMissonEvent(s.Model));
 
         }
 
