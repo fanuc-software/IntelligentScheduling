@@ -1,7 +1,8 @@
 {
   "AppUrl": "http://localhost:55562/",
   "AgvServiceUrl": "http://192.168.1.203:55200/v1",
-  "Environment": "Development",
+  "Environment": "Production",
+  "AppBinPath": "F:\\Work\\Fanuc\\IntelligentScheduling\\Main\\AGV.Web.Service\\bin",
   "DevelopmentCarryDevice": "RightCarryService.TestControlDevice",
   "ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
   "StationNodes": [
@@ -18,7 +19,7 @@
       "StationId": "RX08",
       "ProdeuctType": 3,
       "MaterielType": 23,
-      "DevelopmentService": "AGV.Web.Service.Service.RX08FanucRobotClientDevice",
+      "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
       "ProductionService": "AgvStationClient.RX08FanucRobotClientDevice"
     },
     {

@@ -8,6 +8,7 @@ using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -25,31 +26,26 @@ namespace AGV.Web.Service.Service
             eventBus.Register(this);
             foreach (var item in StaticData.AppHostConfig.StationNodes)
             {
-                //string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
-                //IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
-                //var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
-                //proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
-                //proxy.SendLogEvent += Proxy_SendLogEvent;
-                //stationProxyServices.Add(proxy);
-
-                switch(item.StationId)
+                IStationDevice dObj = null;
+                string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
+                if (Type.GetType(className) == null)
                 {
-                    case "RX08":
-                        IStationDevice dObj1 = new RX08FanucRobotClientDevice();
-                        var proxy1 = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj1);
-                        proxy1.SendSingnalrEvent += Proxy_SendSingnalrEvent;
-                        proxy1.SendLogEvent += Proxy_SendLogEvent;
-                        stationProxyServices.Add(proxy1);
-                        break;
-                    default:
-                        string className = item.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}Service").GetValue(item).ToString();
-                        IStationDevice dObj = Activator.CreateInstance(Type.GetType(className)) as IStationDevice;
-                        var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
-                        proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
-                        proxy.SendLogEvent += Proxy_SendLogEvent;
-                        stationProxyServices.Add(proxy);
-                        break;
+                    string path = $@"{StaticData.AppHostConfig.AppBinPath}\AgvStationClient.dll";
+                  
+                    var assembly = Assembly.LoadFrom(path);
+                    var tpe = assembly.GetType(className);
+                    dObj = Activator.CreateInstance(tpe) as IStationDevice;
+
                 }
+                else
+                {
+                    dObj = Assembly.GetAssembly(Type.GetType(className)).CreateInstance(className) as IStationDevice;
+                }
+
+                var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
+                proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
+                proxy.SendLogEvent += Proxy_SendLogEvent;
+                stationProxyServices.Add(proxy);
 
             }
 

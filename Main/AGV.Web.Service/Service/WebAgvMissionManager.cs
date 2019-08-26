@@ -9,6 +9,7 @@ using RightCarryService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Web;
 
@@ -26,9 +27,13 @@ namespace AGV.Web.Service.Service
 
             string className = StaticData.AppHostConfig.GetType().GetProperty($"{StaticData.AppHostConfig.Environment}CarryDevice").GetValue(StaticData.AppHostConfig).ToString();
 
-            //RightCarryService.IControlDevice dObj = Activator.CreateInstance(Type.GetType(className)) as RightCarryService.IControlDevice;
-            
-            agvMissionManagerClient = new AgvMissionManagerClient(new TestControlDevice() as RightCarryService.IControlDevice);
+            string path = $@"{StaticData.AppHostConfig.AppBinPath}\RightCarryService.dll";
+         
+            var assembly = Assembly.LoadFrom(path);
+            var tpe = assembly.GetType(className);
+            RightCarryService.IControlDevice dObj = Activator.CreateInstance(tpe) as IControlDevice;
+      
+            agvMissionManagerClient = new AgvMissionManagerClient(dObj);
             agvMissionManagerClient.SendAgvMissonEvent += AgvMissionManagerClient_SendAgvMissonEvent;
             agvMissionManagerClient.SendSignalrEvent += AgvMissionManagerClient_SendSignalrEvent;
             agvMissionManagerClient.ShowLogEvent += AgvMissionManagerClient_ShowLogEvent;

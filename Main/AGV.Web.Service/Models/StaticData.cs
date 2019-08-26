@@ -568,6 +568,8 @@ namespace AGV.Web.Service.Models
 
         static void InitStationConfig()
         {
+
+
             string jsonfile = HttpContext.Current.Server.MapPath($"~/jsconfig.json");
             string info = System.IO.File.ReadAllText(jsonfile);
             AppHostConfig = JsonConvert.DeserializeObject<AppHostConfig>(info);

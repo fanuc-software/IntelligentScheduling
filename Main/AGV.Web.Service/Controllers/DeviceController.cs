@@ -35,11 +35,12 @@ namespace AGV.Web.Service.Controllers
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<AgvMissonHub>();
                 hubContext.Clients.All.agvStateChange(id);
 
+                var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
+                hubContext2.Clients.All.agvSignalChange(id);
                 var eventBus = SimpleEventBus.GetDefaultEventBus();
                 eventBus.Post(new agvStateChange(id), TimeSpan.FromSeconds(1));
 
-                var hubContext2 = GlobalHost.ConnectionManager.GetHubContext<NoticeHub>();
-                hubContext2.Clients.All.agvSignalChange(id);
+             
                 if (keyArr.Length >= 3)
                 {
 

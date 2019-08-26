@@ -11,7 +11,7 @@ namespace AGV.Web.Service.Models
 
         public string AgvServiceUrl { get; set; }
         public string AppUrl { get; set; }
-
+        public string AppBinPath { get; set; }
         public string DevelopmentCarryDevice { get; set; }
 
         public string ProductionCarryDevice { get; set; }
