@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace LeftMaterialService
 {
 
-    public abstract class BaseLeftMaterialService
+    public abstract class BaseLeftMaterialService : IDisposable
     {
         public abstract IControlDevice ControlDevice { get; }
         public bool Temp_S_House_RequestFCS_Last { get; set; }
@@ -25,78 +25,75 @@ namespace LeftMaterialService
         public void Start()
         {
 
-            Task.Factory.StartNew(async () =>
+            SendLeftMaterialServiceStateMessage(
+                    new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "左侧料库服务启动！", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
+
+
+            Temp_S_House_RequestFCS_Last = false;
+
+            bool ret = false;
+
+            #region 初始化
+            bool temp_S_House_RequestFCS_Last = false;
+            ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
+            if (ret == false)
             {
-                SendLeftMaterialServiceStateMessage(
-                    new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.INFO, Message = "START！", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
 
-
-                Temp_S_House_RequestFCS_Last = false;
-
-                bool ret = false;
-
-                #region 初始化
-                bool temp_S_House_RequestFCS_Last = false;
-                ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
-                if (ret == false)
+                while (ret == false)
                 {
+                    ret = ControlDevice.SetHouseFCSAlarm(true);
+                    SendLeftMaterialServiceStateMessage(
+                        new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "初始化连接,请检查网络连接与配置后复位!", ErrorCode = LeftMaterialServiceErrorCodeEnum.INI_GETREQ });
+                    Thread.Sleep(1000);
+                }
 
+
+                bool dev_reset = false;
+                while (dev_reset == false)
+                {
+                    ControlDevice.GetHouseFCSReset(ref dev_reset);
+                    SendLeftMaterialServiceStateMessage(
+                        new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "初始化失败,等待设备的复位信号", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
+                    Thread.Sleep(1000);
+                }
+            }
+            Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
+
+            #endregion
+
+            while (!token.IsCancellationRequested)
+            {
+                //料库请求
+                var ret_tuple = LeftMaterialFlow().Result;
+                if (ret_tuple.Item1 == false)
+                {
+                    ret = false;
                     while (ret == false)
                     {
                         ret = ControlDevice.SetHouseFCSAlarm(true);
                         SendLeftMaterialServiceStateMessage(
-                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "初始化连接,请检查网络连接与配置后复位!",ErrorCode=LeftMaterialServiceErrorCodeEnum.INI_GETREQ });
+                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "左侧料库请求调用失败,请检查后复位!", ErrorCode = ret_tuple.Item2 });
                         Thread.Sleep(1000);
                     }
-
 
                     bool dev_reset = false;
                     while (dev_reset == false)
                     {
                         ControlDevice.GetHouseFCSReset(ref dev_reset);
                         SendLeftMaterialServiceStateMessage(
-                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "初始化失败,等待设备的复位信号",ErrorCode=LeftMaterialServiceErrorCodeEnum.NORMAL });
+                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "左侧料库请求调用失败,等待设备的复位信号", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
                         Thread.Sleep(1000);
                     }
+
+                    SendLeftMaterialServiceStateMessage(
+                        new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "左侧料库请求调用失败,设备复位", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
                 }
-                Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
-
-                #endregion
-
-                while (!token.IsCancellationRequested)
+                else
                 {
-                    //料库请求
-                    var ret_tuple = await LeftMaterialFlow();
-                    if (ret_tuple.Item1 == false)
-                    {
-                        ret = false;
-                        while (ret == false)
-                        {
-                            ret = ControlDevice.SetHouseFCSAlarm(true);
-                            SendLeftMaterialServiceStateMessage(
-                                new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.ERROR, Message = "左侧料库请求调用失败,请检查后复位!", ErrorCode = ret_tuple.Item2 });
-                            Thread.Sleep(1000);
-                        }
-                        
-                        bool dev_reset = false;
-                        while (dev_reset == false)
-                        {
-                            ControlDevice.GetHouseFCSReset(ref dev_reset);
-                            SendLeftMaterialServiceStateMessage(
-                                new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "左侧料库请求调用失败,等待设备的复位信号",ErrorCode= LeftMaterialServiceErrorCodeEnum.NORMAL });
-                            Thread.Sleep(1000);
-                        }
-
-                        SendLeftMaterialServiceStateMessage(
-                            new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN, Message = "左侧料库请求调用失败,设备复位", ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
-                    }
-                    else
-                    {
-
-                    }
 
                 }
-            }, token.Token);
+                Thread.Sleep(1000);
+            }
         }
 
         //TODO
@@ -114,16 +111,17 @@ namespace LeftMaterialService
         //TODO
         private void SendLeftMaterialServiceStateMessage(LeftMaterialServiceState state)
         {
-            if(cur_Display_ErrorCode!= state.ErrorCode || state.Message != cur_Display_Message)
+            SendLeftMaterialServiceStateMessageEvent?.Invoke(state);
+
+            if (cur_Display_ErrorCode != state.ErrorCode || state.Message != cur_Display_Message)
             {
-                SendLeftMaterialServiceStateMessageEvent?.Invoke(state);
-                
+
                 cur_Display_ErrorCode = state.ErrorCode;
                 cur_Display_Message = state.Message;
             }
         }
 
-        private async Task<Tuple<bool,LeftMaterialServiceErrorCodeEnum>> LeftMaterialFlow()
+        private async Task<Tuple<bool, LeftMaterialServiceErrorCodeEnum>> LeftMaterialFlow()
         {
             bool ret = false;
 
@@ -187,7 +185,7 @@ namespace LeftMaterialService
         private bool CheckOnBegin()
         {
             bool ret = false;
-            
+
             ret = ControlDevice.SetHouseFCSAlarm(false);
             if (ret != true) return ret;
 
@@ -199,7 +197,7 @@ namespace LeftMaterialService
 
             ret = ControlDevice.SetHouseRequestInfoFCSFin(false);
             if (ret != true) return ret;
-            
+
             return true;
         }
 
@@ -244,9 +242,12 @@ namespace LeftMaterialService
                     }
 
                     SendLeftMaterialServiceStateMessage(
-                        new LeftMaterialServiceState { State = LeftMaterialServiceStateEnum.WARN,
+                        new LeftMaterialServiceState
+                        {
+                            State = LeftMaterialServiceStateEnum.WARN,
                             Message = "等待料库托盘到位",
-                            ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL });
+                            ErrorCode = LeftMaterialServiceErrorCodeEnum.NORMAL
+                        });
 
                     var ret_reset = false;
                     ControlDevice.GetHouseFCSReset(ref ret_reset);
@@ -285,7 +286,7 @@ namespace LeftMaterialService
                     return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_warehouse_tray_position, LeftMaterialServiceErrorCodeEnum.OUT_SETTRAYPOS);
                 }
 
-                var ret_warehouse_quantity= ControlDevice.SetHouseQuantity(S_House_Quantity);
+                var ret_warehouse_quantity = ControlDevice.SetHouseQuantity(S_House_Quantity);
                 if (ret_warehouse_quantity == false)
                 {
                     WareHouse.ReleaseWriterLock();
@@ -294,7 +295,7 @@ namespace LeftMaterialService
 
                 var ret_confirm_materialtype_position = ControlDevice.SetHouseConfirmMaterialType(S_House_MaterialType);
                 if (ret_confirm_materialtype_position == false)
-              {
+                {
                     WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_confirm_materialtype_position, LeftMaterialServiceErrorCodeEnum.OUT_SETMATERIALTYPECONFIRM);
                 }
@@ -312,10 +313,10 @@ namespace LeftMaterialService
                 {
                     var ret_req_info = ControlDevice.GetHouseRequestInfoFCS(ref S_House_RequestInfoFCS);
                     if (ret_req_info == false)
-                  {
+                    {
                         WareHouse.ReleaseWriterLock();
                         return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_req_info, LeftMaterialServiceErrorCodeEnum.OUT_GETREQINFO);
-                  }
+                    }
 
                     SendLeftMaterialServiceStateMessage(
                         new LeftMaterialServiceState
@@ -336,17 +337,17 @@ namespace LeftMaterialService
 
                 var ret_data_input = WareHouse.WriteBackData(S_House_ProductType, S_House_MaterialType, true);
                 if (ret_data_input == false)
-              {
+                {
                     WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_data_input, LeftMaterialServiceErrorCodeEnum.OUT_WRITEDATA);
-              }
+                }
 
                 var ret_info_fin = ControlDevice.SetHouseRequestInfoFCSFin(true);
                 if (ret_info_fin == false)
-              {
+                {
                     WareHouse.ReleaseWriterLock();
                     return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_info_fin, LeftMaterialServiceErrorCodeEnum.OUT_SETREQINFOFIN);
-              }
+                }
 
                 WareHouse.ReleaseWriterLock();
                 return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(true, LeftMaterialServiceErrorCodeEnum.NORMAL); ;
@@ -374,7 +375,7 @@ namespace LeftMaterialService
                 if (ret_material_type == false)
                 {
                     WareHouse.ReleaseWriterLock();
-                    return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_material_type, LeftMaterialServiceErrorCodeEnum.IN_GETMATERIALTYPE); 
+                    return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(ret_material_type, LeftMaterialServiceErrorCodeEnum.IN_GETMATERIALTYPE);
                 }
 
                 var ret_movein = WareHouse.MoveInTray(S_House_ProductType, S_House_MaterialType);
@@ -507,6 +508,14 @@ namespace LeftMaterialService
                 WareHouse.ReleaseWriterLock();
                 return new Tuple<bool, LeftMaterialServiceErrorCodeEnum>(true, LeftMaterialServiceErrorCodeEnum.NORMAL);
             });
+        }
+
+        public void Dispose()
+        {
+            if (token != null)
+            {
+                token.Cancel();
+            }
         }
     }
 }

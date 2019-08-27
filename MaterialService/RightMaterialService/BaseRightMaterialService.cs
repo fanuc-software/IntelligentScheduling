@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace RightMaterialService
 {
 
-    public abstract class BaseRightMaterialService
+    public abstract class BaseRightMaterialService : IDisposable
     {
         public abstract IControlDevice ControlDevice { get; }
         public bool Temp_S_House_RequestFCS_Last { get; set; }
@@ -25,30 +25,57 @@ namespace RightMaterialService
         public void Start()
         {
 
-            Task.Factory.StartNew(async () =>
+            SendRightMaterialServiceStateMessage(
+                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库服务启动！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+
+            Temp_S_House_RequestFCS_Last = false;
+
+            bool ret = false;
+
+            #region 初始化
+            bool temp_S_House_RequestFCS_Last = false;
+
+
+            ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
+            if (ret == false)
             {
-
-                SendRightMaterialServiceStateMessage(
-                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "START！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
-
-                Temp_S_House_RequestFCS_Last = false;
-
-                bool ret = false;
-
-                #region 初始化
-                bool temp_S_House_RequestFCS_Last = false;
-
-
-                ret = ControlDevice.GetHouseRequestFCS(ref temp_S_House_RequestFCS_Last);
-                if (ret == false)
+                while (ret == false)
                 {
+                    ret = ControlDevice.SetHouseFCSAlarm(true);
+                    SendRightMaterialServiceStateMessage(
+                        new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "初始化连接,请检查网络连接与配置后复位!", ErrorCode = RightMaterialServiceErrorCodeEnum.INI_GETREQ });
+                    Thread.Sleep(1000);
+                }
+
+
+                bool dev_reset = false;
+                while (dev_reset == false)
+                {
+                    ControlDevice.GetHouseFCSReset(ref dev_reset);
+                    SendRightMaterialServiceStateMessage(
+                        new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "初始化失败,等待设备的复位信号", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+                    Thread.Sleep(1000);
+                }
+            }
+            Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
+
+            #endregion
+
+            while (!token.IsCancellationRequested)
+            {
+                //料库请求
+                var ret_tuple = RightMaterialFlow().Result;
+                if (ret_tuple.Item1 == false)
+                {
+                    ret = false;
                     while (ret == false)
                     {
                         ret = ControlDevice.SetHouseFCSAlarm(true);
                         SendRightMaterialServiceStateMessage(
-                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "初始化连接,请检查网络连接与配置后复位!", ErrorCode = RightMaterialServiceErrorCodeEnum.INI_GETREQ });
+                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "右侧料库请求调用失败,请检查后复位!", ErrorCode = ret_tuple.Item2 });
                         Thread.Sleep(1000);
                     }
+
 
 
                     bool dev_reset = false;
@@ -56,52 +83,21 @@ namespace RightMaterialService
                     {
                         ControlDevice.GetHouseFCSReset(ref dev_reset);
                         SendRightMaterialServiceStateMessage(
-                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "初始化失败,等待设备的复位信号", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,等待设备的复位信号", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
                         Thread.Sleep(1000);
                     }
+
+                    ControlDevice.SetHouseFCSAlarm(false);
+                    SendRightMaterialServiceStateMessage(
+                        new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,设备复位", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
                 }
-                Temp_S_House_RequestFCS_Last = temp_S_House_RequestFCS_Last;
-
-                #endregion
-
-                while (!token.IsCancellationRequested)
-                {
-                    //料库请求
-                    var ret_tuple = await RightMaterialFlow();
-                    if (ret_tuple.Item1 == false)
-                    {
-                        ret = false;
-                        while (ret == false)
-                        {
-                            ret = ControlDevice.SetHouseFCSAlarm(true);
-                            SendRightMaterialServiceStateMessage(
-                                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.ERROR, Message = "右侧料库请求调用失败,请检查后复位!", ErrorCode = ret_tuple.Item2 });
-                            Thread.Sleep(1000);
-                        }
-
-                        
-
-                        bool dev_reset = false;
-                        while (dev_reset == false)
-                        {
-                            ControlDevice.GetHouseFCSReset(ref dev_reset);
-                            SendRightMaterialServiceStateMessage(
-                                new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,等待设备的复位信号", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
-                            Thread.Sleep(1000);
-                        }
-
-                        ControlDevice.SetHouseFCSAlarm(false);
-                        SendRightMaterialServiceStateMessage(
-                            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.WARN, Message = "右侧料库请求调用失败,设备复位", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
-                    }
-                    //else
-                    //{
-                    //    SendRightMaterialServiceStateMessage(
-                    //            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库请求调用完成！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
-                    //}
-
-                }
-            }, token.Token);
+                //else
+                //{
+                //    SendRightMaterialServiceStateMessage(
+                //            new RightMaterialServiceState { State = RightMaterialServiceStateEnum.INFO, Message = "右侧料库请求调用完成！", ErrorCode = RightMaterialServiceErrorCodeEnum.NORMAL });
+                //}
+                Thread.Sleep(1000);
+            }
         }
 
         //TODO
@@ -119,9 +115,10 @@ namespace RightMaterialService
         //TODO
         private void SendRightMaterialServiceStateMessage(RightMaterialServiceState state)
         {
+            SendRightMaterialServiceStateMessageEvent?.Invoke(state);
             if (cur_Display_ErrorCode != state.ErrorCode || state.Message != cur_Display_Message)
             {
-                SendRightMaterialServiceStateMessageEvent?.Invoke(state);
+
 
                 cur_Display_ErrorCode = state.ErrorCode;
                 cur_Display_Message = state.Message;
@@ -158,7 +155,7 @@ namespace RightMaterialService
                     return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(ret_inout, RightMaterialServiceErrorCodeEnum.INOUT);
                 }
 
-               
+
 
                 if (S_House_InOut == true)
                 {
@@ -273,7 +270,7 @@ namespace RightMaterialService
                 int S_House_TrayPosition = 0;
                 int S_House_Quantity = 0;
                 var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
-                    out S_House_ProductPosition, out S_House_TrayPosition,out S_House_Quantity);
+                    out S_House_ProductPosition, out S_House_TrayPosition, out S_House_Quantity);
                 if (ret_warehouse_info == false)
                 {
                     WareHouse.ReleaseWriterLock();
@@ -385,7 +382,7 @@ namespace RightMaterialService
                 int S_House_MaterialType = 0;
                 var ret_material_type = ControlDevice.GetHouseMaterialType(ref S_House_MaterialType);
 
-                
+
                 if (ret_material_type == false)
                 {
                     WareHouse.ReleaseWriterLock();
@@ -433,7 +430,7 @@ namespace RightMaterialService
                 int S_House_TrayPosition = 0;
                 int S_House_Quantity = 0;
                 var ret_warehouse_info = WareHouse.GetPositionInfo(S_House_ProductType, S_House_MaterialType,
-                    out S_House_ProductPosition, out S_House_TrayPosition,out S_House_Quantity);
+                    out S_House_ProductPosition, out S_House_TrayPosition, out S_House_Quantity);
                 if (ret_warehouse_info == false)
                 {
                     WareHouse.ReleaseWriterLock();
@@ -521,6 +518,14 @@ namespace RightMaterialService
                 WareHouse.ReleaseWriterLock();
                 return new Tuple<bool, RightMaterialServiceErrorCodeEnum>(true, RightMaterialServiceErrorCodeEnum.NORMAL);
             });
+        }
+
+        public void Dispose()
+        {
+            if (token != null)
+            {
+                token.Cancel();
+            }
         }
     }
 }

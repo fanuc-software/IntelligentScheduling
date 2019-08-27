@@ -176,7 +176,10 @@
                         return moment(time).format("YYYY-MM-DD HH:mm:ss");
                     };
                     main.client.client.getAgvLog = function (log) {
-                        main.logNodes.push("【" + main.indexNum + "】" + log);
+                        if (main.logNodes.length > 100) {
+                            main.logNodes = [];
+                        }
+                        main.logNodes.unshift("【" + main.indexNum + "】" + log);
                         main.indexNum++;
                         $scope.$apply();
 
@@ -190,7 +193,7 @@
                     };
                     main.client.client.getSignalrRes = function (log) {
                         main.signalrNode.Log = JSON.stringify(log);
-                       
+
                         $scope.$apply();
                     };
                     main.client.client.getAgvStateLog = function (node) {

@@ -44,101 +44,101 @@ namespace Test
 
         static void Main(string[] args)
         {
-            Task.Factory.StartNew(()=> {
-                RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
+            //Task.Factory.StartNew(()=> {
+            //    RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
 
-                bool req = false;
-                rx08.GetRawInRequireState(ref req);
+            //    bool req = false;
+            //    rx08.GetRawInRequireState(ref req);
 
-                if(req==true)
-                {
-                    rx08.SetRawInFin(true);
+            //    if(req==true)
+            //    {
+            //        rx08.SetRawInFin(true);
 
-                    while(req==true)
-                    {
-                        rx08.GetRawInRequireState(ref req);
+            //        while(req==true)
+            //        {
+            //            rx08.GetRawInRequireState(ref req);
 
-                        if (req==false)
-                        {
-                            rx08.SetRawInFin(false);
-                            break;
-                        }
-                    }
-                }
+            //            if (req==false)
+            //            {
+            //                rx08.SetRawInFin(false);
+            //                break;
+            //            }
+            //        }
+            //    }
 
-            });
+            //});
 
-            Task.Factory.StartNew(() => {
-                RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
+            //Task.Factory.StartNew(() => {
+            //    RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
 
-                bool req = false;
-                rx08.GetRawInRequireState(ref req);
+            //    bool req = false;
+            //    rx08.GetRawInRequireState(ref req);
 
-                if (req == true)
-                {
-                    rx08.SetRawInFin(true);
+            //    if (req == true)
+            //    {
+            //        rx08.SetRawInFin(true);
 
-                    while (req == true)
-                    {
-                        rx08.GetRawInRequireState(ref req);
+            //        while (req == true)
+            //        {
+            //            rx08.GetRawInRequireState(ref req);
 
-                        if (req == false)
-                        {
-                            rx08.SetRawInFin(false);
-                            break;
-                        }
-                    }
-                }
+            //            if (req == false)
+            //            {
+            //                rx08.SetRawInFin(false);
+            //                break;
+            //            }
+            //        }
+            //    }
 
-            });
+            //});
 
-            Task.Factory.StartNew(() => {
-                RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
+            //Task.Factory.StartNew(() => {
+            //    RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
 
-                bool req = false;
-                rx08.GetRawInRequireState(ref req);
+            //    bool req = false;
+            //    rx08.GetRawInRequireState(ref req);
 
-                if (req == true)
-                {
-                    rx08.SetRawInFin(true);
+            //    if (req == true)
+            //    {
+            //        rx08.SetRawInFin(true);
 
-                    while (req == true)
-                    {
-                        rx08.GetRawInRequireState(ref req);
+            //        while (req == true)
+            //        {
+            //            rx08.GetRawInRequireState(ref req);
 
-                        if (req == false)
-                        {
-                            rx08.SetRawInFin(false);
-                            break;
-                        }
-                    }
-                }
+            //            if (req == false)
+            //            {
+            //                rx08.SetRawInFin(false);
+            //                break;
+            //            }
+            //        }
+            //    }
 
-            });
+            //});
 
-            Task.Factory.StartNew(() => {
-                RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
+            //Task.Factory.StartNew(() => {
+            //    RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();
 
-                bool req = false;
-                rx08.GetRawInRequireState(ref req);
+            //    bool req = false;
+            //    rx08.GetRawInRequireState(ref req);
 
-                if (req == true)
-                {
-                    rx08.SetRawInFin(true);
+            //    if (req == true)
+            //    {
+            //        rx08.SetRawInFin(true);
 
-                    while (req == true)
-                    {
-                        rx08.GetRawInRequireState(ref req);
+            //        while (req == true)
+            //        {
+            //            rx08.GetRawInRequireState(ref req);
 
-                        if (req == false)
-                        {
-                            rx08.SetRawInFin(false);
-                            break;
-                        }
-                    }
-                }
+            //            if (req == false)
+            //            {
+            //                rx08.SetRawInFin(false);
+            //                break;
+            //            }
+            //        }
+            //    }
 
-            });
+            //});
 
             //Task.Factory.StartNew(() => {
             //    RX08FanucRobotClientDevice rx08 = new RX08FanucRobotClientDevice();

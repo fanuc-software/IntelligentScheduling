@@ -4,13 +4,77 @@
 }
 
 <div ng-controller="mainController">
-    <div class="row" style="margin-top:10px;text-align:center;margin-top:20px">
-        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.backJobSate" ng-click="main.start()">开始服务</button>
+    <div class="row" style="text-align:center;margin-top:10px">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                AGV总服务
 
-        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.backJobSate" ng-click="main.stop()">停止服务</button>
+            </div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.backJobSate" ng-click="main.start()">开启AGV服务</button>
+
+                <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.backJobSate" ng-click="main.stop()">停止AGV服务</button>
+            </div>
+
+        </div>
+
 
     </div>
 
+    <div class="row" style="margin-top:10px;text-align:center">
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    左侧料库服务
+
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.leftMetrailState" ng-click="main.leftStart()">开启左侧料库服务</button>
+                        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.leftMetrailState" ng-click="main.leftStop()">停止左侧料库服务</button>
+                    </div>
+                    <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
+                        <div ng-repeat="x in main.leftNodes" class="alert alert-info alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{x}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-primary " ng-click="main.clearLeftLog()">清除日志</button>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    右侧料库服务
+
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rightMetrailState" ng-click="main.rightStart()">开启右侧料库服务</button>
+                        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.rightMetrailState" ng-click="main.rightStop()">停止右侧料库服务</button>
+                    </div>
+                    <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
+                        <div ng-repeat="x in main.rightNodes" class="alert alert-success alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{x}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-primary " ng-click="main.clearRightLog()">清除日志</button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 @section scripts{
     <script type="text/javascript">
@@ -18,7 +82,10 @@
             .controller('mainController', function ($scope, $timeout) {
                 var main = this;
                 main.backJobSate = false;
-
+                main.leftMetrailState = false;
+                main.rightMetrailState = false;
+                main.leftNodes = [];
+                main.rightNodes = [];
                 main.init = function () {
                     main.client = $.connection.restHub;
                     $(function () {
@@ -32,15 +99,60 @@
                         main.backJobSate = state;
                         $scope.$apply();
                     };
+                    main.client.client.getleftMaterialState = function (state) {
+                        main.leftMetrailState = state;
+                        $scope.$apply();
+                    };
+                    main.client.client.getRightMaterialState = function (state) {
+                        main.rightMetrailState = state;
+                        $scope.$apply();
+                    };
+                    main.client.client.getRightMaterialLog = function (log) {
+                        if (main.rightNodes.length > 100) {
+                            main.rightNodes = [];
+                        }
+                        main.rightNodes.unshift(log);
+                        $scope.$apply();
+                    };
+                    main.client.client.getLeftMaterialLog = function (log) {
+                        if (main.leftNodes.length > 100) {
+                            main.leftNodes = [];
+                        }
+                        main.leftNodes.unshift(log);
+                        $scope.$apply();
+                    };
                 };
-              
+                main.leftStart = function () {
+                    main.leftNodes = [];
+                    main.client.server.leftMaterialStart();
+
+                };
+                main.leftStop = function () {
+                    main.client.server.leftMaterialStop();
+
+                };
+                main.rightStart = function () {
+                    main.rightNodes = [];
+                    main.client.server.rightMaterialStart();
+
+                };
+                main.rightStop = function () {
+                    main.client.server.rightMaterialStop();
+
+                };
+                main.clearLeftLog = function () {
+                    main.leftNodes = [];
+                };
+                main.clearRightLog = function () {
+                    main.rightNodes = [];
+                };
                 main.start = function () {
                     main.client.server.start();
                 };
-                 main.stop = function () {
+                main.stop = function () {
                     main.client.server.stop();
                 };
-               
+
                 main.init();
                 $scope.main = main;
             });

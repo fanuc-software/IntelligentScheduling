@@ -201,6 +201,7 @@
     <Compile Include="Models\StaticData.cs" />
     <Compile Include="Models\StationNodeConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\MaterialService.cs" />
     <Compile Include="Service\ServiceProxy.cs" />
     <Compile Include="Service\StationProxyService.cs" />
     <Compile Include="Service\TestStationDevice.cs" />
@@ -290,6 +291,14 @@
     <ProjectReference Include="..\..\MaterialService\AgvStationClient\AgvStationClient.csproj">
       <Project>{B6CFADBB-3199-4DBC-B058-AA83C99C0B19}</Project>
       <Name>AgvStationClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaterialService\RightMaterialService\RightMaterialService.csproj">
+      <Project>{943BEBC8-E05E-417F-9273-FFD1F2E10D31}</Project>
+      <Name>RightMaterialService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaterialService\WareHouse\LeftMaterialService.csproj">
+      <Project>{A86CEBA4-DD92-42C2-96CD-74A0EAC92401}</Project>
+      <Name>LeftMaterialService</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RightCarryService\RightCarryService.csproj">
       <Project>{2130dca2-bcdb-4117-aee7-16abe1f8d503}</Project>

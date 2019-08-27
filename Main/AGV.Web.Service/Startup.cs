@@ -19,7 +19,6 @@ namespace AGV.Web.Service
 {
     public class Startup
     {
-        public static List<string> ListJob = new List<string>();
         [Obsolete]
         public void Configuration(IAppBuilder app)
         {
