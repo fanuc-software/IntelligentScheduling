@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "设备监控";
+}
+
+<div ng-controller="mainController">
+    <div class="row" style="margin-top:10px;text-align:center;margin-top:20px">
+        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.backJobSate" ng-click="main.start()">开始服务</button>
+
+        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.backJobSate" ng-click="main.stop()">停止服务</button>
+
+    </div>
+
+</div>
+@section scripts{
+    <script type="text/javascript">
+        angular.module('todoApp', [])
+            .controller('mainController', function ($scope, $timeout) {
+                var main = this;
+                main.backJobSate = false;
+
+                main.init = function () {
+                    main.client = $.connection.restHub;
+                    $(function () {
+                        $.connection.hub.start().done(function () {
+                            console.log(moment().format("YYYY-MM-DD HH:mm:ss") + " 连接到服务器");
+                        });
+
+                    });
+
+                    main.client.client.getBackJobState = function (state) {
+                        main.backJobSate = state;
+                        $scope.$apply();
+                    };
+                };
+              
+                main.start = function () {
+                    main.client.server.start();
+                };
+                 main.stop = function () {
+                    main.client.server.stop();
+                };
+               
+                main.init();
+                $scope.main = main;
+            });
+
+    </script>
+}

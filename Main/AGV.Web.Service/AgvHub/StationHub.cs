@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AGV.Web.Service.Models;
+using DeviceAsset;
 using EventBus;
 using Microsoft.AspNet.SignalR;
 namespace AGV.Web.Service.AgvHub
@@ -25,6 +26,18 @@ namespace AGV.Web.Service.AgvHub
 
         }
 
+        public void writerSingnal(string ip, string adr, string value)
+        {
+            var m_FanucRobotDevice = new FanucRobotModbus(ip);
+            var ret = m_FanucRobotDevice.Write(new FanucRobotDataConfig() { DataType = FanucRobotDataTypeEnum.DI, DataAdr = adr }, value);
+            Clients.Client(Context.ConnectionId).getSignalrRes(ret);
+        }
+        public void readerSingnal(string ip, string adr)
+        {
+            var m_FanucRobotDevice = new FanucRobotModbus(ip);
+            var ret = m_FanucRobotDevice.Read(new FanucRobotDataConfig() { DataType = FanucRobotDataTypeEnum.DO, DataAdr = adr });
+            Clients.Client(Context.ConnectionId).getSignalrRes(ret);
+        }
         public void loadAllOrder()
         {
             int index = 1;

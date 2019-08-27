@@ -92,7 +92,7 @@
                 <tbody>
 
 
-                    <tr ng-repeat="x in main.orderNodes">
+                    <tr ng-repeat="x in main.orderNodes" ng-class="x.className">
                         <td style="width:230px">{{ x.name }}</td>
                         <td>{{ x.category }}</td>
                         <td ng-show="x.state=='FINISHED'">
@@ -107,7 +107,7 @@
 
                         <td>
                             <button type="button" class="btn btn-primary" ng-click="main.orderView(x)">详情</button>
-                            <button type="button" style="margin-left:5px" class="btn btn-info" ng-click="main.refreshOrder(x.name)">刷新</button>
+                            @*<button type="button" style="margin-left:5px" class="btn btn-info" ng-click="main.refreshOrder(x.name)">刷新</button>*@
 
                         </td>
                     </tr>
@@ -165,8 +165,8 @@
     </div>
 
     <div class="row" style="margin-top:10px" ng-show="main.signlrNodes.length>0">
-        <div class="alert alert-info alert-dismissible" role="alert">
-            <div style="float:left;margin-right:10px;margin-top:10px" ng-repeat="x in main.signlrNodes">
+        <div class="alert alert-info alert-dismissible" role="alert" style="overflow-y:auto">
+            <div style="float:left;margin-right:10px;" ng-repeat="x in main.signlrNodes">
                 <span class="label label-success">
                     {{x}}
                 </span>
@@ -181,10 +181,6 @@
 
 @section scripts{
     <script type="text/javascript">
-
-
-
-        // chatHub.server.sendMessage("Hi everybody, I'm connected to the chat!"); // Send a message to the server
 
         angular.module('todoApp', [])
             .controller('mainController', function ($scope) {
@@ -336,8 +332,13 @@
                     main.client.server.sendTask(main.selectedName);
                 };
                 main.orderView = function (order) {
+                    angular.forEach(main.orderNodes, function (item) {
+                        item.className = "";
+                    });
+                    order.className = "info";
                     main.destinations = order.destinations;
                     main.currentOrder = order;
+                    main.refreshOrder(order.name);
                 };
                 main.queryWait = function () {
                     main.isShowWaitInfo = true;

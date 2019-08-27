@@ -17,6 +17,7 @@ namespace AGV.Web.Service.Models
 
         public static ConcurrentDictionary<string, bool> SignalDict = new ConcurrentDictionary<string, bool>();
 
+        public static bool BackGroudJobIsStart = false;
         public static AppHostConfig AppHostConfig = new AppHostConfig();
 
         public static ConcurrentDictionary<string, List<ConfigNode>> ProductNodeDict = new ConcurrentDictionary<string, List<ConfigNode>>();
@@ -566,10 +567,10 @@ namespace AGV.Web.Service.Models
             });
         }
 
-        static void InitStationConfig()
+        public static void InitStationConfig()
         {
 
-
+            string path = Environment.CurrentDirectory;
             string jsonfile = HttpContext.Current.Server.MapPath($"~/jsconfig.json");
             string info = System.IO.File.ReadAllText(jsonfile);
             AppHostConfig = JsonConvert.DeserializeObject<AppHostConfig>(info);

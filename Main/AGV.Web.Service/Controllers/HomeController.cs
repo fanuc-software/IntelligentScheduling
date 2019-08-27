@@ -12,6 +12,10 @@ namespace AGV.Web.Service.Controllers
         {
             return View();
         }
+        public ActionResult Reset()
+        {
+            return View();
+        }
 
         public ActionResult About()
         {

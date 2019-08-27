@@ -70,6 +70,7 @@
     <Reference Include="Hangfire.SqlServer, Version=1.7.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hangfire.SqlServer.1.7.6\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="HslCommunication, Version=6.2.5.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67" />
     <Reference Include="linq2db, Version=1.0.7.1, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\linq2db.1.0.7.1\lib\net45\linq2db.dll</HintPath>
     </Reference>
@@ -183,6 +184,7 @@
   <ItemGroup>
     <Compile Include="AgvHub\AgvMissonHub.cs" />
     <Compile Include="AgvHub\NoticeHub.cs" />
+    <Compile Include="AgvHub\RestHub.cs" />
     <Compile Include="AgvHub\StationHub.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -253,6 +255,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Reset.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -275,6 +278,10 @@
     <ProjectReference Include="..\..\AgvMissionManager\AgvMissionManager.csproj">
       <Project>{546EABBA-C5C6-45D7-9A15-3F289D0A9E68}</Project>
       <Name>AgvMissionManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Asset\DeviceAsset\DeviceAsset.csproj">
+      <Project>{108A2162-2608-44CE-9CD6-6E3FA2E583F3}</Project>
+      <Name>DeviceAsset</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\MaterialService\Agv.Common\Agv.Common.csproj">
       <Project>{0BDBA394-80CE-4FF4-96D3-15123833A493}</Project>

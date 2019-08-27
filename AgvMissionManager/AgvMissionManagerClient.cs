@@ -130,7 +130,8 @@ namespace AgvMissionManager
 
         public void PushOutMission(AgvOutMissonModel mission)
         {
-            if (missionContext.MissionOutNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count() == 0)
+            var count = missionContext.MissionOutNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count();
+            if (count == 0)
             {
                 mission.AgvProcessChangeEvent += (obj, state) => AgvMissonChangeEvent?.Invoke(obj, state);
                 AgvMissonChangeEvent?.Invoke(mission, true);
@@ -141,7 +142,9 @@ namespace AgvMissionManager
 
         public void PushInMission(AgvInMissonModel mission)
         {
-            if (missionContext.MissionInNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count() == 0)
+            var count = missionContext.MissionInNodes.Where(x => x.Id == mission.Id && (x.Process != AgvMissonProcessEnum.CLOSE || x.CarryProcess != CarryMissonProcessEnum.CLOSE)).Count();
+
+            if (count == 0)
             {
                 mission.AgvProcessChangeEvent += (s, e) => AgvMissonChangeEvent?.Invoke(s, e);
                 AgvMissonChangeEvent?.Invoke(mission, true);

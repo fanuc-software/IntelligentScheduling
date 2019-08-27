@@ -4,6 +4,43 @@
 
 <div ng-controller="mainController">
     <div class="row" style="margin-top:10px">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                信号测试
+
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="main.signalrNode.Ip" placeholder="IP地址" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-model="main.signalrNode.Adr" placeholder="DataAdr" />
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" ng-model="main.signalrNode.Val">
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success" ng-click="main.readerSingnal()">读取</button>
+                        <button type="button" class="btn btn-primary" ng-click="main.writerSingnal()">写入</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px">
+                    <div class="alert alert-info alert-dismissible" role="alert" ng-show="main.signalrNode.Log.length>0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ main.signalrNode.Log}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row" style="margin-top:10px">
         <div class="col-md-12">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -114,6 +151,7 @@
                 main.logNodes = [];
                 main.orderNodes = [];
                 main.indexNum = 1;
+                main.signalrNode = { Ip: "192.168.1.121", Adr: "196", Val: "True", Log: "" };
                 main.currentLog = '';
                 main.init = function () {
                     main.client = $.connection.stationHub;
@@ -150,6 +188,11 @@
                         }, 3000);
                         $scope.$apply();
                     };
+                    main.client.client.getSignalrRes = function (log) {
+                        main.signalrNode.Log = JSON.stringify(log);
+                       
+                        $scope.$apply();
+                    };
                     main.client.client.getAgvStateLog = function (node) {
                         if (node == null) {
                             return;
@@ -174,6 +217,12 @@
                 main.clearLog = function () {
                     main.logNodes = [];
 
+                };
+                main.writerSingnal = function () {
+                    main.client.server.writerSingnal(main.signalrNode.Ip, main.signalrNode.Adr, main.signalrNode.Val);
+                };
+                main.readerSingnal = function () {
+                    main.client.server.readerSingnal(main.signalrNode.Ip, main.signalrNode.Adr);
                 };
                 main.carryJobFinish = function () {
                     main.client.server.carryJobFinish();

@@ -11,6 +11,7 @@ using Owin;
 using System.Linq;
 using System.Web;
 using AGV.Web.Service.Service;
+using AGV.Web.Service.Models;
 
 [assembly: OwinStartup(typeof(AGV.Web.Service.Startup))]
 
@@ -58,20 +59,10 @@ namespace AGV.Web.Service
             
             app.UseHangfireDashboard("/hangfire", options);
             app.UseHangfireServer();
-
-            InitBackgroundJob();
+            StaticData.InitStationConfig();
+         //  InitBackgroundJob();
         }
-        void InitBackgroundJob()
-        {
-            WebStationClient webClient = new WebStationClient();
-            WebAgvMissionManager webAgvMission = new WebAgvMissionManager();
-            var job1 = BackgroundJob.Enqueue(() => webClient.Start());
-            var job2 = BackgroundJob.Enqueue(() => webAgvMission.Start());
-
-            ListJob.Add(job1);
-            ListJob.Add(job2);
-
-        }
+       
 
     }
 }

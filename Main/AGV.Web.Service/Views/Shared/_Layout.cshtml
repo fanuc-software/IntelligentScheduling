@@ -17,10 +17,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("智能生产线控制系统", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("智能生产线控制系统", "Reset", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("设备监控", "Reset", "Home")</li>
                     <li>@Html.ActionLink("AGV订单监控", "Index", "Home")</li>
                     <li>@Html.ActionLink("单元订单监控", "About", "Home")</li>
                     <li>@Html.ActionLink("Hangfire", "", "hangfire")</li>
@@ -32,7 +33,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - AGV订单运行监控</p>
+            <p>&copy; @DateTime.Now.Year - 智能生产线控制系统</p>
         </footer>
     </div>
 

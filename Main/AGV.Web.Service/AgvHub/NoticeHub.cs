@@ -81,8 +81,18 @@ namespace AGV.Web.Service.AgvHub
         }
         public void loadOrderProxy(string name)
         {
-            var obj = client.TransportOrders(name);
-            Clients.Client(Context.ConnectionId).getCurrentOrder(obj);
+            try
+            {
+                var obj = client.TransportOrders(name);
+                Clients.Client(Context.ConnectionId).getCurrentOrder(obj);
+            }
+            catch (Exception ex)
+            {
+
+                Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单查询失败,异常信息:{ex.Message}", new { state = false });
+
+            }
+
 
 
         }
@@ -95,10 +105,11 @@ namespace AGV.Web.Service.AgvHub
                 {
                     client.Withdrawal2(item);
                 }
-                catch (Exception )
+                catch (Exception ex)
                 {
 
-                    
+                    Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单撤销失败,异常信息:{ex.Message}", new { state = false });
+
                 }
             }
             StaticData.OrderName = new System.Collections.Concurrent.BlockingCollection<string>();

@@ -4,7 +4,9 @@
   "Environment": "Production",
   "AppBinPath": "F:\\Work\\Fanuc\\IntelligentScheduling\\Main\\AGV.Web.Service\\bin",
   "DevelopmentCarryDevice": "RightCarryService.TestControlDevice",
-  "ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
+  //"ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
+  "ProductionCarryDevice": "RightCarryService.TestControlDevice",
+
   "StationNodes": [
     {
       "Name": "工业实训单元",

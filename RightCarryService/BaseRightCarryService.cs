@@ -21,12 +21,30 @@ namespace RightCarryService
         {
             ControlDevice = device;
 
-            m_readerWriterLock.AcquireWriterLock(100000);
+            try
+            {
+                m_readerWriterLock.AcquireWriterLock(100000);
+
+            }
+            catch (Exception)
+            {
+
+                
+            }
         }
 
         public void ReleaseLock()
         {
-            m_readerWriterLock.ReleaseWriterLock();
+            try
+            {
+                m_readerWriterLock.ReleaseWriterLock();
+
+            }
+            catch (Exception)
+            {
+
+               
+            }
         }
 
         public bool CarryIn(string product, string material)
