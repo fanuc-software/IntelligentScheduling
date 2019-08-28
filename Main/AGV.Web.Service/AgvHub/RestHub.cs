@@ -28,7 +28,7 @@ namespace AGV.Web.Service.AgvHub
             hub.clearAllWaitSignal();
             hub.clearAgvOrder();
             webAgvMission.Clear(null);
-
+            StaticData.CurrentMissionOrder = new System.Collections.Concurrent.BlockingCollection<Agv.Common.Model.AgvMissonModel>();
             var job1 = BackgroundJob.Enqueue(() => webClient.Start());
             var job2 = BackgroundJob.Enqueue(() => webAgvMission.Start());
             ListAgvJob.Add(job1);

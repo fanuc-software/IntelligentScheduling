@@ -8,7 +8,8 @@ namespace AgvStationClient
 {
     public interface IStationDevice
     {
-
+        string RawIn_Prod { get; set; }
+        string RawIn_Mate { get; set; }
         /// <summary>
         /// 获得原料输入请求
         /// </summary>

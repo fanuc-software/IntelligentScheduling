@@ -43,6 +43,8 @@ namespace AGV.Web.Service.Service
                 }
 
                 var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
+                dObj.RawIn_Prod =item.GetType().GetProperty("ProdeuctType").GetValue(item).ToString();
+                dObj.RawIn_Mate= item.GetType().GetProperty("MaterielType").GetValue(item).ToString();
                 proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
                 proxy.SendLogEvent += Proxy_SendLogEvent;
                 stationProxyServices.Add(proxy);

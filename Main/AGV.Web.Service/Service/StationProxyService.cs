@@ -33,7 +33,7 @@ namespace AGV.Web.Service.Service
         {
             while (!token.IsCancellationRequested)
             {
-               
+
                 var ret = StationClientFlow();
                 if (ret == false)
                 {
@@ -85,7 +85,6 @@ namespace AGV.Web.Service.Service
                     if (ret_empty_out == true && empty_out == true)
                     {
                         StationDevice.SetEmptyOutFin(true);
-
                         bool empty_out_confirm = true;
 
                         while (empty_out_confirm)
@@ -95,6 +94,7 @@ namespace AGV.Web.Service.Service
                             {
                                 StationDevice.SetEmptyOutFin(false);
                             }
+                            Thread.Sleep(1000);
                         }
                     }
 
@@ -120,6 +120,7 @@ namespace AGV.Web.Service.Service
                             {
                                 StationDevice.SetFinOutFin(false);
                             }
+                            Thread.Sleep(1000);
                         }
                     }
 
@@ -132,7 +133,7 @@ namespace AGV.Web.Service.Service
             //毛坯输入
             if (mission.Id.Equals(Station_Id + "_RAWIN"))
             {
-                if (mission.Process == AgvMissonProcessEnum.FINISHED && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
+                if ((mission.Process == AgvMissonProcessEnum.FINISHED || mission.Process == AgvMissonProcessEnum.CLOSE) && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool raw_in = false;
                     var ret_raw_in = StationDevice.GetRawInRequireState(ref raw_in);
@@ -141,7 +142,6 @@ namespace AGV.Web.Service.Service
                         Console.WriteLine("RAWIN_" + DateTime.Now);
 
                         StationDevice.SetRawInFin(true);
-
                         bool raw_in_confirm = true;
 
                         while (raw_in_confirm)
@@ -151,6 +151,7 @@ namespace AGV.Web.Service.Service
                             {
                                 StationDevice.SetRawInFin(false);
                             }
+                            Thread.Sleep(1000);
                         }
                     }
                 }
@@ -158,14 +159,13 @@ namespace AGV.Web.Service.Service
             //成品空箱输入
             if (mission.Id.Equals(Station_Id + "_EMPTYIN"))
             {
-                if (mission.Process == AgvMissonProcessEnum.FINISHED && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
+                if ((mission.Process == AgvMissonProcessEnum.FINISHED || mission.Process == AgvMissonProcessEnum.CLOSE) && mission.Process != AgvMissonProcessEnum.CANCEL && mission.Process != AgvMissonProcessEnum.CANCELED)
                 {
                     bool empty_in = false;
                     var ret_empty_in = StationDevice.GetEmptyInState(ref empty_in);
                     if (ret_empty_in == true && empty_in == true)
                     {
                         StationDevice.SetEmptyInFin(true);
-
                         bool empty_in_confirm = true;
 
                         while (empty_in_confirm)
@@ -175,6 +175,7 @@ namespace AGV.Web.Service.Service
                             {
                                 StationDevice.SetEmptyInFin(false);
                             }
+                            Thread.Sleep(1000);
                         }
                     }
                 }
@@ -218,6 +219,10 @@ namespace AGV.Web.Service.Service
             //毛坯输入
             var raw_in = false;
             var ret = StationDevice.GetRawInRequireState(ref raw_in);
+            if (ret && !raw_in)
+            {
+                last_rawin_state = false;
+            }
             if (ret = true && raw_in == true && last_rawin_state == false)
             {
                 System.Threading.Thread.Sleep(1000);
@@ -226,6 +231,10 @@ namespace AGV.Web.Service.Service
                 {
                     var empty_out = false;
                     ret = StationDevice.GetEmptyOutState(ref empty_out);
+                    if (ret && !empty_out)
+                    {
+                        last_emptyin_state = false;
+                    }
                     if (ret = true && empty_out == true && last_emptyout_state == false)
                     {
                         string prod_type = "";
@@ -312,6 +321,10 @@ namespace AGV.Web.Service.Service
             //成品空箱输入
             var empty_in = false;
             ret = StationDevice.GetEmptyInState(ref empty_in);
+            if (ret && !empty_in)
+            {
+                last_emptyin_state = false;
+            }
             if (ret = true && empty_in == true && last_emptyin_state == false)
             {
                 System.Threading.Thread.Sleep(1000);
@@ -320,6 +333,10 @@ namespace AGV.Web.Service.Service
                 {
                     var fin_out = false;
                     ret = StationDevice.GetFinOutState(ref fin_out);
+                    if (ret && !fin_out)
+                    {
+                        last_finout_state = false;
+                    }
                     if (ret = true && fin_out == true && last_finout_state == false)
                     {
                         string prod_type = "";
@@ -403,6 +420,10 @@ namespace AGV.Web.Service.Service
             {
                 var empty_out = false;
                 ret = StationDevice.GetEmptyOutState(ref empty_out);
+                if (ret && !empty_out)
+                {
+                    last_emptyout_state = false;
+                }
                 if (ret = true && empty_out == true && last_emptyout_state == false)
                 {
                     string prod_type = "";
@@ -448,6 +469,10 @@ namespace AGV.Web.Service.Service
             {
                 var fin_out = false;
                 ret = StationDevice.GetFinOutState(ref fin_out);
+                if (ret && !fin_out)
+                {
+                    last_finout_state = false;
+                }
                 if (ret = true && fin_out == true && last_finout_state == false)
                 {
                     string prod_type = "";

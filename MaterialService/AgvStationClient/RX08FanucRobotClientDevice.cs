@@ -47,6 +47,9 @@ namespace AgvStationClient
 
         private FanucRobotModbus m_FanucRobotDevice;
 
+        public string RawIn_Prod { get; set; }
+        public string RawIn_Mate { get; set; }
+
         public RX08FanucRobotClientDevice()
         {
             m_FanucRobotDevice = new FanucRobotModbus("192.168.1.172");
@@ -271,6 +274,7 @@ namespace AgvStationClient
         public bool GetRawInProductType(ref string type)
         {
             //TODO:从配置文件获取
+            type = RawIn_Prod;
 
             return true;
         }
@@ -283,7 +287,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "18";
+            type = RawIn_Mate;
 
             return true;
         }
@@ -296,6 +300,7 @@ namespace AgvStationClient
         public bool GetEmptyInProductType(ref string type)
         {
             //TODO:从配置文件获取
+            type = RawIn_Prod;
 
             return true;
         }
@@ -308,6 +313,7 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
+            type = RawIn_Mate;
 
             return true;
         }
@@ -320,6 +326,7 @@ namespace AgvStationClient
         public bool GetEmptyOutProductType(ref string type)
         {
             //TODO:从配置文件获取
+            type = RawIn_Prod;
 
             return true;
         }
@@ -332,6 +339,7 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
+            type = RawIn_Mate;
 
             return true;
         }
@@ -344,7 +352,7 @@ namespace AgvStationClient
         public bool GetFinOutProductType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Prod;
             return true;
         }
 
@@ -356,7 +364,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Mate;
             return true;
         }
 

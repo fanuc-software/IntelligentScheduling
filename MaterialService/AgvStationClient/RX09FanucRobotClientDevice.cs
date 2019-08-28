@@ -47,6 +47,9 @@ namespace AgvStationClient
 
         private FanucRobotModbus m_FanucRobotDevice;
 
+        public string RawIn_Prod { get; set; }
+        public string RawIn_Mate { get; set; }
+
         public RX09FanucRobotClientDevice()
         {
             m_FanucRobotDevice = new FanucRobotModbus("192.168.1.121");
@@ -127,8 +130,8 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetFinOutState(ref bool fin_out)
         {
-       // var rets = m_FanucRobotDevice.Write(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "196" }, "True");
-            
+            // var rets = m_FanucRobotDevice.Write(new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "196" }, "True");
+
             var ret = m_FanucRobotDevice.Read(m_FinOutStateConfig);
             if (ret.IsSuccess == false) return false;
 
@@ -275,7 +278,7 @@ namespace AgvStationClient
         public bool GetRawInProductType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "1";
+            type = RawIn_Prod;
 
             return true;
         }
@@ -288,7 +291,8 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "18";
+            type = RawIn_Mate;
+
 
             return true;
         }
@@ -301,7 +305,7 @@ namespace AgvStationClient
         public bool GetEmptyInProductType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "1";
+            type = RawIn_Prod;
 
             return true;
         }
@@ -314,7 +318,8 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "18";
+            type = RawIn_Mate;
+
 
             return true;
         }
@@ -327,7 +332,7 @@ namespace AgvStationClient
         public bool GetEmptyOutProductType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "1";
+            type = RawIn_Prod;
 
             return true;
         }
@@ -340,7 +345,8 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "18";
+            type = RawIn_Mate;
+
 
             return true;
         }
@@ -353,7 +359,7 @@ namespace AgvStationClient
         public bool GetFinOutProductType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "1";
+            type = RawIn_Prod;
 
             return true;
         }
@@ -366,7 +372,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = "18";
+            type =RawIn_Mate;
 
             return true;
         }

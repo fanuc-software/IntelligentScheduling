@@ -48,6 +48,12 @@ namespace AgvMissionManager.MissionState
         //料库执行入库
         private bool WareHouseInMission(AgvInMissonModel mission)
         {
+            if (missionContext.carryDevice as RightCarryService.TestControlDevice != null)
+            {
+                mission.CarryProcess = CarryMissonProcessEnum.FINISHED;
+                return true;
+            }
+
             TestRightCarryService<IControlDevice> carry = new TestRightCarryService<IControlDevice>(missionContext.carryDevice);
 
             var ret = carry.CarryIn(mission.ProductId, mission.MaterialId);
@@ -109,7 +115,11 @@ namespace AgvMissionManager.MissionState
         //料库执行出库
         private bool WareHouseOutMission(AgvOutMissonModel mission)
         {
-
+            if (missionContext.carryDevice as RightCarryService.TestControlDevice != null)
+            {
+                mission.CarryProcess = CarryMissonProcessEnum.FINISHED;
+                return true;
+            }
             TestRightCarryService<IControlDevice> carry = new TestRightCarryService<IControlDevice>(missionContext.carryDevice);
 
             int quantity = 0;

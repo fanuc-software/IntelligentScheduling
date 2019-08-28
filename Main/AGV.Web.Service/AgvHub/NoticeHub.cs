@@ -22,8 +22,11 @@ namespace AGV.Web.Service.AgvHub
             }
             catch (Exception ex)
             {
+                if (Context != null && !string.IsNullOrEmpty(Context.ConnectionId))
+                {
 
-                Clients.Client(Context.ConnectionId).pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+                    Clients.Client(Context.ConnectionId).pushSystemMessage($"AGV调度服务连接失败,异常信息:{ex.Message}", new { state = false });
+                }
             }
         }
         public void queryWaitSignal()
@@ -46,8 +49,10 @@ namespace AGV.Web.Service.AgvHub
             }
             catch (Exception ex)
             {
-
-                Clients.Client(Context.ConnectionId).pushSystemMessage($"发送订单失败,异常信息:{ex.Message}", new { state = false });
+                if (Context != null && !string.IsNullOrEmpty(Context.ConnectionId))
+                {
+                    Clients.Client(Context.ConnectionId).pushSystemMessage($"发送订单失败,异常信息:{ex.Message}", new { state = false });
+                }
             }
 
         }
@@ -88,9 +93,10 @@ namespace AGV.Web.Service.AgvHub
             }
             catch (Exception ex)
             {
-
-                Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单查询失败,异常信息:{ex.Message}", new { state = false });
-
+                if (Context != null && !string.IsNullOrEmpty(Context.ConnectionId))
+                {
+                    Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单查询失败,异常信息:{ex.Message}", new { state = false });
+                }
             }
 
 
@@ -107,13 +113,16 @@ namespace AGV.Web.Service.AgvHub
                 }
                 catch (Exception ex)
                 {
+                    if (Context != null && !string.IsNullOrEmpty(Context.ConnectionId))
+                    {
+                        Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单撤销失败,异常信息:{ex.Message}", new { state = false });
 
-                    Clients.Client(Context.ConnectionId)?.pushSystemMessage($"AGV订单撤销失败,异常信息:{ex.Message}", new { state = false });
+                    }
 
                 }
             }
             StaticData.OrderName = new System.Collections.Concurrent.BlockingCollection<string>();
-            
+
         }
         public void loadAllOrder()
         {

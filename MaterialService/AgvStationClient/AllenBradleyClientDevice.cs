@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AgvStationClient
 {
-    public class AllenBradleyClientDevice: IStationDevice
+    public class AllenBradleyClientDevice : IStationDevice
     {
         private AllenBradleyDataConfig m_RawInRequireStateConfig;
         private AllenBradleyDataConfig m_EmptyOutStateConfig;
@@ -31,6 +31,9 @@ namespace AgvStationClient
         private AllenBradleyDataConfig m_FinOutMaterialTypeConfig;
 
         private AllenBradley m_ABDevice;
+
+        public string RawIn_Prod { get; set; }
+        public string RawIn_Mate { get; set; }
 
         public AllenBradleyClientDevice()
         {
@@ -262,7 +265,7 @@ namespace AgvStationClient
         public bool GetRawInProductType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Prod;
             return true;
         }
 
@@ -274,7 +277,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Mate;
             return true;
         }
 
@@ -286,7 +289,7 @@ namespace AgvStationClient
         public bool GetEmptyInProductType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Prod;
             return true;
         }
 
@@ -298,7 +301,7 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Mate;
             return true;
         }
 
@@ -310,7 +313,7 @@ namespace AgvStationClient
         public bool GetEmptyOutProductType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Prod;
             return true;
         }
 
@@ -322,7 +325,7 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Mate;
             return true;
         }
 
@@ -334,7 +337,7 @@ namespace AgvStationClient
         public bool GetFinOutProductType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Prod;
             return true;
         }
 
@@ -346,7 +349,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-
+            type = RawIn_Mate;
             return true;
         }
     }

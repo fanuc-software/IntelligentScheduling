@@ -68,12 +68,14 @@ namespace FANUC.Host
                 {
                     return;
                 }
+                logger.Info("输入 【exit】 退出");
                 Console.WriteLine("输入 【exit】 退出");
             }
         }
 
         private static void MonitorService_ShowMessageEvent(string obj)
         {
+            logger.Info(obj);
             Console.WriteLine(obj);
         }
     }
