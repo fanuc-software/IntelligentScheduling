@@ -287,7 +287,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "17";
 
             return true;
         }
@@ -313,7 +313,7 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "10";
 
             return true;
         }
@@ -339,7 +339,7 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "10";
 
             return true;
         }
@@ -364,7 +364,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "17";
             return true;
         }
 

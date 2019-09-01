@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using AGV.Web.Service.Models;
 using AGV.Web.Service.Service;
+using EventBus;
 using Hangfire;
 using Microsoft.AspNet.SignalR;
 
@@ -13,41 +14,143 @@ namespace AGV.Web.Service.AgvHub
     public class RestHub : Hub
     {
         public static List<string> ListAgvJob = new List<string>();
+        static WebStationClient webClient = new WebStationClient();
 
         public static string WebLeftMaterial = "";
         public static string WebRightMaterial = "";
+        private SimpleEventBus eventBus;
+
+        public RestHub()
+        {
+            eventBus = SimpleEventBus.GetDefaultEventBus();
+
+        }
         public void start()
         {
+            if (StaticData.BackGroudJobIsStart)
+            {
+                return;
+            }
             StaticData.BackGroudJobIsStart = true;
 
 
-            WebStationClient webClient = new WebStationClient();
             WebAgvMissionManager webAgvMission = new WebAgvMissionManager();
 
             var hub = new NoticeHub();
             hub.clearAllWaitSignal();
             hub.clearAgvOrder();
-            webAgvMission.Clear(null);
+
+            eventBus.Post(new ClearMissionNode(), TimeSpan.FromSeconds(1));
             StaticData.CurrentMissionOrder = new System.Collections.Concurrent.BlockingCollection<Agv.Common.Model.AgvMissonModel>();
-            var job1 = BackgroundJob.Enqueue(() => webClient.Start());
-            var job2 = BackgroundJob.Enqueue(() => webAgvMission.Start());
-            ListAgvJob.Add(job1);
-            ListAgvJob.Add(job2);
+            try
+            {
+
+                var job2 = BackgroundJob.Enqueue(() => webAgvMission.Start());
+                //   ListAgvJob.Add(job1);
+                ListAgvJob.Add(job2);
 
 
-            Clients.All.getBackJobState(StaticData.BackGroudJobIsStart);
+                Clients.All.getBackJobState(StaticData.BackGroudJobIsStart);
+            }
+            catch (Exception ex)
+            {
+
+                Clients.All.getStartLog(ex.Message);
+
+            }
+
 
         }
 
+        public void startUnit(string unit)
+        {
+            string job = "";
+            if (unit == "RX07")
+            {
+                if (StaticData.RX07BackGroudJobState)
+                {
+                    return;
+                }
+                StaticData.RX07BackGroudJobState = true;
+                job = BackgroundJob.Enqueue(() => webClient.RX07Start());
+                Clients.All.getRX07BackJobState(StaticData.RX07BackGroudJobState);
+
+            }
+            else if (unit == "RX08")
+            {
+                if (StaticData.RX08BackGroudJobState)
+                {
+                    return;
+                }
+                StaticData.RX08BackGroudJobState = true;
+                job = BackgroundJob.Enqueue(() => webClient.RX08Start());
+                Clients.All.getRX08BackJobState(StaticData.RX08BackGroudJobState);
+            }
+            else if (unit == "RX09")
+            {
+                if (StaticData.RX09BackGroudJobState)
+                {
+                    return;
+                }
+                StaticData.RX09BackGroudJobState = true;
+                job = BackgroundJob.Enqueue(() => webClient.RX09Start());
+                Clients.All.getRX09BackJobState(StaticData.RX09BackGroudJobState);
+            }
+            ListAgvJob.Add($"{unit}_{job}");
+
+
+        }
+
+        public void stopUnit(string unit)
+        {
+            string item = ListAgvJob.FirstOrDefault(d => d.Contains(unit));
+            if (unit == "RX07" && StaticData.RX07BackGroudJobState)
+            {
+
+                StaticData.RX07BackGroudJobState = false;
+                string id = item.Contains("_") ? item.Split('_')[1] : item;
+                BackgroundJob.Delete(id);
+                Clients.All.getRX07BackJobState(StaticData.RX07BackGroudJobState);
+                return;
+
+            }
+            if (unit == "RX08" && StaticData.RX08BackGroudJobState)
+            {
+
+                StaticData.RX08BackGroudJobState = false;
+                string id = item.Contains("_") ? item.Split('_')[1] : item;
+                BackgroundJob.Delete(id);
+                Clients.All.getRX08BackJobState(StaticData.RX08BackGroudJobState);
+                return;
+
+            }
+            if (unit == "RX09" && StaticData.RX09BackGroudJobState)
+            {
+
+                StaticData.RX09BackGroudJobState = false;
+                string id = item.Contains("_") ? item.Split('_')[1] : item;
+                BackgroundJob.Delete(id);
+                Clients.All.getRX09BackJobState(StaticData.RX09BackGroudJobState);
+
+            }
+        }
         public void stop()
         {
             StaticData.BackGroudJobIsStart = false;
+            StaticData.RX07BackGroudJobState = false;
+            StaticData.RX08BackGroudJobState = false;
+            StaticData.RX09BackGroudJobState = false;
             foreach (var item in ListAgvJob)
             {
-                BackgroundJob.Delete(item);
+                string id = item.Contains("_") ? item.Split('_')[1] : item;
+                BackgroundJob.Delete(id);
             }
             ListAgvJob.Clear();
             Clients.All.getBackJobState(StaticData.BackGroudJobIsStart);
+            Clients.All.getRX07BackJobState(StaticData.RX07BackGroudJobState);
+            Clients.All.getRX08BackJobState(StaticData.RX08BackGroudJobState);
+            Clients.All.getRX09BackJobState(StaticData.RX09BackGroudJobState);
+
         }
 
 
@@ -122,6 +225,10 @@ namespace AGV.Web.Service.AgvHub
         public override Task OnConnected()
         {
             Clients.All.getBackJobState(StaticData.BackGroudJobIsStart);
+            Clients.All.getRX07BackJobState(StaticData.RX07BackGroudJobState);
+            Clients.All.getRX08BackJobState(StaticData.RX08BackGroudJobState);
+            Clients.All.getRX09BackJobState(StaticData.RX09BackGroudJobState);
+
             Clients.All.getleftMaterialState(StaticData.LeftMaterialState);
             Clients.All.getRightMaterialState(StaticData.RightMaterialState);
             return base.OnConnected();

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace RightCarryService
 {
     [System.Runtime.Remoting.Contexts.Synchronization]
-    public abstract class BaseRightCarryService<T>  where T : IControlDevice
+    public abstract class BaseRightCarryService<T> where T : IControlDevice
     {
         private static readonly object carrylock = new object();
 
         public T ControlDevice { get; }
-        
+
         public event Action<RightCarryServiceState> SendRightCarryServiceStateMessageEvent;
         private static ReaderWriterLock m_readerWriterLock = new ReaderWriterLock();
 
@@ -29,7 +29,7 @@ namespace RightCarryService
             catch (Exception)
             {
 
-                
+
             }
         }
 
@@ -43,7 +43,7 @@ namespace RightCarryService
             catch (Exception)
             {
 
-               
+
             }
         }
 
@@ -140,7 +140,8 @@ namespace RightCarryService
                 }
 
                 var in_fin = false;
-                while (in_fin == false || ret == false)
+                int macCount = 3;
+                while ((in_fin == false || ret == false) && macCount-- > 0)
                 {
                     ret = ControlDevice.GetRHouseFin(ref in_fin);
 
@@ -156,6 +157,7 @@ namespace RightCarryService
                         });
                         return false;
                     }
+                    Thread.Sleep(1000);
                 }
 
                 ret = ControlDevice.SetRHouseRequest(false);
@@ -208,7 +210,7 @@ namespace RightCarryService
         public bool CarryOut(string product, string material, ref int quantity)
         {
             product = "1";
-
+            int maxCount = 3;
             lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
@@ -298,7 +300,8 @@ namespace RightCarryService
                 }
 
                 var in_fin = false;
-                while (in_fin == false || ret == false)
+                maxCount = 3;
+                while ((in_fin == false || ret == false) && maxCount-- > 0)
                 {
                     ret = ControlDevice.GetRHouseFin(ref in_fin);
 
@@ -314,6 +317,7 @@ namespace RightCarryService
                         });
                         return false;
                     }
+                    Thread.Sleep(1000);
                 }
 
                 ret = ControlDevice.SetRHouseRequest(false);

@@ -11,70 +11,94 @@
 
             </div>
             <div class="panel-body">
-                <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.backJobSate" ng-click="main.start()">开启AGV服务</button>
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.backJobSate" ng-click="main.start()">开启AGV后台服务</button>
 
-                <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.backJobSate" ng-click="main.stop()">停止AGV服务</button>
+                <button type="button" style="margin-left:20px" class="btn btn-danger btn-lg" ng-disabled="!main.backJobSate" ng-click="main.stop()">停止AGV所有服务</button>
             </div>
 
         </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                AGV单元客户端服务
+
+            </div>
+            <div class="panel-body">
+                <div>
+                    <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rx07State" ng-click="main.unitStart('RX07')">开启RX07单元客户端服务</button>
+
+                    <button type="button" style="margin-left:20px" class="btn btn-danger btn-lg" ng-disabled="!main.rx07State" ng-click="main.unitStop('RX07')">停止RX07单元客户端服务</button>
+                </div>
+                <div style="margin-top:20px">
+                    <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rx08State" ng-click="main.unitStart('RX08')">开启RX08单元客户端服务</button>
+
+                    <button type="button" style="margin-left:20px" class="btn btn-danger btn-lg" ng-disabled="!main.rx08State" ng-click="main.unitStop('RX08')">停止RX08单元客户端服务</button>
+                </div>
+                <div style="margin-top:20px">
+                    <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rx09State" ng-click="main.unitStart('RX09')">开启RX09单元客户端服务</button>
+
+                    <button type="button" style="margin-left:20px" class="btn btn-danger btn-lg" ng-disabled="!main.rx09State" ng-click="main.unitStop('RX09')">停止RX09单元客户端服务</button>
+                </div>
+            </div>
+
+        </div>
 
     </div>
 
-    <div class="row" style="margin-top:10px;text-align:center">
+    @*<div class="row" style="margin-top:10px;text-align:center">
 
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    左侧料库服务
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        左侧料库服务
 
-                </div>
-                <div class="panel-body">
-                    <div>
-                        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.leftMetrailState" ng-click="main.leftStart()">开启左侧料库服务</button>
-                        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.leftMetrailState" ng-click="main.leftStop()">停止左侧料库服务</button>
                     </div>
-                    <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
-                        <div ng-repeat="x in main.leftNodes" class="alert alert-info alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            {{x}}
+                    <div class="panel-body">
+                        <div>
+                            <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.leftMetrailState" ng-click="main.leftStart()">开启左侧料库服务</button>
+                            <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.leftMetrailState" ng-click="main.leftStop()">停止左侧料库服务</button>
                         </div>
-                    </div>
+                        <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
+                            <div ng-repeat="x in main.leftNodes" class="alert alert-info alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{x}}
+                            </div>
+                        </div>
 
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-primary " ng-click="main.clearLeftLog()">清除日志</button>
+
+                    </div>
                 </div>
-                <div class="panel-footer">
-                    <button type="button" class="btn btn-primary " ng-click="main.clearLeftLog()">清除日志</button>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        右侧料库服务
+
+                    </div>
+                    <div class="panel-body">
+                        <div>
+                            <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rightMetrailState" ng-click="main.rightStart()">开启右侧料库服务</button>
+                            <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.rightMetrailState" ng-click="main.rightStop()">停止右侧料库服务</button>
+                        </div>
+                        <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
+                            <div ng-repeat="x in main.rightNodes" class="alert alert-success alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{x}}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+                        <button type="button" class="btn btn-primary " ng-click="main.clearRightLog()">清除日志</button>
+
+                    </div>
 
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    右侧料库服务
-
-                </div>
-                <div class="panel-body">
-                    <div>
-                        <button type="button" class="btn btn-primary btn-lg" ng-disabled="main.rightMetrailState" ng-click="main.rightStart()">开启右侧料库服务</button>
-                        <button type="button" class="btn btn-danger btn-lg" ng-disabled="!main.rightMetrailState" ng-click="main.rightStop()">停止右侧料库服务</button>
-                    </div>
-                    <div style="text-align:left;margin-top:10px;height:460px;overflow-y:auto">
-                        <div ng-repeat="x in main.rightNodes" class="alert alert-success alert-dismissible" role="alert" style="padding-bottom:10px;padding-top:10px;margin-bottom:5px">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            {{x}}
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <button type="button" class="btn btn-primary " ng-click="main.clearRightLog()">清除日志</button>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
+        </div>*@
 </div>
 @section scripts{
     <script type="text/javascript">
@@ -82,6 +106,9 @@
             .controller('mainController', function ($scope, $timeout) {
                 var main = this;
                 main.backJobSate = false;
+                main.rx07State = false;
+                main.rx08State = false;
+                main.rx09State = false;
                 main.leftMetrailState = false;
                 main.rightMetrailState = false;
                 main.leftNodes = [];
@@ -99,6 +126,18 @@
                         main.backJobSate = state;
                         $scope.$apply();
                     };
+                    main.client.client.getRX07BackJobState = function (state) {
+                         main.rx07State = state;
+                        $scope.$apply();
+                    };
+                    main.client.client.getRX08BackJobState = function (state) {
+                         main.rx08State = state;
+                        $scope.$apply();
+                    };
+                    main.client.client.getRX09BackJobState = function (state) {
+                         main.rx09State = state;
+                        $scope.$apply();
+                    };
                     main.client.client.getleftMaterialState = function (state) {
                         main.leftMetrailState = state;
                         $scope.$apply();
@@ -114,6 +153,9 @@
                         main.rightNodes.unshift(log);
                         $scope.$apply();
                     };
+                    main.client.client.getStartLog = function (message) {
+                        console.log(message);
+                    }
                     main.client.client.getLeftMaterialLog = function (log) {
                         if (main.leftNodes.length > 100) {
                             main.leftNodes = [];
@@ -138,6 +180,14 @@
                 };
                 main.rightStop = function () {
                     main.client.server.rightMaterialStop();
+
+                };
+                main.unitStart = function (unit) {
+                    main.client.server.startUnit(unit);
+
+                };
+                main.unitStop = function (unit) {
+                    main.client.server.stopUnit(unit);
 
                 };
                 main.clearLeftLog = function () {

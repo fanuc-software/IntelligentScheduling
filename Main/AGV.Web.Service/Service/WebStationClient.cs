@@ -31,7 +31,7 @@ namespace AGV.Web.Service.Service
                 if (Type.GetType(className) == null)
                 {
                     string path = $@"{StaticData.AppHostConfig.AppBinPath}\AgvStationClient.dll";
-                  
+
                     var assembly = Assembly.LoadFrom(path);
                     var tpe = assembly.GetType(className);
                     dObj = Activator.CreateInstance(tpe) as IStationDevice;
@@ -43,8 +43,8 @@ namespace AGV.Web.Service.Service
                 }
 
                 var proxy = new StationProxyService((AgvStationEnum)Enum.Parse(typeof(AgvStationEnum), item.StationId), dObj);
-                dObj.RawIn_Prod =item.GetType().GetProperty("ProdeuctType").GetValue(item).ToString();
-                dObj.RawIn_Mate= item.GetType().GetProperty("MaterielType").GetValue(item).ToString();
+                dObj.RawIn_Prod = item.GetType().GetProperty("ProdeuctType").GetValue(item).ToString();
+                dObj.RawIn_Mate = item.GetType().GetProperty("MaterielType").GetValue(item).ToString();
                 proxy.SendSingnalrEvent += Proxy_SendSingnalrEvent;
                 proxy.SendLogEvent += Proxy_SendLogEvent;
                 stationProxyServices.Add(proxy);
@@ -71,13 +71,38 @@ namespace AGV.Web.Service.Service
             eventBus.Post(instance, TimeSpan.FromSeconds(1));
         }
 
+        public void RX08Start()
+        {
+            var obj = stationProxyServices.FirstOrDefault(d => d.Station_Id == AgvStationEnum.RX08);
+            if (obj != null)
+            {
+                obj.StartStationClentFlow();
+            }
+        }
+
+        public void RX09Start()
+        {
+            var obj = stationProxyServices.FirstOrDefault(d => d.Station_Id == AgvStationEnum.RX09);
+            if (obj != null)
+            {
+                obj.StartStationClentFlow();
+            }
+        }
+        public void RX07Start()
+        {
+            var obj = stationProxyServices.FirstOrDefault(d => d.Station_Id == AgvStationEnum.RX07);
+            if (obj != null)
+            {
+                obj.StartStationClentFlow();
+            }
+        }
         public void Start()
         {
 
             Parallel.ForEach(stationProxyServices, item =>
             {
                 Task.Factory.StartNew(() => item.StartStationClentFlow());
-                Task.Factory.StartNew(() => item.FeedingSignalStart());
+             //   Task.Factory.StartNew(() => item.FeedingSignalStart());
 
             });
             resetEvent.WaitOne();

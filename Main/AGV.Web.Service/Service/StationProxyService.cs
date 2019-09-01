@@ -56,6 +56,7 @@ namespace AGV.Web.Service.Service
                 }
 
                 Thread.Sleep(1000);
+                SendFeedingSignal();
             }
 
 

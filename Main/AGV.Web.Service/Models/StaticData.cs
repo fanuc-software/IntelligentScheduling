@@ -18,6 +18,9 @@ namespace AGV.Web.Service.Models
         public static ConcurrentDictionary<string, bool> SignalDict = new ConcurrentDictionary<string, bool>();
 
         public static bool BackGroudJobIsStart = false;
+        public static bool RX08BackGroudJobState = false;
+        public static bool RX09BackGroudJobState = false;
+        public static bool RX07BackGroudJobState = false;
         public static bool LeftMaterialState = false;
         public static bool RightMaterialState = false;
         public static AppHostConfig AppHostConfig = new AppHostConfig();
@@ -69,7 +72,7 @@ namespace AGV.Web.Service.Models
                 },
                 new ConfigNode()
                 {
-                    Station ="B",
+                    Station ="D",
                     Operation ="JackUnload",
                     IsRequiredWait =true,
                     WaitArrivalNotice=true,
@@ -80,7 +83,7 @@ namespace AGV.Web.Service.Models
                 },
                   new ConfigNode()
                 {
-                    Station ="Bool_B",
+                    Station ="Bool_D",
                     Operation ="JackUnload",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -94,7 +97,7 @@ namespace AGV.Web.Service.Models
 
                  new ConfigNode()
                 {
-                    Station ="Bool_B",
+                    Station ="Bool_D",
                     Operation ="JackUnload",
                     IsRequiredWait =true,
                     WaitArrivalNotice=true,
@@ -106,7 +109,7 @@ namespace AGV.Web.Service.Models
                 },
                 new ConfigNode()
                 {
-                    Station ="B",
+                    Station ="D",
                     Operation ="JackLoad",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -115,7 +118,7 @@ namespace AGV.Web.Service.Models
                 },
                  new ConfigNode()
                 {
-                    Station ="Bool_B",
+                    Station ="Bool_D",
                     Operation ="JackLoad",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -178,7 +181,7 @@ namespace AGV.Web.Service.Models
                 },
                 new ConfigNode()
                 {
-                    Station ="D",
+                    Station ="B",
                     Operation ="JackUnload",
                     IsRequiredWait =true,
                     WaitArrivalNotice=true,
@@ -189,7 +192,7 @@ namespace AGV.Web.Service.Models
                 },
                  new ConfigNode()
                 {
-                    Station ="Bool_D",
+                    Station ="Bool_B",
                     Operation ="JackUnload",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -201,7 +204,7 @@ namespace AGV.Web.Service.Models
             {
                  new ConfigNode()
                 {
-                    Station ="Bool_D",
+                    Station ="Bool_B",
                     Operation ="JackUnload",
                     IsRequiredWait =true,
                     WaitArrivalNotice=true,
@@ -213,7 +216,7 @@ namespace AGV.Web.Service.Models
                 },
                 new ConfigNode()
                 {
-                    Station ="D",
+                    Station ="B",
                     Operation ="JackLoad",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -222,7 +225,7 @@ namespace AGV.Web.Service.Models
                 },
                  new ConfigNode()
                 {
-                    Station ="Bool_D",
+                    Station ="Bool_B",
                     Operation ="JackLoad",
                     IsRequiredWait =false,
                     ArrivalNotice=true,
@@ -572,7 +575,7 @@ namespace AGV.Web.Service.Models
         public static void InitStationConfig()
         {
 
-           
+
             string jsonfile = HttpContext.Current.Server.MapPath($"~/jsconfig.json");
             string info = System.IO.File.ReadAllText(jsonfile);
             AppHostConfig = JsonConvert.DeserializeObject<AppHostConfig>(info);

@@ -54,14 +54,15 @@ namespace AgvStationClient
         {
             m_FanucRobotDevice = new FanucRobotModbus("192.168.1.121");
 
-            m_RawInRequireStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "196" };
-            m_EmptyOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "197" };
-            m_EmptyInStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "195" };
-            m_FinOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "194" };
-            m_RawInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "196" };
-            m_EmptyOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "197" };
-            m_EmptyInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "195" };
-            m_FinOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "194" };
+            m_RawInRequireStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "194" };
+            m_EmptyOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "195" };
+            m_EmptyInStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "197" };
+            m_FinOutStateConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "196" };
+
+            m_RawInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "194" };
+            m_EmptyOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "195" };
+            m_EmptyInFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "197" };
+            m_FinOutFinConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DI, DataAdr = "196" };
 
             m_RawInRequireAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "102" };
             m_EmptyInAllowConfig = new FanucRobotDataConfig { DataType = FanucRobotDataTypeEnum.DO, DataAdr = "101" };
@@ -291,7 +292,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "18";
 
 
             return true;
@@ -318,8 +319,8 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
-
+            type = "7";
+            
 
             return true;
         }
@@ -345,7 +346,7 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "7";
 
 
             return true;
@@ -372,7 +373,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type =RawIn_Mate;
+            type ="18";
 
             return true;
         }

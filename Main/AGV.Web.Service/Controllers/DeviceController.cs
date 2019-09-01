@@ -49,7 +49,7 @@ namespace AGV.Web.Service.Controllers
 
                 return Json(new { state = true, id = id }, JsonRequestBehavior.AllowGet);
             }
-            bool isArrived = false;
+            bool isArrived = true;
             if (StaticData.SignalDict.ContainsKey(id))
             {
                 isArrived = StaticData.SignalDict[id];

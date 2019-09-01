@@ -39,26 +39,23 @@ namespace AgvStationClient
         {
             m_ABDevice = new AllenBradley("192.168.1.81", 44818);//RX07 AB  PLC的IP
 
-            m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Product_Type" };
-            m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Material_Type" };
-            m_EmptyInStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Storage_Out" };
-            m_FinOutStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Storage_In" };
-            m_RawInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Act_Req" };
-            m_EmptyOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_OUT.Act_Finish" };
-            m_EmptyInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Alarm" };
-            m_FinOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_OUT.Reset" };
+            m_RawInRequireStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_Out.ReqNewBox" };
+            m_EmptyOutStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_Out.ReqBackBox" };
 
-            m_RawInRequireAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            m_EmptyInAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
+            m_RawInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_In.NewBoxPutted" };
+            m_EmptyOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_In.EmptyBoxRemoved" };
 
-            //m_RawInProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_RawInMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyInProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyInMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyOutProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_EmptyOutMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_FinOutProductTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
-            //m_FinOutMaterialTypeConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
+            //m_EmptyInStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_Out.ReqNewBox" };
+            //m_FinOutStateConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_In.EmptyBoxRemoved " };
+         
+        
+            //m_EmptyInFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_In.NewBoxPutted" };
+            //m_FinOutFinConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.BOOL, DataAdr = "S_Order.AGV_In.EmptyBoxRemoved" };
+
+            //m_RawInRequireAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
+            //m_EmptyInAllowConfig = new AllenBradleyDataConfig { DataType = AllenBradleyDataTypeEnum.SHORT, DataAdr = "PLC_MES_COMM.AGV_Fix_Robot_IN.Current_Quantity_In_Box" };
+
+           
         }
 
         /// <summary>
@@ -104,14 +101,15 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetEmptyInState(ref bool empty_in)
         {
-            var ret = m_ABDevice.Read(m_EmptyInStateConfig);
-            if (ret.IsSuccess == false) return false;
+            empty_in = false;
+            //var ret = m_ABDevice.Read(m_EmptyInStateConfig);
+            //if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //bool temp = false;
+            //var pret = bool.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            empty_in = temp;
+            //empty_in = temp;
             return true;
         }
 
@@ -122,14 +120,15 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetFinOutState(ref bool fin_out)
         {
-            var ret = m_ABDevice.Read(m_FinOutStateConfig);
-            if (ret.IsSuccess == false) return false;
+            fin_out = false;
+            //var ret = m_ABDevice.Read(m_FinOutStateConfig);
+            //if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //bool temp = false;
+            //var pret = bool.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            fin_out = temp;
+            //fin_out = temp;
             return true;
         }
 
@@ -166,8 +165,8 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetEmptyInFin(bool empty_in_fin)
         {
-            var ret = m_ABDevice.Write(m_EmptyInFinConfig, empty_in_fin.ToString());
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_ABDevice.Write(m_EmptyInFinConfig, empty_in_fin.ToString());
+            //if (ret.IsSuccess == false) return false;
 
             return true;
         }
@@ -179,8 +178,8 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool SetFinOutFin(bool fin_out_fin)
         {
-            var ret = m_ABDevice.Write(m_FinOutFinConfig, fin_out_fin.ToString());
-            if (ret.IsSuccess == false) return false;
+            //var ret = m_ABDevice.Write(m_FinOutFinConfig, fin_out_fin.ToString());
+            //if (ret.IsSuccess == false) return false;
 
             return true;
         }
@@ -228,14 +227,15 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetRawInFeedingSignal(ref bool raw_in)
         {
-            var ret = m_ABDevice.Read(m_RawInRequireAllowConfig);
-            if (ret.IsSuccess == false) return false;
+            raw_in = true;
+            //var ret = m_ABDevice.Read(m_RawInRequireAllowConfig);
+            //if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //bool temp = false;
+            //var pret = bool.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            raw_in = temp;
+            //raw_in = temp;
             return true;
         }
 
@@ -246,14 +246,15 @@ namespace AgvStationClient
         /// <returns>true：读取正常； false：读取异常</returns>
         public bool GetEmptyInFeedingSignal(ref bool empty_in)
         {
-            var ret = m_ABDevice.Read(m_EmptyInAllowConfig);
-            if (ret.IsSuccess == false) return false;
+            empty_in = true;
+            //var ret = m_ABDevice.Read(m_EmptyInAllowConfig);
+            //if (ret.IsSuccess == false) return false;
 
-            bool temp = false;
-            var pret = bool.TryParse(ret.Content, out temp);
-            if (pret == false) return false;
+            //bool temp = false;
+            //var pret = bool.TryParse(ret.Content, out temp);
+            //if (pret == false) return false;
 
-            empty_in = temp;
+            //empty_in = temp;
             return true;
         }
 
@@ -277,7 +278,7 @@ namespace AgvStationClient
         public bool GetRawInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "11";
             return true;
         }
 
@@ -301,7 +302,7 @@ namespace AgvStationClient
         public bool GetEmptyInMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "12";
             return true;
         }
 
@@ -325,7 +326,7 @@ namespace AgvStationClient
         public bool GetEmptyOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "12";
             return true;
         }
 
@@ -349,7 +350,7 @@ namespace AgvStationClient
         public bool GetFinOutMaterialType(ref string type)
         {
             //TODO:从配置文件获取
-            type = RawIn_Mate;
+            type = "12";
             return true;
         }
     }

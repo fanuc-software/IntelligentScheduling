@@ -4,8 +4,8 @@
   "Environment": "Production",
   "AppBinPath": "F:\\Work\\Fanuc\\IntelligentScheduling\\Main\\AGV.Web.Service\\bin",
   "DevelopmentCarryDevice": "RightCarryService.TestControlDevice",
-  //"ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
-  "ProductionCarryDevice": "RightCarryService.TestControlDevice",
+  "ProductionCarryDevice": "RightCarryService.AllenBradleyControlDevice",
+  //"ProductionCarryDevice": "RightCarryService.TestControlDevice",
 
   "StationNodes": [
     {
@@ -23,16 +23,15 @@
       "MaterielType": 23,
       "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
       "ProductionService": "AgvStationClient.RX08FanucRobotClientDevice"
+    },
+    {
+      "Name": "3C加工单元单元",
+      "StationId": "RX09",
+      "ProdeuctType": 1,
+      "MaterielType": 18,
+      "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
+      "ProductionService": "AgvStationClient.RX09FanucRobotClientDevice"
     }
-    //,
-    //{
-    //  "Name": "3C加工单元单元",
-    //  "StationId": "RX09",
-    //  "ProdeuctType": 1,
-    //  "MaterielType": 18,
-    //  "DevelopmentService": "AGV.Web.Service.Service.TestStationDevice",
-    //  "ProductionService": "AgvStationClient.RX09FanucRobotClientDevice"
-    //}
   ]
 
 
