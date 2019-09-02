@@ -51,7 +51,7 @@ namespace RightCarryService
         {
             product = "1";
 
-            lock (carrylock)
+         //   lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
                 if (ret == false)
@@ -140,8 +140,8 @@ namespace RightCarryService
                 }
 
                 var in_fin = false;
-                int macCount = 3;
-                while ((in_fin == false || ret == false) && macCount-- > 0)
+                int macCount = 10;
+                while (macCount-- > 0 && (in_fin == false || ret == false))
                 {
                     ret = ControlDevice.GetRHouseFin(ref in_fin);
 
@@ -211,7 +211,7 @@ namespace RightCarryService
         {
             product = "1";
             int maxCount = 3;
-            lock (carrylock)
+        //    lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
                 if (ret == false)
@@ -300,8 +300,8 @@ namespace RightCarryService
                 }
 
                 var in_fin = false;
-                maxCount = 3;
-                while ((in_fin == false || ret == false) && maxCount-- > 0)
+                maxCount = 10;
+                while (maxCount-- > 0 && (in_fin == false || ret == false))
                 {
                     ret = ControlDevice.GetRHouseFin(ref in_fin);
 
