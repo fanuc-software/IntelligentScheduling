@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RightCarryService
 {
-    [System.Runtime.Remoting.Contexts.Synchronization]
+    //  [System.Runtime.Remoting.Contexts.Synchronization]
     public abstract class BaseRightCarryService<T> where T : IControlDevice
     {
         private static readonly object carrylock = new object();
@@ -21,37 +21,37 @@ namespace RightCarryService
         {
             ControlDevice = device;
 
-            try
-            {
-                m_readerWriterLock.AcquireWriterLock(100000);
+            //try
+            //{
+            //    m_readerWriterLock.AcquireWriterLock(100000);
 
-            }
-            catch (Exception)
-            {
+            //}
+            //catch (Exception)
+            //{
 
 
-            }
+            //}
         }
 
         public void ReleaseLock()
         {
-            try
-            {
-                m_readerWriterLock.ReleaseWriterLock();
+            //try
+            //{
+            //    m_readerWriterLock.ReleaseWriterLock();
 
-            }
-            catch (Exception)
-            {
+            //}
+            //catch (Exception)
+            //{
 
 
-            }
+            //}
         }
 
         public bool CarryIn(string product, string material)
         {
             product = "1";
 
-         //   lock (carrylock)
+            //   lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
                 if (ret == false)
@@ -211,7 +211,7 @@ namespace RightCarryService
         {
             product = "1";
             int maxCount = 3;
-        //    lock (carrylock)
+            //    lock (carrylock)
             {
                 var ret = ControlDevice.SetRHouseFin(false);
                 if (ret == false)

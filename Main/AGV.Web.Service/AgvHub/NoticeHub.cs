@@ -6,6 +6,7 @@ using System.Web;
 using Agv.Common;
 using AGV.Web.Service.Models;
 using Microsoft.AspNet.SignalR;
+using RightCarryService;
 
 namespace AGV.Web.Service.AgvHub
 {
@@ -33,6 +34,58 @@ namespace AGV.Web.Service.AgvHub
         {
 
             Clients.Client(Context.ConnectionId).loadWaitSignal(StaticData.SignalDict);
+        }
+
+        public void carryIn(string name)
+        {
+            name = name.Replace("_", "");
+            Dictionary<string, int> keys = new Dictionary<string, int>();
+            keys.Add("RX09RAWIN", 18);
+            keys.Add("RX09EMPTYIN", 7);
+
+            keys.Add("RX08RAWIN", 17);
+            keys.Add("RX08EMPTYIN", 10);
+
+            keys.Add("RX07RAWIN", 11);
+
+            foreach (var item in keys)
+            {
+
+                if (name.Contains(item.Key))
+                {
+                    int qty = 0;
+
+                    TestRightCarryService<AllenBradleyControlDevice> carry = new TestRightCarryService<AllenBradleyControlDevice>(new AllenBradleyControlDevice());
+                    var ret = carry.CarryOut("1", keys[item.Key].ToString(), ref qty);
+                    break;
+                   
+                }
+            }
+        }
+
+        public void carryOut(string name)
+        {
+            name = name.Replace("_", "");
+            Dictionary<string, int> keys = new Dictionary<string, int>();
+            keys.Add("RX09EMPTYOUT", 7);
+            keys.Add("RX09FINOUT", 18);
+
+            keys.Add("RX08EMPTYOUT", 10);
+            keys.Add("RX08FINOUT", 17);
+
+            keys.Add("RX07EMPTYOUT", 12);
+
+            foreach (var item in keys)
+            {
+
+                if (name.Contains(item.Key))
+                {
+                    TestRightCarryService<AllenBradleyControlDevice> carry = new TestRightCarryService<AllenBradleyControlDevice>(new AllenBradleyControlDevice());
+                    var ret = carry.CarryIn("1", keys[item.Key].ToString());
+                    break;
+                }
+            }
+
         }
         public void sendTask(string id)
         {

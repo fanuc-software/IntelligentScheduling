@@ -17,6 +17,8 @@
             <button type="button" class="btn btn-info" ng-click="main.queryWait()">查询所有等待信号</button>
             <button type="button" class="btn btn-danger" ng-click="main.clearWait()">释放所有等待信号</button>
             <button type="button" class="btn btn-danger" ng-click="main.clearAgvOrder()">清除AGV订单</button>
+            @*<button type="button" class="btn btn-danger" ng-click="main.carryOut('RX09_EMPTYOUT_132')">物料入库测试</button>
+            <button type="button" class="btn btn-danger" ng-click="main.carryIn('RX09_EMPTYIN_132')">物料出库测试</button>*@
 
         </div>
     </div>
@@ -107,6 +109,8 @@
 
                         <td>
                             <button type="button" class="btn btn-primary" ng-click="main.orderView(x)">详情</button>
+                            <button type="button" ng-show="x.name.indexOf('RAWIN')!=-1||x.name.indexOf('EMPTYIN')!=-1" class="btn btn-success" ng-click="main.carryIn(x.name)">请求入料</button>
+                            <button type="button" ng-show="x.name.indexOf('EMPTYOUT')!=-1||x.name.indexOf('FINOUT')!=-1" class="btn btn-info" ng-click="main.carryOut(x.name)">物料回库</button>
                             @*<button type="button" style="margin-left:5px" class="btn btn-info" ng-click="main.refreshOrder(x.name)">刷新</button>*@
 
                         </td>
@@ -147,6 +151,8 @@
                         </td>
                         <td>
                             <button type="button" ng-show="x.properties.length>0&&x.properties[0].key=='device:queryAtExecuted'" class="btn btn-primary" ng-click="main.sendWait($index)">释放信号</button>
+
+
                         </td>
                     </tr>
                 </tbody>
@@ -348,6 +354,14 @@
                 main.clearAgvOrder = function () {
                     main.client.server.clearAgvOrder();
                     main.orderNodes = [];
+                };
+                main.carryOut = function (name) {
+                    main.client.server.carryOut(name);
+
+                };
+                main.carryIn = function (name) {
+                    main.client.server.carryIn(name);
+
                 };
                 main.init();
                 $scope.main = main;
