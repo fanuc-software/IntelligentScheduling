@@ -79,7 +79,6 @@ namespace AgvMissionManager
             });
             signalrService.OnMessage<string>(AgvReceiveActionEnum.agvStateChange.EnumToString(), (s) =>
             {
-
                 try
                 {
                     var data = s.Split('_');

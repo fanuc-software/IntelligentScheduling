@@ -240,6 +240,8 @@ namespace RightMaterialService
             var ret = m_ABDevice.Read(m_HouseFCSResetConfig);
             if (ret.IsSuccess == false) return false;
 
+            Console.WriteLine($"{m_HouseFCSResetConfig.DataAdr} {ret.Content}");
+
             bool temp = false;
             var pret = bool.TryParse(ret.Content, out temp);
             if (pret == false) return false;

@@ -305,10 +305,10 @@ namespace Test
             //bool mode = false;
             //var ret = dev.GetOrderMode(ref mode);
 
-            //var leftSrv = new TestRightMaterialService();
-            //leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
-            //leftSrv.Start();
-            //Console.WriteLine("服务启动中");
+            var leftSrv = new TestRightMaterialService();
+            leftSrv.SendRightMaterialServiceStateMessageEvent += PrintRightMaterialServiceError;
+            leftSrv.Start();
+            Console.WriteLine("服务启动中");
 
             //var leftSrv = new TestLeftMaterialService();
             //leftSrv.SendLeftMaterialServiceStateMessageEvent += PrintLeftMaterialServiceError;
@@ -340,7 +340,7 @@ namespace Test
 
         private static void PrintRightMaterialServiceError(RightMaterialServiceState state)
         {
-            Console.WriteLine($"【NEW】【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
+            Console.WriteLine($"【NEW】   【{DateTime.Now.ToString()}】 【ERROR CODE】: {state.ErrorCode}     【MESSAGE】:{state.Message}");
         }
 
         private static OrderItem Srv_GetFirstOrderEvent(OrderServiceEnum arg)
